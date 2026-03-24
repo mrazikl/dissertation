@@ -1,1 +1,38 @@
 \section{Integrální manometrický permeametr}\label{s:integralni_manometricky_permeametr}
+Vývoj zařízení byl motivován snahou o transformaci původního, manuálně ovládaného laboratorního prototypu v robustní a plně automatizovaný měřicí systém. Z hlediska technického řešení zahrnovala rekonstrukce několik klíčových vylepšení: implementaci mechatronických prvků pro automatizaci ovládání ventilů, eliminaci vnějšího systému termostatování a celkovou instrumentální integraci aparatury do kompaktního šasi.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Princip měření %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Princip měření}\label{ss:princip_mereni}
+
+
+This section establishes the physical foundation of the integral manometric (pressure-rise) method. It defines the experimental setup where a gas at constant pressure $p_{in}$ is applied to the upstream side of a membrane, and the pressure accumulation $p_{out}(t)$ is measured in a downstream reservoir of calibrated volume $V_{R}$. This section directly links the hardware to the Cauchy problem derived in Section \ref{s:vnejsi_dynamika_systemu}:
+
+$$ \frac{dp_{out}}{dt} = \frac{A R T_{R}}{V_{R}} j(p_{in}, p_{out}) $$
+
+where $j$ is the molar flux determined by the internal membrane dynamics.
+
+\subsection{Vývoj aparatury}\label{ss:vyvoj_aparatury}
+
+\subsubsection{Původní prototyp}\label{sss:puvodni_prototyp}
+Describe the inherited setup: a sprawling assembly of discrete manifolds, manual valves, and an active liquid thermostatting loop (Julabo F12-MA) intended to maintain isothermal conditions. Mention the use of flexible tubing and the manual vise for cell clamping.
+
+\subsubsection{Odstranění termostatování a časová měřítka}\label{sss:odstraneni_termostatu}
+Present the primary scientific justification for simplifying the hardware. Argue that for the high-flux GO membranes studied, the experimental timescale (seconds to minutes) is several orders of magnitude smaller than the characteristic time of ambient laboratory temperature drift. Mathematically justify why the isothermal assumption holds without active regulation, allowing for the removal of the bulky thermostatting subsystem and reducing potential leak points associated with liquid jacketing.
+
+\subsubsection{Požadavek na automatizaci a vzdálený přístup}\label{sss:pozadavek_na_automatizaci}
+Identify the limitations of manual operation: human timing error at $t=0$ (valve opening synchronized with software trigger) and the inability to perform long-term or remote sequences. Explain that automation is necessary to standardize the initial condition $y(0)=0$ and to allow for high-throughput testing across varying $p_{in}$ values without local operator intervention.
+
+\subsection{Architektura a konstrukce systému}\label{ss:architektura_systemu}
+
+\subsubsection{Mechanické uspořádání a kompaktifikace}\label{sss:kompaktifikace}
+Detail the mechanical "re-engineering" of the blocks. Explain how the internal channels originally designed for thermostatting fluid were repurposed as structural mounting points. The assembly is now held together by eight threaded rods, creating a rigid, monolithic block. This change minimizes the footprint, eliminates vibration-sensitive flexible piping, and reduces the risk of accidental seal disturbance.
+
+\subsubsection{Automatizace ventilů a servopohony}\label{sss:automatizace_ventilu}
+Describe the hardware implementation of the automation. Detail the mechanical coupling of high-torque servos to the stems of the existing manual valves. Discuss the choice of actuators based on the torque required to overcome friction under high-pressure gas loads and the physical mounting brackets designed to maintain axial alignment. This section provides the physical context for the software control logic discussed in Chapter \ref{s:software}.
+
+\subsection{Validace a kalibrace}\label{ss:validace_a_kalibrace}
+
+\subsubsection{Stanovení mrtvého objemu}\label{sss:mrtvy_objem}
+Describe the volumetric calibration of the downstream reservoir $V_{R}$ using the gas expansion (pressure-step) method. Explain how the compactification significantly reduced this volume, thereby increasing the sensitivity of the $dp/dt$ measurement for low-permeability samples.
+
+\subsubsection{Ověření izotermního předpokladu}\label{sss:overeni_izotermnosti}
+Provide empirical data (temperature logs) confirming that internal gas temperature remains stable within the required margin during the measurement period. This validates the decision to remove the active thermostatting loop and confirms that the heat capacity of the monolithic metal blocks provides sufficient passive thermal damping.

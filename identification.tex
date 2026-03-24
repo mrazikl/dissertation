@@ -12,7 +12,7 @@ Při vhodně zvoleném referenčním bodu, $(p_0,T_0)=(p_{\mathrm{in}},T_{\mathr
 \begin{equation}
     \Dd{y}{t}=K\frac{1-y^\alpha}{\alpha}, \qquad y(0)=0,\quad K=\frac{T_R k}{S \mu_0},
 \end{equation}
-kde $K\Unit{-}$ je bezrozměrný multiplikativní parametr. Obecné řešení v implicitní podobě dle \refeq{eq:general_cauchy_problem_alpha_solution} má podobu
+kde \Unit{K}{-} je bezrozměrný multiplikativní parametr. Obecné řešení v implicitní podobě dle \refeq{eq:general_cauchy_problem_alpha_solution} má podobu
 \begin{equation}\label{eq:implicit_solution_definition}
     G(t,y,\alpha):=\int_0^y\frac{\alpha}{1-u^\alpha} \d{u} -Kt=0,
 \end{equation}
@@ -310,7 +310,7 @@ derivace $\Dd{y}{\alpha}$ je tedy kladná,
 \begin{equation}
     \Dd{y}{\alpha}=-(1-y^\alpha)\int_0^y \frac{u^\alpha \ln{u}}{(1-u^\alpha)^2}\d{u}>0,
 \end{equation}
-řezy $y(\alpha)$ jsou při konstantním času funkce rostoucí. Zde se projevuje normalizace času: v~kapitole \ref{sss:dusledky_exponencialniho_parametru} je nezávisle proměnnou reálný čas $t$, po normalizaci je fixovaná proměnná normalizovaný čas $t'$. 
+řezy $y(\alpha)$ jsou při konstantním času funkce rostoucí. Zde se projevuje normalizace času: v~Kapitole \ref{sss:dusledky_exponencialniho_parametru} je nezávisle proměnnou reálný čas $t$, po normalizaci je fixovaná proměnná normalizovaný čas $t'$. 
 
 Pro druhou derivaci ve směru $\alpha$ dle \refeq{eq:implicit_second_derivative} potřebujeme druhé parciální derivace,
 \begin{align}
@@ -375,7 +375,7 @@ systém \refeq{eq:general_cauchy_problem_alpha} pak zapíšeme jako
     \Dd{y}{\tau}=1-y^\alpha, \qquad y(0)=0.
 \end{equation}
 
-Pro zkrácení syntaxe v rámci kapitoly zavádíme značení
+Pro zkrácení syntaxe v rámci Kapitoly zavádíme značení
 \begin{equation}
     y_T:=\left.y\right|_{\tau=T},\qquad y'_T:=\left.\Dd{y}{\tau}\right|_{\tau=T}.
 \end{equation}
@@ -386,7 +386,7 @@ Pro počáteční směrnici přechodové charakteristiky po normalizaci platí
 \end{equation}
 je tedy invariantní vůči $K$ i $\alpha$. Tečna ke grafu přechodové charakteristiky protne hodnotu ustáleného stavu v $\tau=1$, přechodová charakteristika má v tomto čase hodnotu odpovídající $y_1$.
 
-\paragraph{Časová konstanta systému} je koncept používaný při identifikaci lineárního systému prvního řádu. Pro lineární systém platí, že časová konstanta je převrácenou hodnotou počáteční směrnice, a zároveň hodnota odezvy v čase jedné časové konstanty je notoricky známé $y_1=1-\e{-1}\approx0.632$. Při rozšíření konceptu na nelineární systémy zachováme definici časové konstanty založené na počáteční směrnici, hodnota odezvy však je nyní již funkcí $y_\tau(\alpha)$. Jednoznačnost platí obecně pro libovolný řez, konkrétně $\tau=1$ je však pro identifikaci $\alpha$ ideální, jak ukážeme limitní analýzou. 
+\paragraph{Časová konstanta systému} je koncept používaný při identifikaci lineárního systému prvního řádu. Pro lineární systém platí, že časová konstanta je převrácenou hodnotou počáteční směrnice, a zároveň hodnota odezvy v čase jedné časové konstanty je notoricky známé $y_1=1-\e{-1}\approx\num{0.632}$. Při rozšíření konceptu na nelineární systémy zachováme definici časové konstanty založené na počáteční směrnici, hodnota odezvy však je nyní již funkcí $y_\tau(\alpha)$. Jednoznačnost platí obecně pro libovolný řez, konkrétně $\tau=1$ je však pro identifikaci $\alpha$ ideální, jak ukážeme limitní analýzou. 
 
 Pro $\alpha\to0_+$ je přechodová charakteristika normalizovaného systému nulová,
 \begin{equation}
@@ -454,7 +454,7 @@ Iterace Newtonovy metody má podobu
     \alpha^{(n+1)}=\alpha^{(n)}\left(1-\frac{\alpha^{(n)}y_{\tau_0}\Phi_1-\left(\alpha^{(n)}\right)^2\bm{\tau}}{\left(\alpha^{(n)}\right)^2 y_{\tau_0}\ln{y_{\tau_0}}\Phi_0-\alpha^{(n)}y_{\tau_0}(\ln{y_{\tau_0}}+1)\Phi_1+y_{\tau_0}\Phi_2}\right),
 \end{equation}
 kde Lerchova transcendenta je vyhodnocena v $(y_{\tau_0},\alpha^{(n)})$
-Konvergence Newtonovy metody aplikované na rostoucí konkávní funkci je zaručena pro $\alpha^{(0)}<\alpha_0$. Pro systém bez přenosu energie platí $\alpha=2$, tomu odpovídá $y_\tau=\tanh(1)\approx0.762$, lineárnímu případu odpovídá již zmíněných $y_\tau\approx0.632$. S~ohledem na experimentální data je volba $\alpha^{(0)}=1$ bezpečná. Z druhé strany, volba $\alpha^{(0)}=0$ není možná, neboť směrnice pro $\alpha\to0_+$ roste nade všechny meze.
+Konvergence Newtonovy metody aplikované na rostoucí konkávní funkci je zaručena pro $\alpha^{(0)}<\alpha_0$. Pro systém bez přenosu energie platí $\alpha=2$, tomu odpovídá $y_\tau=\tanh(1)\approx\num{0.762}$, lineárnímu případu odpovídá již zmíněných $y_\tau\approx\num{0.632}$. S~ohledem na experimentální data je volba $\alpha^{(0)}=1$ bezpečná. Z druhé strany, volba $\alpha^{(0)}=0$ není možná, neboť směrnice pro $\alpha\to0_+$ roste nade všechny meze.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Metoda počátečních směrnic %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Metoda počátečních směrnic}\label{sss:metoda_pocatecnich_smernic}

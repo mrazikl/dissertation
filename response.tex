@@ -1,5 +1,5 @@
 \section{Vnější dynamika systému}\label{s:vnejsi_dynamika_systemu}
-Abychom popsali projevy nelineárního chování, vystavíme matematický model integrálního permeametru: formulujeme bilanci hmoty pro permeační celu a~na jejím základě diferenciální rovnici popisující časový průběh tlaku odpovídající realizaci experimentu. Z předchozí kapitoly si odnášíme zejména vyjádření toku plynu membránou v~ustáleném stavu jako funkce tlaku před a~za membránou. Pro normalizovaný tlak odvodíme třídu přechodových charakteristik: pro vybrané hodnoty exponentu explicitně, pro ostatní pak implicitně součtem hypergeometrické řady.
+Abychom popsali projevy nelineárního chování, vystavíme matematický model integrálního permeametru: formulujeme bilanci hmoty pro permeační celu a~na jejím základě diferenciální rovnici popisující časový průběh tlaku odpovídající realizaci experimentu. Z předchozí Kapitoly si odnášíme zejména vyjádření toku plynu membránou v~ustáleném stavu jako funkce tlaku před a~za membránou. Pro normalizovaný tlak odvodíme třídu přechodových charakteristik: pro vybrané hodnoty exponentu explicitně, pro ostatní pak implicitně součtem hypergeometrické řady.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bilance hmoty %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Bilance hmoty}\label{ss:bilance_hmoty}
@@ -7,7 +7,7 @@ Permeační celu integrálního permeametru v~režimu permeace do slepé větve 
 
 Změnu tlaku uvnitř cely vyjádříme z bilance hmoty s použitím stavové rovnice ideálního plynu,
 \begin{equation}
-    \Dd{m_{\mathcal{R}}}{t}=\Dd{p_{\mathcal{R}}}{t}\frac{V_{\mathcal{R}}}{R T_{\mathcal{R}}}=Aj,
+    \Dd{m_{\mathcal{R}}}{t}=\Dd{p_{\mathcal{R}}}{t}\frac{V_{\mathcal{R}}}{R_s T_{\mathcal{R}}}=Aj,
 \end{equation}
 kde zavádíme index $\mathcal{R}$ \english{reservoir} pro vlastnosti a~stavy permeační cely, zde  pro hmotnost, tlak a~teplotu plynu uvnitř cely, a~celkový objem cely. Uvažujeme celkovou plochu membrány~$A$, nikoliv pouze efektivní plochu membrány $\varepsilon A$, neboť porozita membrány je zahrnuta v~definici Darcyho rychlosti dle \refeq{eq:darcy_velocity}. Teplotu považujeme za~v~čase konstantní, neboť z makroskopického pohledu lze objem cely považovat za~temperovaný tělesem cely; objem cely je konstantní konstrukčně.
 
@@ -25,7 +25,7 @@ Tlak pod membránou odpovídá tlaku v~permeační cele, $p_{\mathcal{R}}=p_{\ma
 \end{equation}
 Pozorujeme, že volba referenčního bodu není pouze arbitrární volbou, ale jde fakticky o~volbu fyzikálních jednotek, ve~kterých je systém modelován.
 
-Zavádíme zbezrozměrněné veličiny tlaku a~teploty $p_{in}, p_{out}, T_{R} \Unit{-}$ (rozlišené šikmým řezem indexu) a~částečně zbezrozměrněnou viskozitu $\mu_0 \Unit{s}$. Prostorové rozměry cely a~membrány vyjádříme souhrnně jako $S=V_{\mathcal{R}}L/A \Unit{m^2}$, dostáváme
+Zavádíme zbezrozměrněné veličiny tlaku a~teploty \Unit{p_{in}, p_{out}, T_{R}}{-} (rozlišené šikmým řezem indexu) a~částečně zbezrozměrněnou viskozitu \Unit{\mu_0}{s}. Prostorové rozměry cely a~membrány vyjádříme souhrnně jako \Unit{S=V_{\mathcal{R}}L/A}{\square\meter}, dostáváme
 \begin{equation}
     \Dd{p_{out}}{t}=\frac{T_R}{S}\frac{k}{\mu_0}\frac{1}{\alpha}\left(p_{in}^\alpha-p_{out}^{\alpha}\right),
 \end{equation}
@@ -581,7 +581,7 @@ kde rovnici upravíme do tvaru odpovídajícímu $u\e{u}$ a~aplikujeme Lambertov
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Neexistence dalších explicitních řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Neexistence dalších explicitních řešení}\label{ss:neexistence_dalsich_explicitnich_reseni}
-Dále ukážeme, že výčet explicitních řešení v~kapitole \ref{ss:explicitni_reseni} je úplný.
+Dále ukážeme, že výčet explicitních řešení v~Kapitole \ref{ss:explicitni_reseni} je úplný.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Důkaz úplnosti pro elementární funkce %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Důkaz úplnosti pro elementární funkce}\label{sss:dukaz_uplnosti_pro_elementarni_funkce}
@@ -633,7 +633,7 @@ reziduum potom dostáváme v~podobě
 \end{equation}    
 na základě věty o~reziduu algebraické funkce je tedy nezbytné, aby $\omega_k^B$ byla racionální čísla. 
 
-Posloupnost $\omega_k^B$ je pro nesoudělná $A,B$ permutací posloupnosti $\omega_k$, rezidua tedy bez ohledu na~pořadí nabývají hodnot všech kořenů jednotky. Alespoň jeden z kořenů jednotky pro $k>2$ je vždy komplexní, existují tedy pouze dvě varianty pro řád jmenovatele, $A\in\{1,2\}$. Spolu s podmínkou \refeq{eq:condition_coprime_inequality} tak získáváme pouze dvě přípustné varianty: $A=1, B=1$, odpovídající lineárnímu systému dle kapitoly \ref{sss:linearni_system}, a~$A=2, B=1$, odpovídající kvadratickému systému dle kapitoly \ref{sss:kvadraticky_system}. Lineární a~kvadratický systém tak jsou jediné dva případy, kdy pro racionální $\alpha$ existuje explicitní řešení pouze s použitím elementárních funkcí.
+Posloupnost $\omega_k^B$ je pro nesoudělná $A,B$ permutací posloupnosti $\omega_k$, rezidua tedy bez ohledu na~pořadí nabývají hodnot všech kořenů jednotky. Alespoň jeden z kořenů jednotky pro $k>2$ je vždy komplexní, existují tedy pouze dvě varianty pro řád jmenovatele, $A\in\{1,2\}$. Spolu s podmínkou \refeq{eq:condition_coprime_inequality} tak získáváme pouze dvě přípustné varianty: $A=1, B=1$, odpovídající lineárnímu systému dle Kapitoly \ref{sss:linearni_system}, a~$A=2, B=1$, odpovídající kvadratickému systému dle Kapitoly \ref{sss:kvadraticky_system}. Lineární a~kvadratický systém tak jsou jediné dva případy, kdy pro racionální $\alpha$ existuje explicitní řešení pouze s použitím elementárních funkcí.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Důkaz úplnosti s rozšířením o~Lambertovu funkci W %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Důkaz úplnosti s rozšířením o~Lambertovu funkci W}\label{dukaz_uplnosti_s_rozsirenim_o_lambertovu_funkci_w}
@@ -702,7 +702,7 @@ kde abychom na~obou stranách dostali polynomy stejného řádu, musí nutně pl
 \begin{equation}
     u-1=\sum_{k=1}^{B-1}\frac{u^{B-k}}{B-k}-1=\sum_{k=1}^{2-1}\frac{u^{2-k}}{2-k}-1=u-1,
 \end{equation}
-pro hodnoty $A=1$, $B=2$ pak dostáváme $b=-r\frac{n}{B}=-\frac{1}{2}$ a~$\ln a=(-1)^n=-1$, $a=\e{-1}$, samotné řešení vede na~odmocninný systém popsaný v~kapitole \ref{sss:odmocninny_system}.
+pro hodnoty $A=1$, $B=2$ pak dostáváme $b=-r\frac{n}{B}=-\frac{1}{2}$ a~$\ln a=(-1)^n=-1$, $a=\e{-1}$, samotné řešení vede na~odmocninný systém popsaný v~Kapitole \ref{sss:odmocninny_system}.
 
 Pro $n\ge2$ podmínku splnit nelze, neboť polynomy získáváme v~podobě
 \begin{equation}\label{eq:lambert_alpha_positive_expanded}
@@ -722,7 +722,7 @@ kde abychom na~obou stranách dostali polynomy stejného řádu, musí nutně pl
 \begin{equation}
     u-1=\frac{n}{n}u^n+\sum_{k=1}^{n-1}\frac{nu^{n-k}}{n-k}+(-1)^n=u-1,
 \end{equation}
-pro hodnoty $A=1$, $B=1$ pak dostáváme $b=-r\frac{n}{B}=1$ a~$\ln a=(-1)^1=-1$, $a=\e{-1}$, samotné řešení vede na~reciproký systém popsaný v~kapitole \ref{sss:reciproky_system}.
+pro hodnoty $A=1$, $B=1$ pak dostáváme $b=-r\frac{n}{B}=1$ a~$\ln a=(-1)^1=-1$, $a=\e{-1}$, samotné řešení vede na~reciproký systém popsaný v~Kapitole \ref{sss:reciproky_system}.
 
 Pro $n\ge2$ podmínku splnit nelze, neboť polynomy získáváme v~podobě
 \begin{equation}
@@ -749,9 +749,9 @@ Mocnině $\alpha=0$ odpovídá $n=-1$, a~tedy speciální případ integrace dif
 Hustotu toku vyjádříme z profilu hustoty podle \refeq{eq:polytropic_state_equation} a~derivace tlakového profilu,
 \begin{subequations}
 \begin{align}
-\rho(x)&=\frac{K_p}{p_{\mathrm{in}}}\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{-{x}/{L}},\qquad K_p=\frac{p_0^2}{RT_0},\\
+\rho(x)&=\frac{K_p}{p_{\mathrm{in}}}\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{-{x}/{L}},\qquad K_p=\frac{p_0^2}{R_s T_0},\\
 \Dd{p}{x}&=\frac{p_{\mathrm{in}}}{L}\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)\cdot \left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{{x}/{L}},\\
-j&=-\frac{k}{\mu}\frac{p_0^2}{RT_0}\frac{1}{L}\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right),
+j&=-\frac{k}{\mu}\frac{p_0^2}{R_s T_0}\frac{1}{L}\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right),
 \end{align}
 \end{subequations}
 nárůst tlaku v~permeametru získáváme v~podobě
