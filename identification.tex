@@ -1,0 +1,766 @@
+\section{Experimentální identifikace}\label{s:identification}
+
+Napouštění permeační cely modelujeme Cauchyho úlohou dle \refeq{eq:general_cauchy_problem_alpha},
+\begin{equation}
+    \Dd{y}{t}=\frac{T_R k}{S \mu_0}\frac{p_{in}^{\alpha-1}}{\alpha}\left(1-y^\alpha\right),\qquad y(0)=0.
+\end{equation}
+Model obsahuje parametry multiplikativního a exponenciálního charakteru; odvodíme dvě nezávislé metody experimentální identifikace těchto parametrů. První metoda vychází z jednoho měření přechodové charakteristiky po takovou dobu, že se projeví zakřivení charakteristiky v důsledku poklesu gradientu tlaků. Druhá metoda využívá narušení principu superpozice: vychází ze srovnání rychlostí napouštění pro různé počáteční podmínky, tedy pro různé hodnoty vstupního tlaku. Omezíme se na identifikaci systémů, kde $\alpha>0$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Vyšetření průběhu přechodové charakteristiky %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Vyšetření průběhu přechodové charakteristiky}\label{ss:vysetreni_prubehu_prechodove_charakteristiky}
+Při vhodně zvoleném referenčním bodu, $(p_0,T_0)=(p_{\mathrm{in}},T_{\mathrm{in}})$, získáváme model tvaru
+\begin{equation}
+    \Dd{y}{t}=K\frac{1-y^\alpha}{\alpha}, \qquad y(0)=0,\quad K=\frac{T_R k}{S \mu_0},
+\end{equation}
+kde $K\Unit{-}$ je bezrozměrný multiplikativní parametr. Obecné řešení v implicitní podobě dle \refeq{eq:general_cauchy_problem_alpha_solution} má podobu
+\begin{equation}\label{eq:implicit_solution_definition}
+    G(t,y,\alpha):=\int_0^y\frac{\alpha}{1-u^\alpha} \d{u} -Kt=0,
+\end{equation}
+kde rovnice $G(t,y,\alpha)=0$ v oblasti $\Omega:=(0,\infty)\times (0,1)\times(0,\infty)$ implicitně definuje plochu $y(t,\alpha)$.
+
+Přechodová charakteristika odpovídá řezu plochou pro konstantní $\alpha$. Jde zřejmě o funkci rostoucí a konkávní, neboť
+\begin{equation}
+    \Dd{y}{t}=K\frac{1-y^\alpha}{\alpha}>0,
+\end{equation}
+\begin{equation}
+    \DD{y}{t}=\Dd{}{t}\left(K\frac{1-y^\alpha}{\alpha}\right)=-Ky^{\alpha-1}\Dd{y}{t}<0.
+\end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Důsledky exponenciálního parametru %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Důsledky exponenciálního parametru}\label{sss:dusledky_exponencialniho_parametru}
+Pro určení parametru $\alpha$ z přechodové charakteristiky nás však více zajímá chování funkce ve směru $\alpha$, tedy řezy plochou pro konstantní $t$. Zaveďme 
+\begin{equation}\label{eq:def_F_without_time_integral}
+    F(y(\alpha),\alpha):=\int_0^y\frac{\alpha}{1-u^\alpha}\d{u}.
+\end{equation}
+Derivací rovnice $G(t,y(t,\alpha),\alpha)=0$ získáváme implicitní vyjádření derivace $\Dd{y}{\alpha}$,
+\begin{equation}
+    \Dd{G}{\alpha}=F_y \Dd{y}{\alpha}+F_\alpha=0,
+\end{equation}
+kde dolním indexem značíme parciální derivaci. Vyjádřením derivace $\Dd{y}{\alpha}$ získáváme standardní formuli pro první derivaci implicitně dané funkce,
+\begin{equation}\label{eq:implicit_first_general}
+    \Dd{y}{\alpha}=-\frac{F_\alpha}{F_y},
+\end{equation}
+kde jednolivé parciální derivace odpovídají
+\begin{align}
+    F_y&=\dd{}{y}\int_0^y\frac{\alpha}{1-u^\alpha}\d{u}=\frac{\alpha}{1-y^\alpha},\\
+    F_\alpha&=\int_0^y\frac{1-u^\alpha+u^\alpha \ln{u^\alpha}}{(1-u^\alpha)^2}\d{u}=\frac{F}{\alpha}+\int_0^y\frac{u^\alpha \ln{u^\alpha}}{(1-u^\alpha)^2}\d{u}=:\frac{F}{\alpha}+I_\alpha.
+\end{align}
+Člen $F_y$ je zřejmě kladný; ukážeme, že člen $F_\alpha$ je také kladný. Kořen integrandu $F_\alpha$ při substituci $x=u^\alpha$ odpovídá rovnici
+\begin{equation}\label{eq:convex_tangent_positive_argument}
+    \frac{1-x+x\ln{x}}{(1-x)^2}=0\quad \Longleftrightarrow \quad x\ln{x}=x-1,
+\end{equation}
+kde rovnice je zjevně splněna pro $x=1$. Jedná se o jediný kořen, neboť levá strana je konvexní funkce, $(x\ln{x})''=(\ln{x}+1)'=1/x$, a pravá strana rovnice je tečnou ke grafu levé strany v $x=1$, proto $x\ln{x}\geq x-1$. $F_\alpha$ je určitým integrálem funkce kladné na $(0,y)$, je proto kladná a $\Dd{y}{\alpha}$ tudíž záporná. 
+
+Souhrnně pro $\Dd{y}{\alpha}$ popisující chování řezu plochou řešení při konstatním čase píšeme
+\begin{equation}\label{eq:dy_da_is_negative}
+    \Dd{y}{\alpha}=-\frac{1-y^\alpha}{\alpha}\int_0^y\frac{1-u^\alpha+u^\alpha\ln{u^\alpha}}{(1-u^\alpha)^2}\d{u} <0,\quad y\in(0,1).
+\end{equation}
+Derivace je v limitách pro $y\to0_+$ a $y\to 1_-$ nulová, neboť první limitě odpovídá počáteční podmínka $y(t=0)=0$ a druhé limitě odpovídá ustálený stav pro $t\to \infty$, obě limity jsou vůči $\alpha$ invariantní. Z uvedených vlastností rovnou plyne existence lokálního maxima první derivace, ve směru $\alpha$ tedy nutně dochází alespoň k jedné inflexi, což značně omezuje dostupnou metodiku pro určení hodnoty parametru.
+
+Druhou derivaci získáme úplnou derivací rovnice \refeq{eq:implicit_first_general},
+\begin{align}\label{eq:implicit_second_derivative}
+    \Dd{}{\alpha}\Dd{y}{\alpha}=&-\frac{\Dd{F_\alpha}{\alpha}F_y-\Dd{F_y}{\alpha}F_\alpha}{F_y^2}=-\frac{F_y(F_{\alpha\alpha}+F_{\alpha y}\Dd{y}{\alpha})-F_\alpha(F_{y\alpha}+F_{yy}\Dd{y}{\alpha})}{F_y^2}
+    \nonumber \\ 
+    =&-\frac{F_y(F_{\alpha\alpha}-F_{\alpha y}\frac{F_\alpha}{F_y})-F_\alpha(F_{y\alpha}-F_{yy}\frac{F_\alpha}{F_y})}{F_y^2}
+    \nonumber \\
+    =&-\frac{F_y^2 F_{\alpha\alpha}-2F_yF_\alpha F_{y\alpha}+F_\alpha^2F_{yy}}{F_y^3}.
+\end{align}
+Druhou parciální derivaci ve směru $y$ lze vyjádřit pomocí $F_y$,
+\begin{equation}
+    F_{yy}=\dd{F_y}{y}=\dd{}{y}\frac{\alpha}{1-y^\alpha}=\frac{\alpha^2 y^{\alpha-1}}{(1-y^\alpha)^2}=F_y^2 y^{\alpha-1}.
+\end{equation}
+Druhá parciální derivace ve směru $\alpha$ lze díky $\alpha F_\alpha-F=\alpha I_\alpha$ upravit na součet záporného a kladného členu,
+\begin{align}
+    F_{\alpha\alpha}=\dd{F_\alpha}{\alpha}=&\int_0^y 2\frac{u^\alpha \ln{u^\alpha}}{\alpha(1-u^\alpha)^2}+\frac{u^\alpha(u^\alpha+1)\ln^2{\!u^\alpha}}{\alpha(1-u^\alpha)^3}\d{u}\\
+    =&\frac{2}{\alpha^2}(\alpha F_\alpha-F)+\int_0^y \frac{u^\alpha(u^\alpha+1)\ln^2{\!u^\alpha}}{\alpha(1-u^\alpha)^3}\d{u}=:\frac{2}{\alpha}I_\alpha+I_{\alpha\alpha},
+\end{align}
+Smíšená derivace je integrandem $F_\alpha$ a tedy dle \refeq{eq:convex_tangent_positive_argument} kladná,
+\begin{equation}
+    F_{y\alpha}=\dd{}{\alpha}\frac{\alpha}{1-y^\alpha}=\frac{1-y^\alpha+y^\alpha\ln{y^\alpha}}{(1-y^\alpha)^2}=\frac{F_y^2}{\alpha^2}\left(1-y^\alpha +y^\alpha \ln{y^\alpha}\right).
+\end{equation}
+Postupným dosazením vybraných parciálních derivací získáváme vyjádření
+\begin{subequations}
+    \begin{align}
+        \DD{y}{\alpha}&=-\frac{F_{\alpha\alpha}}{F_y}+2\frac{F_\alpha}{\alpha^2}\left(1-y^\alpha+y^\alpha\ln y^\alpha\right)-\frac{F_\alpha^2y^{\alpha-1}}{F_y}\\
+        &=-\frac{I_{\alpha\alpha}}{F_y}+\frac{2}{\alpha^3}F\left(1-y^\alpha+y^\alpha\ln y^\alpha\right)+\frac{2}{\alpha^2}I_\alpha y^\alpha\ln y^\alpha-\frac{F_\alpha^2y^{\alpha-1}}{F_y},
+    \end{align}\label{eq:second_derivative_positive_negative}
+\end{subequations}
+kde každý ze čtyř členů bez průvodného znaménka je kladný. Rovnice \refeq{eq:second_derivative_positive_negative} spolu s limitním chováním potvrzuje existenci inflexního bodu. Důkaz jeho jedinečnosti, či přímo jeho analytické vyjádření, se však pro algebraickou složitost plynoucí z~kombinací transcendentních a logaritmických členů jeví jako nedosažitelné. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Momentová reprezentace %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Momentová reprezentace}\label{ss:momentova_reprezentace}
+Bližší zkoumání rekurentní povahy derivací odhaluje neoddělitelný transcendentní charakter problému.
+
+\paragraph{Lerchova transcendenta} je definována řadou,
+\begin{equation}
+\Phi(z,s,a) = \sum_{n=0}^{\infty} \frac{z^n}{(n+a)^s},
+\end{equation}
+kde $z \in \mathbb{C}$ je argument, $s \in \mathbb{C}$ je řád a $a \in \mathbb{C} \setminus \mathbb{Z}_{\le 0}$ je parametr posunu.
+
+Funkci $F$ dle \refeq{eq:def_F_without_time_integral} lze pomocí Lerchovy transcendenty zapsat jako
+\begin{equation}
+    F(y,\alpha)=\sum_{n=0}^{\infty}\frac{\alpha y^{\alpha n+1}}{\alpha n+1}
+    =y \sum_{n=0}^{\infty}\frac{\left(y^{\alpha}\right)^{n}}{n+\frac{1}{\alpha}}
+    =y\Phi\!\left(y^\alpha, 1, \frac{1}{\alpha}\right).
+\end{equation}
+Nabízí se tak chování funkce popsat s použitím přirozených souřadnic Lerchovy transcendenty,
+\begin{equation}
+    \beta(\alpha) := \frac{1}{\alpha}\quad\Longleftrightarrow\quad \alpha=\frac{1}{\beta},
+\end{equation}
+\begin{equation}
+    z(y,\alpha) := y^\alpha \quad \Longleftrightarrow \quad y = z^{\frac{1}{\alpha}}=z^\beta.
+\end{equation}
+Funkce $F$ je nyní pouze posunutou Lerchovou transcendentou,
+\begin{equation}
+    F=z^\beta\Phi(z,1,\beta).
+\end{equation}
+
+Lerchova transcendenta má též integrální reprezentaci,
+\begin{equation}
+    \Phi(z,s,a) = \frac{1}{\Gamma(s)}\int_0^\infty \frac{x^{s-1}\e{-a x}}{1-z\e{-x}}\d{x}=\frac{1}{\Gamma(s)}\int_0^1 \frac{t^{a-1}(-\ln{t})^{s-1}}{1-zt}\d{t},
+\end{equation}
+kde exponenciální tvar je běžný v literatuře, logaritmický tvar pak je pouhou substitucí $t=\e{-x}$.
+
+Funkce $F$ rozepsaná v integrální podobě odpovídá
+\begin{equation}
+    z^\beta\Phi(z,1,\beta)=\frac{z}{\Gamma(1)}\int_0^1 \frac{(zt)^{\beta-1}(-\ln{t})^{0}}{1-zt}\d{t}.
+\end{equation}
+Integrál lze interpretovat jako náhodnou veličinu $X(t)=-\ln{t}$ na míře $\!\d{\mu}(t)$,
+\begin{equation}
+    \d{\mu}(t) := \frac{(zt)^{\beta-1}}{1-zt}\d{t},\qquad t\in(0,1),
+\end{equation}
+kde míra je na $z\in(0,1), \beta >0$ kladná a konečná.
+
+Zaveďme momenty náhodné veličiny $X$ na míře $\!\d{\mu}$,
+\begin{equation}\label{eq:def_moment}
+    M_k:=\int_0^1X^k(t)\d{\mu}(t)=\frac{\Gamma(k+1)}{z}z^\beta \Phi(z,k+1,\beta),
+\end{equation}
+funkce $F$ pak odpovítá posunutému nultému momentu,
+\begin{equation}\label{eq:F_as_moment}
+    F=\int_0^1 z\frac{(zt)^{\beta-1}}{1-zt}\d{t}=z\int_0^1X^{0}(t)\d{\mu}(t)=zM_{0}.
+\end{equation}
+
+Míra $\!\d{\mu}$ je kladná a konečná, neboť pro fixní $z\in(0,1)$ a $\beta>0$ platí
+\begin{equation}
+    \int_0^1\frac{(zt)^{\beta-1}}{1-zt} \d{t} \leq \frac{z^{\beta-1}}{1-z}\int_0^1t^{\beta-1}\d{t}=\frac{z^{\beta-1}}{1-z}\frac{1}{\beta}<\infty.
+\end{equation}
+Z konečnosti míry okamžitě plyne také omezenost nultého momentu.
+
+Momenty prvního a vyššího řádu jsou také omezené, neboť 
+\begin{equation}
+    M_k=\int_0^1(-\ln{t})^k\frac{(zt)^{\beta-1}}{1-zt}\d{t}\leq\frac{z^{\beta-1}}{1-z}\int_0^1(-\ln{t})^k t^{\beta-1}\d{t},
+\end{equation}
+kde zbývající integrál dává po exponenciální substituci $t=\e{-x}$ explicitní mez,
+\begin{equation}
+    \int_0^1(-\ln{t})^k t^{\beta-1}\d{t}=\int_0^\infty x^k \e{-\beta x} \d{x}=\frac{\Gamma(k+1)}{\beta^{k+1}}.
+\end{equation}
+
+Definujme skalární součin,
+\begin{equation}
+    \langle f,g\rangle_\mu:=\int_0^1f(t)g(t)\d{\mu}(t),
+\end{equation}
+pro momenty pak platí
+\begin{equation}
+    M_{i+j}=\langle X^i,X^j\rangle_\mu.
+\end{equation}
+Skalární součin indukuje normu $\norm{\cdot}_{L^2(\mu)}$, která je pro mocniny $X$ konečná,
+\begin{equation}
+    \norm{X^i}_{L^2(\mu)}^2=\langle X^i, X^i\rangle_\mu=\int_0^1 X^{2i}\d{\mu}(t)=M_{2i}<\infty,
+\end{equation}
+pro konečný systém funkcí $\mathcal{X}_n=\lbrace X^i\rbrace_{i=0}^{n}$ tedy platí $\mathcal{X}_n\subset L^2(\mu)$.
+
+Gramova matice systému $\mathbf{G}$ má formu Hankelovy momentové matice $\mathbf{H}^{(n)}$,
+\begin{equation}
+    \mathbf{G}(\mathcal{X}_n)=(\langle X^i,X^j\rangle_\mu)=(M_{i+j})=\mathbf{H}^{(n)}, \quad i,j=0\dots n,
+\end{equation}
+a protože pro libovolný vektor $\bm{c}\in\mathbb{R}^{n+1}$ platí
+\begin{equation}
+    \bm{c}^\mathsf{T} \mathbf{G} \bm{c}=\int_0^1\left(\sum_{i=0}^n c_i X^i(t)\right)^2\!\d{\mu}(t)\geq0,
+\end{equation}
+je Gramova matice pozitivně semidefinitní, $\mathbf{G}\succeq 0$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Diferenciální operátory %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Diferenciální operátory}\label{sss:diferencialni_operatory}
+Parciální derivace plynoucí z transformace souřadnic odpovídají
+\begin{equation}
+    \beta_{\alpha}=-\frac{1}{\alpha^2}=-\beta^2,\quad
+    z_y=\alpha y^{\alpha-1}=\beta^{-1}z^{1-\beta},\quad
+    z_\alpha = y^\alpha\ln y  = \beta z \ln z.
+\end{equation}
+Operátor parciální derivace ve směru $\alpha$ pak má podobu
+\begin{equation}
+    \partial_\alpha=\beta z \ln{z}\,\partial_z-\beta^2\partial_\beta,
+\end{equation}
+ve směru $y$ získáváme
+\begin{equation}
+    \partial_y=\frac{z^{1-\beta}}{\beta}\partial_z.
+\end{equation}
+
+Parciální derivace momentu ve směru $\beta$ vychází z derivace čitatele míry,
+\begin{equation}
+    \partial_\beta(zt)^{\beta-1}=(zt)^{\beta-1}\ln{zt}=(zt)^{\beta-1}(\ln{z}+\ln{t})=(zt)^{\beta-1}(\ln{z}-X),
+\end{equation}
+působením operátoru na obecný moment získáváme
+\begin{equation}
+    \partial_\beta M_k = \int_0^1X^k\frac{(zt)^{\beta-1}}{1-zt}(\ln{z}-X)\d{t}=\ln{z}M_k-M_{k+1}.
+\end{equation}
+
+Parciální derivaci ve směru $z$ budeme uvažovat spolu s násobením $z$ jako operátor $z\partial_z$, ukážeme snáze působením na definici součtem,
+\begin{align}
+    z\partial_zM_k&=z\Gamma(k+1)\dd{}{z}\sum_{n=0}^{\infty}\frac{z^{n+\beta-1}}{(n+\beta)^{k+1}}=\Gamma(k+1)\sum_{n=0}^{\infty}\frac{(n+\beta-1)z^{n+\beta-1}}{(n+\beta)^{k+1}}\nonumber\\
+    &=\Gamma(k+1)\sum_{n=0}^{\infty}\left(\frac{z^{n+\beta-1}}{(n+\beta)^k}-\frac{z^{n+\beta-1}}{(n+\beta)^{k+1}}\right)=kM_{k-1}-M_k,
+\end{align}
+kde speciálně pro $k=0$ namísto zavádění záporného řádu momentu řešíme explicitně,
+\begin{equation}
+    z\partial_zM_0=\sum_{n=0}^{\infty}\left(z^{n+\beta-1}-\frac{z^{n+\beta-1}}{n+\beta}\right)=\frac{z^{\beta-1}}{1-z}-M_0.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% První derivace %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{První derivace}\label{sss:prvni_derivace}
+Působením operátoru $\partial_z$ na $F$ dle \refeq{eq:F_as_moment} získáváme
+\begin{equation}
+    F_z=\partial_z (zM_0)=M_0+z\partial_z M_0 = M_0+\frac{z^{\beta-1}}{1-z}-M_0=\frac{z^{\beta-1}}{1-z},
+\end{equation}
+působením operátoru $\partial_\beta$ získáváme
+\begin{equation}
+    F_\beta=z \partial_\beta M_0=z(\ln{z}M_0-M_1).
+\end{equation}
+
+První derivaci $\Dd{y}{\alpha}$ s využitím momentové reprezentace odpovídá
+\begin{equation}
+    \Dd{y}{\alpha}=-\frac{F_\alpha}{F_y}=-\frac{F_z z_\alpha+F_\beta \beta_\alpha}{F_z z_y},
+\end{equation}
+kde jmenovatel reprodukuje původní integrand $F$,
+\begin{equation}
+    F_z z_y = \frac{z^{\beta-1}}{1-z} \beta^{-1}z^{1-\beta}=\frac{\beta^{-1}}{1-z}=\frac{\alpha}{1-y^{\alpha}},
+\end{equation}
+a čitatel odpovídá
+\begin{equation}
+    F_z z_\alpha+F_\beta \beta_\alpha = \frac{z^\beta}{1-z}\beta\ln z-\beta^2 z(\ln{z}M_0-M_1).
+\end{equation}
+Čitatel $F_\alpha$ je kladný, pokud
+\begin{equation}
+    \frac{z^\beta}{1-z}\beta\ln z>\beta^2 z(\ln{z}M_0-M_1).
+\end{equation}
+S použitím integrální reprezentace momentů můžeme pravou stranu nerovnice zapsat jako
+\begin{equation}
+     \beta^2 z(\ln{z}M_0-M_1)=\beta^2 z^\beta \int_0^1\frac{\ln{zt}}{1-zt} t^{\beta-1}\d{t},
+\end{equation}
+na levé straně můžeme zavést integrál
+\begin{equation}
+    \int_0^1 t^{\beta-1}\d{t} = \frac{1}{\beta},\qquad \frac{z^\beta}{1-z}\beta \ln z = \beta^2 z^\beta \int_0^1\frac{\ln{z}}{1-z}t^{\beta-1}\d{t},
+\end{equation}
+nerovnost tak zapíšeme v podobě 
+\begin{equation}\label{eq:moment_first_derivative_modified_integral_inequality}
+    \int_0^1\frac{\ln{zt}}{1-zt}t^{\beta-1}\d{t}<\int_0^1\frac{\ln{z}}{1-z}t^{\beta-1}\d{t}.
+\end{equation}
+Uvažujme nerovnost integrandů pro fixní $z$ na celém oboru $t\in(0,1)$,
+\begin{equation}
+\forall t\in(0,1): \frac{\ln{zt}}{1-zt}<\frac{\ln{z}}{1-z}.
+\end{equation}
+Funkce na pravé straně je rostoucí funkcí,
+\begin{equation}
+    g(z)=\frac{\ln{z}}{1-z},\qquad g'(z)=\frac{1-x+x\ln{x}}{x(1-x)^2},
+\end{equation} 
+neboť první derivace je dle \refeq{eq:convex_tangent_positive_argument} kladný. Protože $0<zt<z<1$, je nerovnost integrandů splněna pro všechna $t\in(0,1)$. Integrací proti kladné váze získáváme \refeq{eq:moment_first_derivative_modified_integral_inequality}, odkud čitatel první derivace $\Dd{y}{\alpha}$ je kladný a první derivace proto záporná.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Druhá derivace %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Druhá derivace}\label{sss:druha_derivace}
+Vyjádření pomocí momentů umožňuje formalizovat rekurentní vztahy derivací, nedokáže však obejít vlastní transcendentní podstatu problému, vyšetření druhé derivace je proto bohužel i s využitím momentů nedosažitelné. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Metoda zakřivení přechodové charakteristiky %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Metoda zakřivení přechodové charakteristiky}\label{ss:metoda_zakriveni_prechodove_charakteristiky}
+Velká část složitosti systému pochází z kombinace multiplikativního a exponenciálního vlivu parametru $\alpha$, nabízí se tedy studovat tyto vlivy odděleně.
+
+Uvažujme systém \refeq{eq:general_cauchy_problem_alpha} v pozměněné podobě,
+\begin{equation}
+    \Dd{y}{t'}=K(1-y^\alpha), \qquad y(0)=0,\quad K=\frac{T_Rk}{S\mu_0},\quad t'=\frac{t}{\alpha},
+\end{equation}
+kde $K$ je nyní ryze multiplikativní parametr a $t'$ reprezentuje nové časové souřadnice systému, mluvíme o časově normalizovaném systému. 
+
+Obecné řešení má podobu
+\begin{equation}
+    H(t',y,\alpha):=\int_0^y\frac{1}{1-u^\alpha}\d{u}-Kt'=0,
+\end{equation}
+kde rovnice $H(t',y,\alpha)=0$ v oblasti $\Omega:=(0,\infty)\times(0,1)\times(0,\infty)$ implicitně definuje plochu $y(t',\alpha)$.
+
+Přechodová charakteristika je zřejmě rostoucí a konkávní, neboť
+\begin{equation}
+    \Dd{y}{t'}=K(1-y^\alpha)>0,
+\end{equation}
+\begin{equation}
+    \DD{y}{t'}=\Dd{}{t'}(K(1-y^\alpha))=-K\alpha y^{\alpha-1}\Dd{y}{t'}<0.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Vliv exponenciálního parametru %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Vliv exponenciálního parametru}\label{sss:vliv_exponencialniho_parametru}
+Zaveďme
+\begin{equation}
+    F(y(\alpha),\alpha):=\int_0^y\frac{1}{1-u^\alpha}\d{u}.
+\end{equation}
+Derivací rovnice $H(t',y(t',\alpha),\alpha)=0$ získáváme implicitní vyjádření derivace $\Dd{y}{\alpha}$,
+\begin{equation}
+    \Dd{y}{\alpha}=-\frac{F_\alpha}{F_y},
+\end{equation}
+kde jednotlivé parciální derivace odpovídají
+\begin{align}
+    F_y&=\dd{}{y}\int_0^y\frac{1}{1-u^\alpha}\d{u}=\frac{1}{1-y^{\alpha}}>0,\\
+    F_\alpha&=\dd{}{\alpha}\int_0^y\frac{1}{1-u^\alpha}\d{u}=\int_0^y \frac{u^\alpha \ln{u}}{(1-u^\alpha)^2}\d{u}<0,
+\end{align}
+derivace $\Dd{y}{\alpha}$ je tedy kladná,
+\begin{equation}
+    \Dd{y}{\alpha}=-(1-y^\alpha)\int_0^y \frac{u^\alpha \ln{u}}{(1-u^\alpha)^2}\d{u}>0,
+\end{equation}
+řezy $y(\alpha)$ jsou při konstantním času funkce rostoucí. Zde se projevuje normalizace času: v~kapitole \ref{sss:dusledky_exponencialniho_parametru} je nezávisle proměnnou reálný čas $t$, po normalizaci je fixovaná proměnná normalizovaný čas $t'$. 
+
+Pro druhou derivaci ve směru $\alpha$ dle \refeq{eq:implicit_second_derivative} potřebujeme druhé parciální derivace,
+\begin{align}
+    F_{yy}&=\dd{}{y}\frac{1}{1-y^{\alpha}}=\frac{\alpha y^{\alpha-1}}{(1-y^\alpha)^2}>0,
+    \\
+    F_{y\alpha}&=\dd{}{\alpha}\frac{1}{1-y^{\alpha}}=\frac{y^\alpha \ln{y}}{(1-y^\alpha)^2}<0,
+    \\
+    F_{\alpha\alpha}&=\dd{}{\alpha}\int_0^y \frac{u^\alpha \ln{u}}{(1-u^\alpha)^2}\d{u}=\int_0^y\frac{u^\alpha(u^\alpha+1)\ln^2\!{u}}{(1-u^\alpha)^3}\d{u}>0,
+\end{align}
+souhrnně pro druhou derivaci píšeme
+\begin{align}
+    \DD{y}{\alpha}&=-\frac{F_{\alpha\alpha}F_y^2-2F_{\alpha y}F_\alpha F_y+F_{yy}F_\alpha^2}{F_y^3}\nonumber \\
+    &=-\left((1-y^\alpha)F_{\alpha\alpha}-2{y^\alpha \ln{y}}F_\alpha+(1-y^\alpha)\alpha y^{\alpha-1}F_\alpha^2
+    \right).
+\end{align}
+Znaménko druhé derivace jednoznačně určíme omezením členu s $F_{\alpha\alpha}$ zdola,
+\begin{equation}\label{eq:second_derivative_lower_bound}
+    (1-y^\alpha)F_{\alpha\alpha}\geq (1+y^\alpha)\ln{y}F_\alpha.
+\end{equation}
+Nerovnici upravíme do tvaru
+\begin{equation}
+    \int_0^y\frac{u^{\alpha}\ln{u}}{(1-u^\alpha)^2}\frac{1+u^\alpha}{1-u^\alpha}\d{u}\geq\frac{1+y^\alpha}{1-y^\alpha}\ln{y}\int_0^y\frac{u^\alpha\ln{u}}{(1-u^\alpha)^2}\d{u},
+\end{equation}
+kde pro funkce 
+\begin{equation}
+    \phi(x):=\frac{1+x^\alpha}{1-x^\alpha}\ln{x}<0,\qquad \psi(x):=\frac{x^\alpha}{(1-x^\alpha)^2}\ln{x}<0,
+\end{equation}
+můžeme psát
+\begin{equation}
+    \int_0^y \phi(u)\psi(u)\d{u}\geq\phi(y)\int_0^y\psi(u)\d{u}.
+\end{equation}
+Obě funkce jsou na doméně záporné, nerovnost tedy platí, pokud $\phi(x)$ je roustoucí: pak $\forall u\in(0,y): \phi(u)\leq\phi(y)$. Pro derivaci $\phi'(x)$ píšeme
+\begin{equation}
+    \phi'(x)=\frac{1+2x^\alpha\ln{x^\alpha}-x^{2\alpha}}{x(1-x^\alpha)^2},
+\end{equation}
+kde pro čitatel po substituci $s=x^\alpha$ platí
+\begin{equation}
+    h(s):=1+2s\ln{s}-s^2,\quad\lim_{s\to0_+}h(s)=1,\quad h(1)=0,
+\end{equation}
+a jeho derivaci platí
+\begin{equation}
+    h'(s)=2(1-s+\ln{s})\leq0\quad\Longleftrightarrow\quad\ln{s}\leq s-1.
+\end{equation}
+Poslední nerovnost je splněna, neboť přímka $s-1$ je tečnou ke konkávní funkci $\ln{s}$ v bodě $s=1$. Čitatel $h(s)$ tak je klesající, ale kladnou funkcí, funkce $\phi(x)$ je proto roustoucí, dolní mez dle \refeq{eq:second_derivative_lower_bound} tedy platí. 
+
+S pomocí dolní meze již lze ukázat, že druhá derivace $\DD{y}{\alpha}$ je záporná, neboť
+\begin{equation}
+    (1-y^\alpha)F_{\alpha\alpha}-2y^\alpha\ln{y}F_\alpha\geq(1+y^\alpha)\ln{y}F_\alpha-2y^\alpha\ln{y}F_\alpha=(1-y^\alpha)\ln{y}F_\alpha\geq0.
+\end{equation}
+Člen $(1-y^\alpha)\alpha y^{\alpha-1}F_\alpha^2$ je také kladný, čitatel druhé derivace tvoří součet kladných členů, a proto druhá derivace je na celé doméně záporná.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Časová konstanta systému %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Časová konstanta systému}\label{sss:casova_konstanta_systemu}
+Plocha $y(t',\alpha)$ je v obou parametrech rostoucí a konkávní funkce, stále je však lineárně závislá na celé řadě multiplikativních parametrů. Zaměříme se proto důsledněji na normalizaci systému v čase, s cílem ponechat $\alpha$ jako jediný parametr systému.
+
+Zaveďme normalizovaný čas,
+\begin{equation}
+    \tau:=\frac{T_R k}{S \mu_0 }t',
+\end{equation}
+systém \refeq{eq:general_cauchy_problem_alpha} pak zapíšeme jako
+\begin{equation}
+    \Dd{y}{\tau}=1-y^\alpha, \qquad y(0)=0.
+\end{equation}
+
+Pro zkrácení syntaxe v rámci kapitoly zavádíme značení
+\begin{equation}
+    y_T:=\left.y\right|_{\tau=T},\qquad y'_T:=\left.\Dd{y}{\tau}\right|_{\tau=T}.
+\end{equation}
+
+Pro počáteční směrnici přechodové charakteristiky po normalizaci platí
+\begin{equation}
+    \lim_{\tau\to0_+}y'_0=\lim_{\tau\to0_+}(1-y^\alpha)=1,
+\end{equation}
+je tedy invariantní vůči $K$ i $\alpha$. Tečna ke grafu přechodové charakteristiky protne hodnotu ustáleného stavu v $\tau=1$, přechodová charakteristika má v tomto čase hodnotu odpovídající $y_1$.
+
+\paragraph{Časová konstanta systému} je koncept používaný při identifikaci lineárního systému prvního řádu. Pro lineární systém platí, že časová konstanta je převrácenou hodnotou počáteční směrnice, a zároveň hodnota odezvy v čase jedné časové konstanty je notoricky známé $y_1=1-\e{-1}\approx0.632$. Při rozšíření konceptu na nelineární systémy zachováme definici časové konstanty založené na počáteční směrnici, hodnota odezvy však je nyní již funkcí $y_\tau(\alpha)$. Jednoznačnost platí obecně pro libovolný řez, konkrétně $\tau=1$ je však pro identifikaci $\alpha$ ideální, jak ukážeme limitní analýzou. 
+
+Pro $\alpha\to0_+$ je přechodová charakteristika normalizovaného systému nulová,
+\begin{equation}
+    \lim_{\alpha\to0_+}1-y^\alpha=0.
+\end{equation}
+Situace v reálném čase, kde $\hat{y}(t)$ značí přechodovou charakteristiku v nenormalizovaném čase, odpovídá logaritmickému řešení,
+\begin{equation}
+    \lim_{\alpha\to0_+}\frac{1-\hat{y}^\alpha}{\alpha}=-\ln{\hat{y}},
+\end{equation}
+jehož počáteční směrnice je nekonečná,
+\begin{equation}
+    \lim_{\alpha\to0_+}\hat{y}'_0=\lim_{\hat{y}\to0_+}-\ln{\hat{y}}=+\infty,
+\end{equation}
+normalizace je tedy pro $\alpha\to0_+$ limitně singulární.
+
+Pro $\alpha\to+\infty$ je přechodová charakteristika úsečkou, neboť pro derivaci platí
+\begin{equation}
+    \lim_{\alpha\to+\infty}1-y^\alpha=\begin{cases}1,&y\in(0,1),\\0,&y=1,\end{cases}
+\end{equation}
+odkud přechodová charakteristika má tvar
+\begin{equation}
+    y(\tau)=\begin{cases}\tau,&\tau\in(0,1),\\1,&\tau\geq1.\end{cases}
+\end{equation}
+Situace v reálném čase odpovídá konstantnímu nulovému řešení,
+\begin{equation}
+    \lim_{\alpha\to+\infty}\frac{1-\hat{y}^{\alpha}}{\alpha}=0,
+\end{equation}
+tvar přechodové charakteristiky zde plyne z vynucené hodnoty směrnice.
+
+Z limitní analýzy plyne, že plocha $y(\tau,\alpha)$ ve směru $\alpha$ konkávně vyplňuje prostor mezi konstantní $y=0$, úsečkou $y=\tau$ a přímkou $y=1$. Na řezu $\tau=1$ poprvé pokrývá $y(\alpha)$ celý interval $(0,1)$, tento řez je proto pro identifikaci $\alpha$ ideální.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Newtonova metoda %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Newtonova metoda}\label{sss:newtonova_metoda}
+Řez plochou $y(\alpha,\tau)$ pro konstantní $\tau=\tau_0$ je rostoucí konkávní funkcí závislou pouze na $\alpha$, vyhovující rovnici
+\begin{equation}
+    F(y,\alpha)=\tau_0.
+\end{equation}
+Pro konkrétní hodnotu $y_{\tau_0}$ mějme funkci
+\begin{equation}
+    f(\alpha):=F(y_{\tau_0},\alpha)-\bm{\tau},
+\end{equation}
+pak kořen rovnice $f(\alpha_0)=0$ je hodnotou odpovídající $y_\tau$.
+
+Funcki $F(y,\alpha)$ vyjádříme s pomocí Lerchovy transcendenty,
+\begin{equation}
+    F(y,\alpha)=\int\frac{1}{1-y^\alpha}\d{y}=\frac{y}{\alpha}\sum_{n=0}^{\infty}\frac{y^{n\alpha}}{n+1/\alpha}=\frac{y}{\alpha}\Phi\!\left(y^\alpha,1,\frac{1}{\alpha}\right)=\frac{y}{\alpha}\Phi_1,
+\end{equation}
+kde $\Phi_k:=\Phi(y^\alpha,k,1/\alpha)$. 
+Explicitní vyjádření $\alpha$ by vyžadovalo analytické vyjádření inverzní funkce k Lerchově transcendentě. Ani pro řád $s=1$ však žádné takové vyjádření neexistuje, uchýlíme se proto k numerickým metodám: pro konkávní rostoucí funkci odvodíme Newtonovu metodu. Potřebnou derivaci ve směru $\alpha$ jsme již vyjádřili integrálně, pro numerické účely však bude vhodnější formulovat s~pomocí transcendent. Derivujeme řadu, kde pod substitucí $u=\alpha n+1$, $n=\frac{u-1}{\alpha}$, $\d{u}=n\d{\alpha}$ píšeme
+\begin{equation}
+    \dd{}{\alpha}\sum_{n=0}^{\infty}\frac{y^{\alpha n+1}}{\alpha n +1}
+    =\sum_{n=0}^{\infty}\dd{}{u}\frac{y^{u}}{u}\Dd{y}{\alpha}
+    =\sum_{n=0}^{\infty}\left(\frac{y^u}{u}\ln{y}-\frac{y^u}{u^2}\right)\frac{u-1}{\alpha}.
+\end{equation}
+Transcendentní členy vyjádřené Lerchovou transcendentou odpovídají
+\begin{equation}
+    \sum_{n=0}^{\infty}\frac{y^u}{u^k}=\sum_{n=0}^{\infty}\frac{y^{\alpha n+1}}{(\alpha n +1)^k}=\frac{y}{\alpha^k}\sum_{n=0}^{\infty}\frac{(y^{\alpha})^n}{(n +1/\alpha)^k}=\frac{y}{\alpha^k}\Phi\!\left(y^\alpha,k,\frac{1}{\alpha}\right)=\frac{y}{\alpha^k}\Phi_k.
+\end{equation}
+\begin{align}
+    f_\alpha&=\alpha^{-3}\left(\alpha^2 y\ln{y}\Phi_0-\alpha y(\ln{y}+1)\Phi_1+y\Phi_2\right).
+\end{align}
+
+Iterace Newtonovy metody má podobu
+\begin{equation}
+    \alpha^{(n+1)}=\alpha^{(n)}\left(1-\frac{\alpha^{(n)}y_{\tau_0}\Phi_1-\left(\alpha^{(n)}\right)^2\bm{\tau}}{\left(\alpha^{(n)}\right)^2 y_{\tau_0}\ln{y_{\tau_0}}\Phi_0-\alpha^{(n)}y_{\tau_0}(\ln{y_{\tau_0}}+1)\Phi_1+y_{\tau_0}\Phi_2}\right),
+\end{equation}
+kde Lerchova transcendenta je vyhodnocena v $(y_{\tau_0},\alpha^{(n)})$
+Konvergence Newtonovy metody aplikované na rostoucí konkávní funkci je zaručena pro $\alpha^{(0)}<\alpha_0$. Pro systém bez přenosu energie platí $\alpha=2$, tomu odpovídá $y_\tau=\tanh(1)\approx0.762$, lineárnímu případu odpovídá již zmíněných $y_\tau\approx0.632$. S~ohledem na experimentální data je volba $\alpha^{(0)}=1$ bezpečná. Z druhé strany, volba $\alpha^{(0)}=0$ není možná, neboť směrnice pro $\alpha\to0_+$ roste nade všechny meze.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Metoda počátečních směrnic %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Metoda počátečních směrnic}\label{sss:metoda_pocatecnich_smernic}
+Další vlastností systému, které lze pro určení exponenciálního parametru využít, je narušení principu superpozice. 
+
+Uvažujme referenční bod $(p_0, T_\mathcal{R})$ a vícero realizací experimentu pro různé vstupní tlaky dle \refeq{eq:unitless_nonnormalized_system},
+\begin{equation}\label{eq:ei_nonnormalized_system}
+    \Dd{p_{\mathcal{\mathrm{out}}}}{t}
+    =\frac{A}{V_{\mathcal{R}}L}\frac{k}{\mu}\frac{p_0^{2}}{\alpha}\frac{p_{\mathrm{in}}^{\alpha}}{p_0^{\alpha}}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right).
+\end{equation}
+
+Uvažujme závislost na $X$ počáteční směrnice přechodové charakteristiky při $p_\mathrm{in}=X\cdot p_0$,
+\begin{equation}
+    p'(X):=\Dd{p_{\mathrm{out}}}{t}(t=0, p_{\mathrm{in}}=Xp_0).
+\end{equation}
+Po dosazení počáteční podmínky $p_{\mathrm{out}}=0$ do \refeq{eq:ei_nonnormalized_system} zíksáváme,
+\begin{equation}
+    p'=\frac{A}{V_{\mathcal{R}}L}\frac{k}{\mu}\frac{p_0^{2-\alpha}}{\alpha}\left(Xp_0\right)^\alpha=\frac{A}{V_{\mathcal{R}}L}\frac{k}{\mu}\frac{p_0^{2}}{\alpha}X^\alpha.
+\end{equation}
+Závislost počáteční směrnice na exponenciálním parametru je opět kombinací hyperbolické a mocninné, závislost na násobku referenčního tlaku je však pouze mocninná,
+\begin{equation}
+    p'=\frac{K}{\alpha}X^\alpha.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lineární regrese %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Lineární regrese}\label{sss:linearni_regrese}
+Optimalizační úlohu lineární regrese chápeme ve smyslu minimalizace kvadratického kritéria. Měřené hodnoty $\bm{y}\in\mathbb{R}^N$ modelujeme lineárním regresním modelem,
+\begin{equation}
+    \bm{y}=\bm{x}\bm{\beta}+\bm{\varepsilon},
+\end{equation}
+kde ${\bm{\beta}\in\mathbb{R}^p}$ je vektor regresních koeficientů, ${\bm{x}\in\mathbb{R}^{N\times p}}$ je matice prediktorů \english{design matrix} a ${\bm{\varepsilon}\in\mathbb{R}^N}$ reprezentuje chyby měření. Úlohu řeší vektor $\hat{\bm{\beta}}$, který minimalizuje reziduální součet čtverců, 
+\begin{equation}
+    S(\bm{\beta})=\norm{\bm{y}-\bm{x}\bm{\beta}}_2^2,\qquad \hat{\bm{\beta}}:=\arg \min_{\bm{\beta}} S(\bm{\beta}),
+\end{equation}
+který získáme položením gradientu kritéria,
+\begin{equation}
+    \nabla S(\bm{\beta})=\nabla(\bm{y}-\bm{x}\bm{\beta})^\top(\bm{y}-\bm{x}\bm{\beta})=2(\bm{x}^\top\bm{x}\bm{\beta}-\bm{x}^\top\bm{y}),
+\end{equation}
+rovnému nule,
+\begin{equation}\label{eq:linear_regression_solution}
+    \nabla S(\hat{\bm{\beta}})= \bm{0} \quad \Longleftrightarrow \quad \hat{\bm{\beta}}=(\bm{x}^\top\bm{x})^{-1}\bm{x}^\top\bm{y}.
+\end{equation}
+
+Počáteční směrnici $p'$ stanovujeme lineární regresí počátečních bodů měření přechodové charakteristiky,
+\begin{equation}
+    \bm{x}_{N\times 2}=[\bm{1}, \bm{t}], \qquad \bm{y}=p(\bm{t}),\qquad  \bm{\beta}=(p',b).
+\end{equation}
+Stupeň volnosti v podobě afinního posunu $b$ bychom v ideálním případě uvažovat nemuseli, v experimentu však dochází k systematickému dopravnímu zpoždění. I~při zanedbání všech fyzikálních jevů na úrovni dynamiky napouštění permeametru a ustálení profilů v membráně je samotné ovládání regulátoru, tedy spuštění experimentu odpovídající $t=0$, asynchronní vůči čtení senzoru, stupeň volnosti tedy ponecháme. Měření tlaku, a tedy i stanovení počáteční směrnice, je zatíženo chybou měření aditivního charakteru. 
+
+Uvažujme, že pro účely identifikace máme k dispozici naměřené počáteční směrnice při různých násobcích referenčního tlaku,
+\begin{equation}
+    \bm{X}:=(X_1,\dots, X_N)^\top,\quad \bm{p'}:=(p'_{1},\dots,p'_N)^\top,\quad p'_i:=p'(X=i).
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Logaritmické měřítko %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Logaritmické měřítko}\label{sss:logaritmicke_meritko}
+Základní technikou identifikace parametrů mocninné řady je použití logaritmické transformace, která umožňuje převést úlohu kombinující multiplikativní a mocninou závislost v závislost lineární,
+\begin{equation}
+    \ln{p'}=\ln{K}-\ln{\alpha}+\alpha \ln{X}.
+\end{equation}
+Úlohu lineární regrese formulujeme pro
+\begin{equation}
+    \bm{x}_{N\times2}:=[\bm{1},\ln{\bm{X}}],\quad \bm{y}:=\ln{\bm{p'}},\quad \bm{\beta}:=(\ln{K}-\ln{\alpha}, \alpha)^\top,
+\end{equation}
+kde parametry $\alpha$ a $K$ získáváme v podobě
+\begin{equation}
+    \alpha=\hat{\beta}_2,\qquad K=\hat{\beta}_2 \e{\hat{\beta}_1}.
+\end{equation}
+Tato metodika předpokládá, že chyba měření je aditivní až po logaritmické transformaci, což odpovídá multiplikativnímu charakteru v původním měření,
+\begin{equation}
+    \ln\bm{p'}=\ln{K}-\ln{\alpha}+\alpha \ln{\bm{X}}+\bm{\varepsilon} \quad \Longrightarrow \quad \bm{p'}=\frac{K}{\alpha}\e{\bm{\varepsilon}}\bm{X}^{\alpha}.
+\end{equation}
+To je však v rozporu s aditivním charakterem chyby stanovení počáteční směrnice, jednoduchost metodiky je tedy vykoupena nesprávným zacházením s chybou měření. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Metody nelineární regrese %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Metody nelineární regrese}\label{sss:metody_nelinearni_regrese}
+Abychom zachovali aditivní charakter šumu, budeme dále pracovat bez logaritmické transformace. Měřené hodnoty $\bm{y}\in\mathbb{R}^N$ modelujeme nelineárním regresním modelem,
+\begin{equation}
+    \bm{y}=\bm{f}(\bm{\beta})+\bm{\varepsilon},\qquad \bm{f}(\bm{\beta})=(f(x_i,\bm{\beta})),
+\end{equation}
+kde $\bm{f}$ zveme regresní funkcí. 
+
+Účelovou funkci ve smyslu nejmenších čtverců zavádíme s pomocí vektoru reziduí,
+\begin{equation}
+    S(\bm{\beta}):=\bm{r}^\top\bm{r}=\norm{\bm{y}-\bm{f}(\bm{\beta})}_2^2,\qquad \bm{r}:=\bm{y}-\bm{f}(\bm{\beta}).
+\end{equation}
+Vektor $\hat{\bm{\beta}}$ minimalizuje účelovou funkci, pokud její gradient,
+\begin{equation}
+    \nabla S (\bm{\beta})=-2\mathbf{J}(\bm{\beta})^\top(\bm{y}-\bm{f}(\bm{\beta})),\qquad \mathbf{J}(\bm{\beta}):=\dd{\bm{f}}{\bm{\beta}}\in\mathbb{R}^{N\times p},
+\end{equation}
+kde $\mathbf{J}$ je Jacobiho matice vektorové funkce $\bm{f}$, je nulový,
+\begin{equation}
+    \hat{\bm{\beta}}:=\arg \min_{\bm{\beta}} S(\bm{\beta})
+    \quad\Longleftrightarrow\quad 
+    \nabla S (\hat{\bm{\beta}})=\bm{0}.
+\end{equation}
+
+Na rozdíl od lineární regrese, kdy model je lineární kombinací prediktorů a~regresních koeficientů, $\bm{f}(\bm{\beta})=\bm{x}\bm{\beta}$, nelineární úloha pro obecnou regresní funkci nemá uzavřené řešení.
+
+\paragraph{Jednorozměrná Newtonova metoda} pro hledání minima funkce $g(x)$ si klade za cíl sestavit řadu $\{x^{(k)}\}$, která konverguje k souřadnici minima $x^\star$. Vychází z~Taylorova rozvoje druhého řádu na okolí bodu $x_0:=x^{(k)}$,
+\begin{equation}
+    g(x_0+\Delta x)\approx g(x_0)+g'(x_0)\Delta x+\frac{1}{2}g''(x_0)(\Delta x)^2=:\hat{g}(\Delta x).
+\end{equation}
+Iterační krok $\Delta x$ je zvolen tak, aby minimalizoval parabolu v $\Delta x$,
+\begin{equation}
+    \Dd{}{\Delta x}\hat{g}(\Delta x)=g'(x_0)+g''(x_0)\Delta x=0.
+\end{equation}
+Vyjádřením velikosti kroku získáváme předpis iterace Newtonovy metody,
+\begin{equation}
+    \Delta x=-\frac{g'(x_0)}{g''(x_0)}\quad \Longrightarrow \quad x^{(k+1)}:=x^{(k)}+\Delta x^{(k)}=x^{(k)}-\frac{g'(x^{(k)})}{g''(x^{(k)})}.
+\end{equation}
+V principu se jedná o Newtonovu metodu pro hledání kořenu funkce aplikovanou na hledání kořene první derivace.
+
+\paragraph{Vícerozměrná Newtonova metoda} pro hledání minima funkce $g(\bm{x})$ si klade za cíl sestavit řadu $\{\bm{x}^{(k)}\}$, která konverguje k minimu v $\bm{x}^\star$. Vychází z Taylorova rozvoje druhého řádu na okolí $\bm{x}_0:=\bm{x}^{(k)}$,
+\begin{equation}
+    g(\bm{x}_0+\Delta\bm{x})\approx g(\bm{x}_0)+\nabla f(\bm{x}_0)^\top \Delta \bm{x}+\frac{1}{2}{\Delta \bm{x}}^\top \mathbf{H}(\bm{x}_0)\Delta\bm{x}=:\hat{g}(\Delta\bm{x}),
+\end{equation}
+kde $\mathbf{H}$ je Hessova matice funkce $g$. Minimum aproximace $\hat{g}$ hledáme s pomocí gradientu ve směru $\Delta\bm{x}$, 
+\begin{equation}\label{eq:multivariable_newton_quadratic_of_step_gradient}
+    \nabla \hat{g}(\Delta \bm{x})=\nabla g(\bm{x}_0)+\mathbf{H}(x_0)\Delta \bm{x},
+\end{equation}
+odkud velikost iteračního kroku získáváme položením nulového gradientu,
+\begin{equation}
+    \nabla \hat{g}(\Delta \bm{x})=\bm{0}\quad\Longleftrightarrow\quad \Delta \bm{x}=-\mathbf{H}^{-1}(\bm{x}_0)\nabla g(\bm{x}_0).
+\end{equation}
+Iterujeme analogicky,
+\begin{equation}
+    \bm{x}^{(k+1)}:=\bm{x}^{(k)}+\Delta \bm{x}^{(k)}=\bm{x}^{(k)}-\mathbf{H}^{-1}(\bm{x}^{(k)})\nabla g(\bm{x}^{(k)}).
+\end{equation}
+
+\paragraph{Gaussova-Newtonova metoda} je modifikací Newtonovy metody aplikované na úlohu minimalizace kvadratického kritéria. Minimalizovaná funkce $g(\bm{x})$ je nyní kvadratické kritérium $S(\bm{\beta})$, prvky její Hessovy matice mají formu
+\begin{equation}
+    \dDxy{S}{\beta_j}{\beta_k}=\dd{}{\beta_k}\left(2\sum_{i=1}^{N}r_i\dd{r_i}{\beta_j}\right)=2\sum_{i=1}^{N}\left(\dd{r_i}{\beta_j}\dd{r_i}{\beta_k}+r_i\dDxy{r_i}{\beta_j}{\beta_k}\right).
+\end{equation}
+Součet prvních členů, vyjádřen pomocí Jacobiho matice regresní funkce $\bm{f}$, odpovídá $\mathbf{J}^\top\mathbf{J}$. Gaussova-Newtonova metoda součet druhých členů zanedbává, a to na základě dvou argumentů: jednak se jedná o všechny členy s druhou derivací a~zároveň při dobré shodě $r_i\to0$. Získáváme odhad Hessovy matice,
+\begin{equation}
+    \mathbf{H}\approx 2\mathbf{J}^\top\mathbf{J}=:\hat{\mathbf{H}},
+\end{equation}
+s jehož pomocí aproximujeme gradient kvadratické aproximace $\hat{\mathbf{S}}$ dle \refeq{eq:multivariable_newton_quadratic_of_step_gradient},
+\begin{equation}
+    \hat{\mathbf{S}}(\Delta\bm{\beta})\approx\nabla S(\bm{\beta_0})+\hat{\mathbf{H}}(\bm{\beta}_0)\Delta\bm{\beta}=-2\mathbf{J}^\top\bm{r}+2\mathbf{J}^\top\mathbf{J}\Delta\bm{\beta}.
+\end{equation}
+Velikost iteračního kroku získáváme položením aproximace gradientu rovné nule,
+\begin{equation}
+    -2\mathbf{J}^\top\bm{r}+2\mathbf{J}^\top\mathbf{J}\Delta\bm{\beta}=\bm{0}
+    \quad\Longrightarrow\quad
+    \Delta\bm{\beta}=\left(\mathbf{J}^\top\mathbf{J}\right)^{-1}\mathbf{J}^\top\bm{r}.
+\end{equation}
+Iteraci Gaussovy-Newtonovy metody získáváme v podobě
+\begin{equation} 
+    \bm{\beta}^{(k+1)}:=\bm{\beta}^{(k)}+\Delta\bm{\beta}^{(k)}=\bm{\beta}^{(k)}+\left(\mathbf{J}^\top\mathbf{J}\right)^{-1}\mathbf{J}^\top\bm{r},
+\end{equation}
+kde Jacobiho matice i vektor residuí jsou vyhodnoceny v $\beta^{(k)}$.
+
+\paragraph{Levenbergova-Marquardtova metoda} zavádí do Gaussovy-Newtonovy metody navíc parametr tlumení $\lambda$,
+\begin{equation}
+    \Delta\bm{\beta}=\left(\mathbf{J}^\top\mathbf{J}+\lambda\mathbf{I}\right)^{-1}\mathbf{J}^\top\bm{r},
+\end{equation}
+kterým lze tlumit velikost kroku dle jeho reálného aktuálního vlivu na hodnotu účelové funkce.
+
+\paragraph{Golubova-Pereyrova metoda} je metodou nelineární regrese pro modely se separovatelnými parametry. Uvažujme nad úlohou minimalizace iterativně, 
+\begin{equation}\label{eq:minimum_composition_property}
+    \min_{\bm{\xi}, \bm{\zeta}}S(\bm{\xi}, \bm{\zeta})=\min_{\bm{\zeta}}\left(\min_{\bm{\xi}}S(\bm{\xi},\bm{\zeta})\right).
+\end{equation}
+Vztah platí z definice operátoru minima pro libovolnou účelovou funkci. Obecně je však pro hledání minima nevhodný, neboť sice hledáme vnitřní minimum při fixním $\bm{\zeta}$, celý proces minimalizace vnitřní funkce však opakujeme pro každou iteraci algoritmu pro hledání vnějšího minima.
+
+Tuto formu s výhodou použijeme, pokud má vnitřní problém explicitní řešení, jako je tomu u problémů lineárních. Regresní model má separovatelné parametry, pokud lze příslušnou regresní funkci zapsat ve tvaru lineární kombinace nelineárních funkcí,
+\begin{equation}
+    \bm{f}(\bm{\xi},\bm{\zeta})=\mathbf{\Psi}(\bm{\zeta})\bm{\xi},\qquad \bm{\zeta}\in\mathbb{R}^p,\quad \bm{\xi}\in\mathbb{R}^q,\quad\mathbf{\Psi}\in\mathbb{R}^{N\times q}.
+\end{equation}
+Minimalizace účelové funkce pro fixní $\bm{\zeta}$ je nyní pouhou lineární regresí, kde explicitní řešení získáváme dle \refeq{eq:linear_regression_solution} v podobě
+\begin{equation}
+    \hat{\bm{\xi}}(\bm{\zeta})=(\mathbf{\Psi}^\top\mathbf{\Psi})^{-1}\mathbf{\Psi}^\top\bm{y}.
+\end{equation}
+Pro vnější minimalizační úlohu formulujeme účelovou funkci,
+\begin{equation}
+    S^\star(\bm{\zeta})=\norm{\bm{y}-\mathbf{\Psi}(\bm{\zeta})\hat{\bm{\xi}}(\bm{\zeta})}_2^2=\norm{\bm{y}-\mathbf{\Psi}(\mathbf{\Psi}^\top\mathbf{\Psi})^{-1}\mathbf{\Psi}^\top\bm{y}}_2^2.
+\end{equation}
+Označme
+\begin{equation}
+    \mathbf{P}:=\mathbf{\Psi}(\mathbf{\Psi}^\top\mathbf{\Psi})^{-1}\mathbf{\Psi}^\top,
+\end{equation}
+pak $\mathbf{P}$ je ortogonální projektor do sloupcového prostoru matice $\mathbf{\Psi}$ a úloha se redukuje na hledání nelineárních parametrů $\hat{\bm{\zeta}}$ minimalizujících ortogonální projekci vektoru měření $\bm{y}$ do doplňkového prostoru $\left(\mathbf{I}-\mathbf{P}\right)$, metoda se proto také nazývá metodou projekce proměných \english{VarPro, Variable Projection}. Projektor je nezbytně idempotentní,
+\begin{equation}
+    \mathbf{P}^2=\mathbf{\Psi}\underbrace{(\mathbf{\Psi}^\top\mathbf{\Psi})^{-1}\mathbf{\Psi}^\top\mathbf{\Psi}}_{=\mathbf{I}}(\mathbf{\Psi}^\top\mathbf{\Psi})^{-1}\mathbf{\Psi}^\top=\mathbf{\Psi}(\mathbf{\Psi}^\top\mathbf{\Psi})^{-1}\mathbf{\Psi}^\top=\mathbf{P},
+\end{equation}
+totéž platí i pro projektor do doplňkového prostoru, neboť díky symetrii můžeme psát
+\begin{equation}
+    (\mathbf{I}-\mathbf{P})^2=\mathbf{I}^2-\mathbf{I}\mathbf{P}-\mathbf{P}\mathbf{I}+\mathbf{P}^2=\mathbf{I}-2\mathbf{P}+\mathbf{P}^2=\mathbf{I}-\mathbf{P}.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Nelineární regresní model %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Nelineární regresní model}\label{sss:nelinearni_regresni_model}
+Zaveďme nelineární regresní model odpovídající měřeným datům,
+\begin{equation}
+    \bm{p'}=\bm{f}(\bm{\beta}) +\bm{\varepsilon},\qquad\bm{\beta}=(C,\alpha),\qquad \bm{f}(\bm{\beta})= C\bm{X}^{\alpha}.
+\end{equation}
+Ačkoliv $C=\frac{K}{\alpha}$, uvažujeme nad $C$ jako nad multiplikativním parametrem nezávislým na $\alpha$, pro odhad multiplikativního parametru píšeme $\hat{K}:=\hat{C}\hat{\alpha}$. Jacobiho matice regresní funkce má prvky
+\begin{equation}
+    \dd{f_i}{C}=X_i^\alpha,\qquad \dd{f_i}{\alpha}=C X_i^\alpha\ln{X_i}.
+\end{equation}
+Pozorujeme, že sloupce Jacobiho matice jsou vysoce korelované a tedy potenciálně špatně podmíněné. Lze proto očekávat, že vícerozměrná Gaussova-Newtonova metoda nebude stabilní a bude velmi citlivá na počáteční odhad. Nelineární regresi proto řešíme metodou projekce proměnných.
+
+Regresní model je separovatelný, neboť regresní funkce je lineárně závislá na multiplikativním parametru, $\bm{\xi}=(C)$, a nelineárně závislá na exponenciálním parametru, $\bm{\zeta}=(\alpha)$. Nelineární závislost popisuje matice $\mathbf{\Psi}(\bm{\zeta})=\bm{X}^\alpha$, která tímto degeneruje v sloupcový vektor $\bm{\psi}$. Ortogonální projektor $\mathbf{P}$ pak má podobu
+\begin{equation}
+    \mathbf{P}=\mathbf{\Psi}(\mathbf{\Psi}^\top\mathbf{\Psi})^{-1}\bm{\Psi}^\top=\frac{\bm{\psi} \bm{\psi}^\top}{\bm{\psi}^\top\bm{\psi}}.
+\end{equation}
+
+Účelovou funkci můžeme vyjádřit explicitně s využitím ortogonálního projektoru,
+\begin{equation}
+    S^\star(\alpha)=\norm{\left(\mathbf{I}-\mathbf{P}\right)\bm{y}}_2^2=\bm{y}^\top\left(\mathbf{I}-\mathbf{P}\right)^\top\left(\mathbf{I}-\mathbf{P}\right)\bm{y}=\bm{y}^\top\left(\mathbf{I}-\mathbf{P}\right)\bm{y},
+\end{equation}
+kde využíváme idempotence a symetrie projekce $\left(\mathbf{I}-\mathbf{P}\right)$. Pro účely vyčíslení účelové funkce ji vyjádříme s využitím vektoru $\bm{\psi}$, získáváme kompaktní tvar
+\begin{equation}
+    S^\star(\alpha)=\bm{y}^\top\bm{y} -\bm{y}^\top \frac{\bm{\psi} \bm{\psi}^\top}{\bm{\psi}^\top\bm{\psi}}\bm{y}=\norm{\bm{y}}_2^2-\frac{\left(\bm{\psi}^\top\bm{y}\right)^2}{\norm{\bm{\psi}}_2^2}.
+\end{equation}
+
+Pro účely minimalizace účelové funkce bude vhodnější pracovat s účelovou funkcí dvou proměnných,
+\begin{equation}
+    S(C,\alpha)=\norm{\bm{y}-C\bm{\psi}}_2^2=\bm{y}^\top\bm{y}-2C\bm{\psi}^\top\bm{y}+C^2\bm{\psi}^\top\bm{\psi}.
+\end{equation}
+Úlohy jsou ekvivalentní, neboť minimum $S^\star(\alpha)$ je dle \refeq{eq:minimum_composition_property} zároveň minimem $S(C,\alpha)$ v bodě $C=\hat{C}(\alpha)$, které je minimem $S(C,\alpha)$ pro fixní $\alpha$,
+\begin{equation}\label{eq:C_hat_linear_regression_solution}
+    S^\star(\alpha)=S(\hat{C}(\alpha),\alpha),\qquad \hat{C}(\alpha)=\frac{\bm{\psi}^\top\bm{y}}{\bm{\psi}^\top\bm{\psi}}.
+\end{equation}
+Ekvivalenci ukážeme srovnáním úplné derivace $S^\star$, kde parciální derivace $S$ jsou vyhodnoceny v bodě $\hat{C}$, 
+\begin{equation}
+    \Dd{S^\star}{\alpha}=\left.\dd{S}{C}\right|_{C=\hat{C}}\Dd{\hat{C}}{\alpha}+\left.\dd{S}{\alpha}\right|_{C=\hat{C}}=\left.\dd{S}{\alpha}\right|_{C=\hat{C}}.
+\end{equation}
+
+Parciální derivace vyhodnocena v $C=\hat{C}$ odpovídá
+\begin{equation}
+    \dd{S}{\alpha}=-2\hat{C}\bm{\psi}'^\top\left(\bm{y}-\hat{C}\bm{\psi}\right)=-2\hat{C}\bm{\psi}'^\top(\mathbf{I}-\mathbf{P})\bm{y}.
+\end{equation}
+Derivace nelineární části regresního modelu má rekturentní charakter,
+\begin{equation}
+    \dd{^n\psi_i}{\alpha^n}=X_i^\alpha \ln^n{\!X_i},\qquad\bm{\psi}^{(n)}=\bm{\psi}\underbrace{\odot\bm{L}\odot\bm{L}\dots}_{n},
+\end{equation}
+kde $L_i=\ln{X_i}$ a $\odot$ značí Hadamardův součin, $\bm{a}\odot\bm{b}:=(a_1b_1, \dots,a_N b_N)$.
+
+Pro netriviální data zřejmě $\hat{C}\neq0$, kořen $\hat{\alpha}$ parciální derivace $S$ a tedy minimum účelové funkce $S^\star$ vychází z funkce
+\begin{equation}
+    g(\alpha):=\bm{\psi}'^\top(\mathbf{I}-\mathbf{P})\bm{y}=\bm{\psi}'^\top(\bm{y}-\hat{C}\bm{\psi}).
+\end{equation}
+Funkci lze vyjádřit též v podobě součtu,
+\begin{equation}
+    g(\alpha)=\sum_{i=1}^{N}\left(X_i^\alpha \ln{X_i}-X_i^\alpha\frac{\sum_{j=1}^{N}X_j^{2\alpha}\ln{X_j}}{\sum_{j=1}^{N}X_j^{2\alpha}}\right)y_i,
+\end{equation}
+kde vnitřní součty jsou nezávislé na $i$, výpočet je složitosti $\mathcal{O}(N)$ a je tedy vhodný k algoritmizaci. Alternativně lze funkci převedením na společného jmenovatale a~vhodným přeindexováním sumy upravit do podoby
+\begin{equation}
+    g(\alpha)=\frac{\sum_{i=1}^{N}\left(X_i^\alpha\sum_{j=1}^{N}X_j^{2\alpha}\ln{\frac{X_i}{X_j}}\right)y_i}{\sum_{j=1}^{N}X_j^{2\alpha}},
+\end{equation}
+odkud je zřejmé, že váha vlivu jednotlivých měření na konkrétní příspěvek je úměrná logaritmické vzdálenosti souřadnic. 
+
+Kořen $g(\alpha)$ hledáme Newtonovou metodou pro funkci jedné proměnné. Při zjištění $g'(\alpha)$ budeme s ohledem na dimenzionalitu členů vycházet z vyjádření ve~tvaru s $(\bm{y}-\hat{C}\bm{\psi})$,
+\begin{equation}
+    g'(\alpha)=\bm{\psi}''^\top(\bm{y}-\hat{C}\bm{\psi})-\bm{\psi}'^\top(\hat{C}'\bm{\psi}+\hat{C}\bm{\psi}').
+\end{equation}
+Pro Hadamardův součin platí identita
+\begin{equation}
+    (\bm{a}\odot\bm{b})^\top\bm{c}=\bm{a}^\top(\bm{b}\odot\bm{c}),
+\end{equation}
+odkud pro součin $\bm{\psi}''^\top\bm{\psi}$ platí
+\begin{equation}
+    \bm{\psi}''^\top\bm{\psi}=(\bm{\psi}'\odot\bm{L})^\top\bm{\psi}=\bm{\psi}'^\top(\bm{\psi}'\odot\bm{L})=\bm{\psi}'^\top\bm{\psi}',
+\end{equation}
+derivaci $g'$ tak můžeme upravit do podoby
+\begin{equation}
+    g'=\bm{\psi}''^\top\bm{y}-\bm{\psi}''^\top\hat{C}\bm{\psi}-\bm{\psi}'^\top(\hat{C}'\bm{\psi}+\hat{C}\bm{\psi}')
+    =\bm{\psi}''^\top\bm{y}-2\hat{C}\bm{\psi}'^\top\bm{\psi}'-\hat{C}'\bm{\psi}'^\top\bm{\psi}.
+\end{equation}
+
+Derivaci $\hat{C}'$ vyjádříme z \refeq{eq:C_hat_linear_regression_solution},
+\begin{equation}
+    \hat{C}'=\frac{(\bm{\psi}'^\top\bm{y})(\bm{\psi}^\top\bm{\psi})-(\bm{\psi}^\top\bm{y})(2\bm{\psi}'^\top\bm{\psi})}{(\bm{\psi}^\top\bm{\psi})^2}
+    =\frac{\bm{\psi'}^\top\bm{y}}{\bm{\psi}^\top\bm{\psi}}-2\frac{\bm{\psi}^\top\bm{y}\bm{\psi}'^\top\bm{\psi}}{(\bm{\psi}^\top\bm{\psi})^2},
+\end{equation}
+dosazením za $\hat{C}$ a $\hat{C}'$ do $g'$ po úpravě získáváme
+\begin{equation}
+    g'=\left(\bm{\psi}''^\top-\frac{\bm{\psi}'^\top\bm{\psi}}{\bm{\psi}^\top\bm{\psi}}\bm{\psi'}^\top-2\left(\frac{\bm{\psi}'^\top\bm{\psi}'}{\bm{\psi}^\top\bm{\psi}}-\left(\frac{\bm{\psi}'^\top\bm{\psi}}{\bm{\psi}^\top\bm{\psi}}\right)^2\right)\bm{\psi}^\top\right)\bm{y},
+\end{equation}
+kde jednotlivé části vyjádření lze interpretovat jako momenty. Konkrétně, prvnímu momentu, tedy váženému průměru, odpovídá faktor
+\begin{equation}
+    E:=\frac{\bm{\psi}'^\top\bm{\psi}}{\bm{\psi}^\top\bm{\psi}}=\frac{\sum_{i=1}^{N}X_i^{2\alpha}\ln{X_i}}{\sum_{i=1}^N{X_i^{2\alpha}}},
+\end{equation}
+dalšímu výrazu odpovídá druhý moment, tedy vážený rozptyl,
+\begin{equation}
+    V:=\frac{\bm{\psi}'^\top\bm{\psi}'}{\bm{\psi}^\top\bm{\psi}}-\left(\frac{\bm{\psi}'^\top\bm{\psi}}{\bm{\psi}^\top\bm{\psi}}\right)^2=\frac{\sum_{i=1}^{N}X_i^{2\alpha}\ln^2{\!{X_i}}}{\sum_{i=1}^{N}X_i^{2\alpha}}-E^2.
+\end{equation}
+Derivaci $g'$ tak můžeme vyjádřit ve tvaru
+\begin{equation}
+    g'(\alpha)=(\bm{\psi}''^\top-E\bm{\psi}'^\top-2V\bm{\psi}^\top)\bm{y}=\sum_{i=1}^{N}X_i^\alpha\left(\ln^2{\!X_i}-E\ln{X_i}-2V\right)y_i.
+\end{equation}
+S využitím momentů zjednodušíme též zápis původní funkce $g$,
+\begin{equation}
+    g(\alpha)=\left(\bm{\psi}'^\top-E\bm{\psi}^\top\right)\bm{y}=\sum_{i=1}^{N}X_i^\alpha(\ln{X_i}-E)y_i
+\end{equation}
+
+Optimální hodnotu $\hat{\alpha}$ hledáme numericky s pomocí Newtonovy metody,
+\begin{equation}
+    \alpha^{(k+1)}:=\alpha^{(k)}-\frac{\sum_{i=1}^{N}X_i^\alpha(\ln{X_i}-E)y_i}{\sum_{i=1}^{N}X_i^\alpha\left(\ln^2{\!X_i}-E\ln{X_i}-2V\right)y_i},
+\end{equation}
+kde počáteční odhad $\alpha^{(0)}$ volíme $\alpha^{(0)}=1$, případně můžeme využít hodnoty získané lineární regresí v logaritmickém měřítku. Optimálnímu $\hat{\alpha}$ odpovídá hodnota $\hat{C}(\hat{\alpha})$,
+\begin{equation}
+    \hat{C}(\hat{\alpha})=\frac{\bm{\psi}^\top\bm{y}}{\bm{\psi}^\top\bm{\psi}}=\frac{\sum_{i=1}^{N}X_i^{\hat{\alpha}}y_i}{\sum_{i=1}^{N}X_i^{2\hat{\alpha}}}.
+\end{equation}
+
+
+

@@ -1,0 +1,829 @@
+\section{Vnější dynamika systému}\label{s:vnejsi_dynamika_systemu}
+Abychom popsali projevy nelineárního chování, vystavíme matematický model integrálního permeametru: formulujeme bilanci hmoty pro permeační celu a~na jejím základě diferenciální rovnici popisující časový průběh tlaku odpovídající realizaci experimentu. Z předchozí kapitoly si odnášíme zejména vyjádření toku plynu membránou v~ustáleném stavu jako funkce tlaku před a~za membránou. Pro normalizovaný tlak odvodíme třídu přechodových charakteristik: pro vybrané hodnoty exponentu explicitně, pro ostatní pak implicitně součtem hypergeometrické řady.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Bilance hmoty %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Bilance hmoty}\label{ss:bilance_hmoty}
+Permeační celu integrálního permeametru v~režimu permeace do slepé větve \english{dead-end permeation} můžeme reprezentovat obyčejnou diferenciální rovnicí, neboť dynamika ustalování hodnoty stavových veličin v~celém objemu cely je řádově rychlejší než dynamika napouštění cely. Experimentální uspořádání tedy modelujeme jako Cauchyho úlohu s nulovou počáteční podmínkou pro průběh měřené veličiny -- tlaku v~cele, kde jediným zdrojem látky v~cele je tok plynu membránou.
+
+Změnu tlaku uvnitř cely vyjádříme z bilance hmoty s použitím stavové rovnice ideálního plynu,
+\begin{equation}
+    \Dd{m_{\mathcal{R}}}{t}=\Dd{p_{\mathcal{R}}}{t}\frac{V_{\mathcal{R}}}{R T_{\mathcal{R}}}=Aj,
+\end{equation}
+kde zavádíme index $\mathcal{R}$ \english{reservoir} pro vlastnosti a~stavy permeační cely, zde  pro hmotnost, tlak a~teplotu plynu uvnitř cely, a~celkový objem cely. Uvažujeme celkovou plochu membrány~$A$, nikoliv pouze efektivní plochu membrány $\varepsilon A$, neboť porozita membrány je zahrnuta v~definici Darcyho rychlosti dle \refeq{eq:darcy_velocity}. Teplotu považujeme za~v~čase konstantní, neboť z makroskopického pohledu lze objem cely považovat za~temperovaný tělesem cely; objem cely je konstantní konstrukčně.
+
+Dosazením za~hustotu toku dle 
+%\refeq{eq:pme_mass_flux}, resp. 
+\refeq{eq:pme_mass_flux_reference} získáváme
+\begin{equation}\label{eq:unitless_nonnormalized_system}
+    \Dd{p_{\mathcal{R}}}{t}
+    %=\frac{A}{V_{\mathcal{R}}L}\frac{T_\mathcal{R}}{T_{\mathrm{in}}}\frac{k}{\mu}\frac{p_{\mathrm{in}}^2}{\alpha}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right)
+    =\frac{A}{V_{\mathcal{R}}L}\frac{T_{\mathcal{R}}}{T_0}\frac{k}{\mu}\frac{p_0^{2}}{\alpha}\frac{p_{\mathrm{in}}^{\alpha}}{p_0^{\alpha}}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right).
+\end{equation}
+Tlak pod membránou odpovídá tlaku v~permeační cele, $p_{\mathcal{R}}=p_{\mathrm{out}}$. Uveďme nejprve bezrozměrnou variantu vyjádření,
+\begin{equation}
+    \Dd{}{t}\left[\frac{p_{\mathrm{out}}}{p_0}\right]=\frac{A}{V_{\mathcal{R}}L}\frac{k}{\alpha}\left[\frac{T_{\mathcal{R}}}{T_0}\right]\left[\frac{p_0}{\mu}\right]\left(\left[\frac{p_{\mathrm{in}}}{p_0}\right]^{\alpha}-\left[\frac{p_{\mathrm{out}}}{p_0}\right]^{\alpha}\right).
+\end{equation}
+Pozorujeme, že volba referenčního bodu není pouze arbitrární volbou, ale jde fakticky o~volbu fyzikálních jednotek, ve~kterých je systém modelován.
+
+Zavádíme zbezrozměrněné veličiny tlaku a~teploty $p_{in}, p_{out}, T_{R} \Unit{-}$ (rozlišené šikmým řezem indexu) a~částečně zbezrozměrněnou viskozitu $\mu_0 \Unit{s}$. Prostorové rozměry cely a~membrány vyjádříme souhrnně jako $S=V_{\mathcal{R}}L/A \Unit{m^2}$, dostáváme
+\begin{equation}
+    \Dd{p_{out}}{t}=\frac{T_R}{S}\frac{k}{\mu_0}\frac{1}{\alpha}\left(p_{in}^\alpha-p_{out}^{\alpha}\right),
+\end{equation}
+kde normalizací na~vstupní tlak pomocí substituce $y=p_{out}/p_{in}$ získáváme
+\begin{equation}
+\Dd{y}{t}=\frac{T_R k}{S \mu_0}\frac{p_{in}^{\alpha-1}}{\alpha}\left(1-y^\alpha\right).
+\end{equation}
+Z vyjádření se opět potvrzuje nelineární charakter problému, neboť vyjádření není invariantní vůči volbě $p_{in}$; normalizací jsme zároveň omezili fyzikálně přípustné hodnoty na~$y\in\left[0,1\right]$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Přechodová charakteristika %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Přechodová charakteristika}\label{ss:prechodova_charakteristika}
+Pro nelineární systém neplatí princip superpozice, nemůžeme tedy bez újmy na obecnosti uvažovat pouze vstup systému ve~tvaru jednotkového skoku. Nicméně, vzhledem k~absenci nelineární terminologie a~ustálenosti pojmu přechodové charakteristiky, budeme pojem přesto používat.
+
+Vstup systému je charakterizován tlakem v~zásobní nádrži $p_{in}$. Pro účely odvození jej budeme považovat za~konstantní, jeho velikost je amplitudou skoku. Reálně je tlak v~zásobní nádrži řízen PID regulátorem, obecně tedy $p_{in}=p_{in}(t)$.
+
+Řešíme Cauchyho úlohu s nulovou počáteční podmínkou,
+\begin{equation}\label{eq:general_cauchy_problem_alpha}
+    \Dd{y}{t}=\frac{T_R k}{S \mu_0}\frac{p_{in}^{\alpha-1}}{\alpha}\left(1-y^\alpha\right),\qquad y(0)=0.
+\end{equation}
+Jedná se o~separovatelnou úlohu,
+\begin{equation}\label{eq:step_response_diff_eqn}
+    \int\frac{1}{1-y^{\alpha}} \d{y} =\int\frac{T_R k}{S \mu_0}\frac{p_{in}^{\alpha-1}}{\alpha} \d{t},
+\end{equation}
+kde integrál pravé strany je triviální. Integrál na~levé straně nelze vyřešit pomocí standardních funkcí, lze jej však řešit jako integrál řady. Integrand odpovídá součtu geometrické řady, dostáváme
+\begin{equation}\label{eq:general_cauchy_series_solution_positive}
+\int \frac{1}{1-y^{\alpha}} \d{y}=\int \sum_{n=0}^{\infty}\left(y^{\alpha}\right)^n \d{y}=\sum_{n=0}^{\infty}\frac{y^{\alpha n+1}}{\alpha n+1},\quad \abs{y^{\alpha}}<1,
+\end{equation}
+kde kritérium $\abs{y^{\alpha}}<1$, které je podmínkou konvergence řady, je pro $y\in(0,1)$ ekvivalentní podmínce $\alpha>0$. 
+
+Řešení lze také vyjádřit pomocí hypergeometrické ${}_{2}F_1$ funkce,
+\begin{equation}
+    \int \frac{1}{1-y^{\alpha}} \d{y}=y {\,}_2F_1\left(1,\frac{1}{\alpha};\frac{\alpha+1}{\alpha};y^{\alpha}\right),
+\end{equation}
+kde ${}_2F_1$ je definována jako
+\begin{equation}
+    {}_2F_1\left(a,b;c;z\right):=\sum_{n=0}^{\infty}\frac{\left(a\right)_{n}\left(b\right)_n}{\left(c\right)_n}\frac{z^n}{n!},
+\end{equation}
+kde $\left(m\right)_k$ je tzv. rostoucí faktoriál či Pochhammerův symbol,
+\begin{equation}
+    \left(m\right)_n:=\prod_{k=0}^{n-1}\left(m+k\right)=\frac{\left(m+n-1\right)!}{\left(m-1\right)!},\quad \left(x\right)_{n}:=\frac{\Gamma(x+n)}{\Gamma(x)}.
+\end{equation}
+Jde o~jiné vyjádření téhož, neboť
+\begin{align}
+    y {\,}_2F_1 & \left(1,\frac{1}{\alpha};\frac{\alpha+1}{\alpha};y^{\alpha}\right)
+    =y\sum_{n=0}^{\infty}\frac{\Gamma(1+n)}{\Gamma(1)}\frac{\Gamma(\frac{1}{\alpha}+n)}{\Gamma(\frac{1}{\alpha})}\frac{\Gamma(1+\frac{1}{\alpha})}{\Gamma(1+\frac{1}{\alpha}+n)}\frac{y^{n\alpha}}{n!}\nonumber\\
+    =&\sum_{n=0}^{\infty}\frac{\Gamma(1+n)}{\Gamma(1)n!}\frac{\Gamma(1+\frac{1}{\alpha})}{\Gamma(\frac{1}{\alpha})}\frac{\Gamma(\frac{1}{\alpha}+n)}{\Gamma(1+\frac{1}{\alpha}+n)} y^{n\alpha+1}
+    =\sum_{n=0}^{\infty}\frac{n!}{n!}\frac{1}{\alpha}\frac{\alpha}{n\alpha +1}y^{n\alpha+1}.
+\end{align}
+
+Řešením Cauchyho úlohy \refeq{eq:general_cauchy_problem_alpha} je funkce $y(t)$ daná implicitně vztahem
+\begin{equation}\label{eq:general_cauchy_problem_alpha_solution}
+    \sum_{n=0}^{\infty}\frac{y^{\alpha n+1}}{\alpha n+1}=\frac{T_R k}{S \mu_0}\frac{p_{in}^{\alpha-1}}{\alpha}\cdot t+c,
+\end{equation}
+kde integrační konstanta pro nulovou počáteční podmínku je nulová.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Hustý prostor řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Hustý prostor řešení}\label{ss:husty_prostor_reseni}
+Součet nekonečné řady není uzavřeným výrazem, nicméně dá se ukázat, že prostor uzavřených řešení je hustý. Uvažujme racionální exponent $\alpha =A/B\in\mathbb{Q}$, bez újmy na~obecnosti pro nesoudělné hodnoty, $\gcd(A,B)=1$. S~vhodnou substitucí,
+\begin{equation}\label{eq:rational_substitution}
+    u=y^{\frac{1}{B}},\quad \d{y}=Bu^{B-1}\d{u},\qquad \int\frac{1}{1-y^{\frac{A}{B}}}\d{y}=\int\frac{Bu^{B-1}}{1-u^A}\d{u},
+\end{equation}
+lze integrál upravit do podoby racionálně lomené funkce, řešitelné v~uzavřené podobě rozkladem na~konečný počet parciálních zlomků. Prostor uzavřených řešení je tedy hustý ve~stejném smyslu, jako je hustá množina racionálních čísel.
+
+Pro $\alpha<0$ integrand upravíme tak, abychom získali geometrickou řadu s faktorem $\abs{y^{-\alpha}}<1$,
+\begin{align}\label{eq:negative_alpha_absolute_value}
+    \int\frac{1}{1-y^{\alpha}}\d{y}
+    &=\int\frac{y^{-\alpha}}{y^{-\alpha}-1}\d{y}
+    =\int 1-\frac{1}{1-y^{-\alpha}}\d{y}\nonumber\\
+    &=y-\sum_{n=0}^{\infty}\frac{y^{-\alpha n+1}}{-\alpha n+1}
+    =y-\sum_{n=0}^{\infty}\frac{y^{\abs{\alpha} n+1}}{\abs{\alpha} n+1}.
+\end{align}
+Pozorujeme, že primitivní funkci lze vyjádřit pomocí výsledků pro $\alpha>0$,
+\begin{equation}\label{eq:negative_alpha_symmetry}
+    F_\alpha(y):=\int\frac{1}{1-y^{\alpha}}\d{y},\qquad F_\alpha(y)=y-F_{\abs{\alpha}}(y),\quad\alpha<0,
+\end{equation}
+budeme se tedy nejprve věnovat případu $\alpha>0$, poté řešení pro $\alpha<0$ a~na závěr ukážeme, že tato řešení na~sebe spojitě navazují pro limitu $\alpha \to0$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Vybrané nástroje %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Vybrané nástroje}\label{sss:vybrane_nastroje}
+\paragraph{Komplexní číslo} značíme $z\in\mathbb{C}$, dle kontextu budeme volně přecházet mezi algebraickým, goniometrickým i~exponenciálním tvarem čísla,
+\begin{equation}
+    z=a+bi=\Re{z}+i\Im{z}=\abs{z}(\cos\varphi+i\sin{\varphi})=\abs{z}\cis\varphi=\abs{z}\e{i\varphi}.
+\end{equation}
+
+\paragraph{Fáze komplexního čísla} odpovídá úhlu $\varphi$, nazýváme též argument komplexního čísla. Píšeme
+\begin{equation}
+    \varphi=\arg{z}=\atantwo(b,a),
+\end{equation}
+kde funkce $\atantwo:\mathbb{R}^2\to(-\pi,\pi]$ je rozšířením standardní $\atan$ na~všechny čtyři kvadranty. Funkce je standardně definována jako
+\begin{equation}\label{eq:atantwo_definition}
+\atantwo(b,a):=\begin{cases}
+\atan(\frac{b}{a}) & a~> 0 \\ 
+\atan(\frac{b}{a}) + \pi & a~< 0, b \ge 0 \\
+\atan(\frac{b}{a}) - \pi & a~< 0, b < 0 \\
++\frac{\pi}{2} & a~= 0, b > 0 \\
+-\frac{\pi}{2} & a~= 0, b < 0 \\
+\end{cases},
+\end{equation}
+kde dodržujeme standardní pořadí argumentů tak, aby $(b,a)\to b/a$. Nadto 
+\begin{equation}\label{eq:atantwo_flipped}
+    \atantwo(b,a)=\sgn(b)\frac{\pi}{2}-\atan\!\left(\frac{a}{b}\right),\quad b\neq0
+\end{equation}
+
+
+Pro argument čísla s nenulovou komplexní složkou platí, že je funkce v~prvním argumentu lichá, 
+\begin{equation}
+    \atantwo(-b,a)=-\atantwo(b,a), \quad b\neq0,
+\end{equation}
+pro argument ryze reálného čísla je symetrie narušena pro $a<0$,
+\begin{align}\label{eq:atantwo_odd}
+    \atantwo(0,a)=-\atantwo(0,a), \quad a>0,\nonumber\\
+    \atantwo(0,a)\neq-\atantwo(0,a), \quad a<0.
+\end{align}
+
+Rozdíl fází dvou komplexních čísel je fází jejich podílu,
+\begin{equation}
+    \frac{z_1}{z_2}=\frac{a_1+ib_1}{a_2+ib_2}\cdot\frac{a_2-ib_2}{a_2-ib_2}=\frac{(a_1a_2+b_1b_2)+i(b_1a_2-b_2a_1)}{a_2^2+b_2^2},
+\end{equation}
+odkud plyne vztah pro rozdíl argumentů
+\begin{equation}
+    \atantwo(b_1,a_1)-\atantwo(b_2,a_2)=\atantwo(b_1a_2-b_2a_1,a_1a_2+b_1b_2).
+\end{equation}
+Ekvivalentní goniometrickou identitou je rozdílový vzorec
+\begin{equation}\label{eq:atantwo_diff}
+    \tan(\varphi_1-\varphi_2)=\frac{\tan\varphi_1-\tan\varphi_2}{1+\tan\varphi_1\tan\varphi_2},\quad \tan\varphi_i=\frac{b_i}{a_i}.
+\end{equation}
+
+\paragraph{Komplexní logaritmus} je inverzní funkcí ke komplexní exponenciále,
+\begin{equation}\label{eq:complex_log_deff}
+    z=\abs{z}\e{i\varphi}\quad\Longleftrightarrow\quad \Log{z}=\ln{\abs{z}}+i\arg{z},
+\end{equation}
+kde budeme uvažovat pouze hlavní větev logaritmu, $\Im\Log{z}\in(-\pi,\pi]$.
+
+\paragraph{Hyperbolický tangens} a~jeho inverzní funkci zavádíme jako
+\begin{equation}\label{eq:tanh_atanh_deff}
+    \tanh{x}=\frac{\sinh{x}}{\cosh{x}}=\frac{\e{x}-\e{-x}}{\e{x}+\e{-x}},\qquad \atanh{x}=\frac{1}{2}\ln\frac{1+x}{1-x},\quad\abs{x}<1.
+\end{equation}
+
+\paragraph{Goniometrické vztahy} vycházejí z periodicity a~parity funkcí. Pro přehlednost následných výpočtů explicitně uveďme následující, pro $k\bmod2=1$
+\begin{subequations}
+\begin{align}
+    \sin(-\varphi)&=-\sin(\varphi) & \cos(-\varphi) &= \cos(\varphi),\label{eq:cis_negative}\\
+    \sin(\pi+\varphi)&=-\sin(\varphi) & \cos(\pi+\varphi) &= -\cos(\varphi),\label{eq:cis_pi_shift}\\
+    \sin(k(\pi+\varphi))&=-\sin(k\varphi) & \cos(k(\pi+\varphi)) &= -\cos(k\varphi),\label{eq:cs_kpi_shift}\\
+    \sin(\pi-\varphi)&=\sin(\varphi) & \cos(\pi-\varphi)&=-\cos(\varphi),\label{eq:cis_pi_negative}\\
+    \sin(k(\pi-\varphi))&=\sin(k\varphi) & \cos(k(\pi-\varphi))&=-\cos(k\varphi),\label{eq:cis_kpi_negative}\\
+    \sin(2\varphi)&= 2\sin(\varphi)\cos(\varphi)&\cos(2\varphi)&=\cos^2(\varphi)-\sin^2(\varphi),\label{eq:cis_double}\\
+    \tan(2\varphi)&=\frac{2\tan(\varphi)}{1-\tan^2(\varphi)}&\tanh(2\varphi)&=\frac{2\tanh(\varphi)}{1+\tanh^2(\varphi)}.\label{eq:tan_tanh_double}
+\end{align}
+\end{subequations}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Strategie řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Strategie řešení}\label{sss:strategie_reseni}
+Integrand je racionálně lomenou funkcí, jejíž póly leží na~jednotkové kružnici, zveme je kořeny jednotky \english{roots of unity}. Řešíme rozkladem na~parciální zlomky v~komplexní doméně pro neznámý řád jmenovatele $A$ i~neznámý řád čitatele $B-1$, kde pro $\alpha>0$ platí $A,B\in\mathbb{N}$, $\gcd(A,B)=1$. 
+
+Klíčovým nástrojem pro řešení je symetrie plynoucí z rovnoměrného rozmístění kořenů jednotky. V průběhu řešení se budeme postupně omezovat z obecné dvojice nesoudělných $A, B$ na~$A\bmod 2=1$, $A\bmod 2=0$ a~$A\bmod 4 = 0$, kde každá z těchto restrikcí s sebou nese další možnosti sloučení vybraných členů hledané primitivní funkce.
+
+%TODO: schéma s kořeny jednotkové kružnice - workflow diagram pro různé varianty počtu kořenů
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Rozklad na~parciální zlomky %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Rozklad na~parciální zlomky}\label{sss:rozklad_na_parcialni_zlomky}
+Racionálně lomenou funkci rozložíme na~polynom a~parciální zlomky,
+\begin{equation}
+    \frac{Bu^{B-1}}{1-u^A}=P(u)+\sum_{k=0}^{A-1}\frac{c_k}{u-\omega_k},\quad \omega_k=\cis{\varphi_k},\quad \varphi_k=2\pi k\frac{1}{A},
+\end{equation}
+kde $P(u)$ je polynom, $c_k$ jsou konstanty a~$\omega_k$ jsou kořeny jednotky.
+
+Polynomiální část $P(u)$ získáme dělením polynomů,
+\begin{equation}
+    \frac{u^{B-1}}{1-u^A}=-\sum_{k=1}^{m}u^{B-1-kA}+\frac{u^{B-1-mA}}{1-u^A},\quad m=\floor{\frac{B-1}{A}},
+\end{equation}
+po integraci dostáváme
+\begin{equation}\label{eq:solution_polynomial}
+    \int P(u)\d{u}=-\int B\sum_{k=1}^{m}u^{B-1-kA} \d{u} = -\sum_{k=1}^{m}\frac{Bu^{B-kA}}{B-kA}=-\sum_{k=1}^{m}\frac{y^{1-k\alpha}}{1-k\alpha}.
+\end{equation}
+
+Konstanty $c_k$ určíme s využitím reziduální věty. Rozložíme jmenovatele,
+\begin{subequations}
+\begin{align}
+    \omega_k^A-u^A&=(\omega_k-u)\left(u^{A-1}\omega_k^0+u^{A-2}\omega_k^1+\dots+u^1\omega_k^{A-2}+u^0\omega_k^{A-1}\right),\\
+    1-u^A&=-(u-\omega_k)\sum_{j=0}^{A-1}u^{A-1-j}\omega_i^j,
+\end{align}
+\end{subequations}
+komplexní konstantě příslušné $k$-tému kořenu pak odpovídá výraz
+\begin{align}
+    c_k&=\lim_{u\to \omega_k}(u-\omega_k)\frac{Bu^{B-1}}{1-u^A}=\lim_{u\to \omega_k}\frac{-(u-\omega_k)Bu^{B-1}}{\left(u-\omega_k\right)\sum_{j=0}^{A-1}u^{A-1-j}\omega_k^j}\nonumber\\
+    &=-\frac{B\omega_k^{B-1}}{\sum_{j=0}^{A-1}{\omega_k^{A-1-j+j}}}=-\frac{B}{A}\omega_k^{B-A}=-\frac{B}{A}\omega_{k}^B.
+\end{align}
+
+Integrací parciálních zlomků získáváme
+\begin{equation}
+    \int \sum_{k=0}^{A-1}-\frac{B}{A}\frac{\omega_k^{B}}{u-\omega_k} \d{u}
+    =-\sum_{k=0}^{A-1}\frac{B}{A}\omega_k^{B}\Log\left(u-\omega_k\right).
+\end{equation}
+kde $\Log{z}$ je komplexní logaritmus dle \refeq{eq:complex_log_deff}. Rozepsáním komplexního logaritmu získáváme součet součinů komplexních výrazů,
+\begin{equation}
+    -\sum_{k=0}^{A-1}\frac{B}{A}\omega_k^{B}\Log\left(u-\omega_k\right)
+    =-\sum_{k=0}^{A-1}\frac{B}{A}\e{iB\varphi_k}(\ln\abs{u-\omega_k}+i\arg(u-\omega_k)),
+\end{equation}
+kde logaritmus velikosti je sudá funkce úhlu,
+\begin{equation}
+    \ln\!\left(\sqrt{(u-\cos{\varphi_k})^2+\sin^2 \varphi_k}\right)=\ln\!\left(\sqrt{u^2+1-2u\cos\varphi_k}\right),
+\end{equation}
+argument čísla je lichá, reálná část kořenu je sudá a~imaginární část kořenu je lichá funkce úhlu. Tyto symetrie využijeme pro eliminaci imaginárních členů: pokud budeme uvažovat vhodně přeindexovaný součet,
+\begin{equation}
+    \mathcal{S}=-\sum_{k=0}^{A-1}\frac{B}{A}\omega_k^{B}\Log\left(u-\omega_k\right)=-\sum_{k=0}^{A-1}\frac{B}{A}\omega_{-k}^{B}\Log\left(u-\omega_{-k}\right),
+\end{equation}
+získáváme stejné členy, ovšem v~obráceném pořadí ve~smyslu směru pohybu po~jednotkové kružnici. Součet tak můžeme vyjádřit dvěma způsoby,
+\begin{subequations} 
+    \begin{align}
+        \mathcal{S}&=-\frac{B}{A}\sum_{k=0}^{A-1}
+        \left(\begin{aligned}&\left(\Re\omega_{k}^B\cdot\Re\Log(u-\omega_{k})-\Im\omega_{k}^{B}\cdot\Im\Log(u-\omega_{k})\right)\\
+            +&\left(\Re\omega_{k}^B\cdot\Im\Log(u-\omega_{k})+\Im\omega_{k}^{B}\cdot\Re\Log(u-\omega_{k})\right)i
+        \end{aligned}\right),\\
+        \mathcal{S}&=-\frac{B}{A}\sum_{k=0}^{A-1}
+        \left(\begin{aligned}&\left(\Re\omega_{-k}^B\cdot\Re\Log(u-\omega_{-k})-\Im\omega_{-k}^{B}\cdot\Im\Log(u-\omega_{-k})\right)\\
+            +&\left(\Re\omega_{-k}^B\cdot\Im\Log(u-\omega_{-k})+\Im\omega_{-k}^{B}\cdot\Re\Log(u-\omega_{-k})\right)i
+        \end{aligned}\right)\nonumber\\
+        &=-\frac{B}{A}\sum_{k=0}^{A-1}
+        \left(\begin{aligned} &\left(\Re\omega_{k}^B\cdot\Re\Log(u-\omega_{k})-\Im\omega_{k}^{B}\cdot\Im\Log(u-\omega_{k})\right)\\
+            -&\left(\Re\omega_{k}^B\cdot\Im\Log(u-\omega_{k})+\Im\omega_{k}^{B}\cdot\Re\Log(u-\omega_{k})\right)i
+        \end{aligned}\right),
+    \end{align}
+\end{subequations}
+kde součtem obou vyjádření získáváme
+\begin{equation}
+    2\mathcal{S}=-2\frac{B}{A}\sum_{k=0}^{A-1}\Re\omega_{k}^B\cdot\Re\Log(u-\omega_{k})-\Im\omega_{k}^{B}\cdot\Im\Log(u-\omega_{k}).
+\end{equation}
+Dosazením za~příslušné části získáváme souhrnně primitivní funkci k~rozkladu na~parciální zlomky,
+\begin{equation}
+    \mathcal{S}=-\frac{B}{A}\sum_{k=0}^{A-1}\left(
+        \begin{aligned}+&\cos{B\varphi_k}\ln\!\left(\sqrt{u^2+1-2u\cos\varphi_k}\right)\\
+            -&\sin{B\varphi_k}\atantwo(-\sin\varphi_k,u-\cos\varphi_k)\end{aligned}\right).
+\end{equation}
+
+Pro lepší orientaci v~zápisu zavádíme substituce,
+\begin{equation}
+    \mathcal{S}=-\frac{B}{A}\sum_{k=0}^{A-1}C_k+S_k,\quad \begin{aligned}
+    C_k&=\frac{1}{2}\cos{B\varphi_k} \ln(u^2+1-2u\cos{\varphi_k}),\\
+    S_k&=-\sin{B\varphi_k}\atantwo(-\sin{\varphi_k},u-\cos{\varphi_k}),
+    \end{aligned}
+\end{equation}
+kde o~symetriích budeme uvažovat ve~smyslu polohy příslušného kořenu $\omega_k$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lichý počet kořenů %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Lichý počet kořenů}\label{sss:lichy_pocet_korenu}
+Uvažujme lichý řád jmenovatele, $A=2M+1$, $M\in\mathbb{N}$. Pro nultý člen, $k=0$ platí $\varphi_k=0$, $\sin{\varphi_k}=0$, $\cos{\varphi_k}=1$, $\cos{B\varphi_k}=1$. Součástí řešení je tedy člen
+\begin{equation}
+    C_0=\frac{1}{2}\ln(u^2+1-2u)=\ln(1-u),\qquad S_0=0.
+\end{equation}
+
+Pro zbývající členy, $k\in\{1,\dots,2M\}$, uvažujme dvojice členů symetrických podle osy $x$, $\omega_k$ a~$\omega_{A-k}$. Pro jejich fázi platí
+\begin{equation}
+    \varphi_{A-k}=\frac{2\pi(A-k)}{A}=2\pi-\varphi_k\equiv-\varphi_k\pmod {2\pi}.
+\end{equation}
+
+Součet příspěvků těchto členů zapíšeme jako součet symetrických dvojic,
+\begin{equation}
+    \sum_{k=1}^{A-1}C_k+S_k=\sum_{k=1}^{M}C_k+C_{A-k}+S_k+S_{A-k},
+\end{equation}
+kde na~základě \refeq{eq:atantwo_odd} a~\refeq{eq:cis_negative} pro $\varphi_k'=\varphi_{A-k}$ platí
+\begin{align}
+        C_{A-k}=&\frac{1}{2}\cos{B\varphi_k'}\ln(u^2+1-2u\cos\varphi_k')\nonumber\\
+        =&\frac{1}{2}\cos{B\varphi_k}\ln(u^2+1-2u\cos\varphi_k)=C_k,\\
+        S_{A-k}=&-\sin{B\varphi_k'}\atantwo(-\sin{\varphi_k'},u-\cos{\varphi_k'})\nonumber\\
+        =&-\sin{B\varphi_k}\atantwo(-\sin{\varphi_k},u-\cos{\varphi_k})=S_k.
+\end{align}
+Pro $k\in\{1,\dots,M\}$ platí $\varphi_k\in(0,\pi)$ a~tedy $-\sin\varphi_k<0$, dle \refeq{eq:atantwo_flipped} tedy můžeme psát
+\begin{equation}
+    S_k=-\sin{B\varphi_k}\left(-\frac{\pi}{2}-\atan\frac{u-\cos\varphi_k}{-\sin\varphi_k}\right).
+\end{equation}
+
+Člen $-\frac{\pi}{2}$ je absolutním členem výrazu a~odpovídá hodnotě integrační konstanty pro nulovou počáteční podmínku. Člen se objevuje v~součtu za~každé $S_k$ i~$S_{A-k}$, píšeme
+\begin{equation}
+    \lambda = -\frac{B}{A}\sum_{k=1}^{M}2\frac{\pi}{2} \sin B\varphi_k=-\frac{B}{A}\sum_{k=0}^{M}\pi \sin B\varphi_k=-\pi\frac{B}{A}\Im\!\left(\sum_{k=0}^{M}\e{i 2\pi k\frac{B}{A}}\right),
+\end{equation}
+kde součet geometrické posloupnosti pro zjednodušení rozšiřujeme o~nultý člen, neboť $\sin(B\varphi_0)=0$. Součet posloupnosti získáváme v~podobě
+\begin{equation}
+    \sum_{k=0}^{M}\left(\e{i2\pi\frac{B}{A}}\right)^k = \frac{1-\left(\e{i2\pi\frac{B}{A}}\right)^{M+1}}{1-\e{i2\pi\frac{B}{A}}}.
+\end{equation}
+Čitatele upravíme,
+\begin{equation}
+    \left(\e{i2\pi\frac{B}{A}}\right)^{M+1}=\e{i2\pi (M+1)\frac{B}{2M+1}}=\e{i\pi(2 M+2)\frac{B}{2M+1}}=\e{i\pi B}\e{i\pi\frac{B}{A}},
+\end{equation}
+zavedeme poloviční úhel $\delta=\pi\frac{B}{A}$ a~upravíme jmenovatele,
+\begin{equation}
+    1-\e{i2\pi\frac{B}{A}}=1-\e{i2\delta}=\e{i\delta}(\e{-i\delta}-\e{i\delta})=\e{i\delta}(-2i\sin{\delta}),
+\end{equation}
+součet řady pak odpovídá
+\begin{equation}
+    \frac{1-\e{i\pi B}\e{i\delta}}{-2i\e{i\delta}\sin{\delta}}
+    =i\frac{\e{-i\delta}-\e{i\pi B}}{2\sin{\delta}}
+    =\frac{1}{2}+i\frac{\cos\delta-(-1)^B}{2\sin\delta}.
+\end{equation}
+
+Imaginární část součtu přepíšeme pomocí polovičních úhlů $\gamma=\delta/2$ dle \refeq{eq:cis_double}. Pro $B$ sudé platí $(-1)^B=1$, uvažujeme $\cos\delta=1-2\sin^2\gamma$ a~píšeme
+\begin{equation}
+    \frac{\cos\delta - 1}{2\sin\delta} = \frac{-2\sin^2\gamma}{4\sin\gamma\cos\gamma} = -\frac{1}{2}\tan\gamma=-\frac{1}{2}\tan\frac{\pi}{2}\frac{B}{A},
+\end{equation}
+pro $B$ liché platí $(-1)^B=-1$, uvažujeme $\cos\delta = 2\cos^2\gamma-1$ a~píšeme
+\begin{equation}
+    \frac{\cos\delta + 1}{2\sin\delta} = \frac{2\cos^2\gamma}{4\sin\gamma\cos\gamma} = \frac{1}{2}\cot\gamma=\frac{1}{2}\cot\frac{\pi}{2}\frac{B}{A}.
+\end{equation}
+Oba dílčí výsledy sjednotíme, pokud výrazy vhodně posuneme o~periodu. Pro $B$~sudé platí $B\frac{\pi}{2}\equiv \pi\pmod \pi$ a~píšeme
+\begin{equation}
+    -\frac{1}{2}\tan\frac{\pi}{2}\frac{B}{A}=-\frac{1}{2}\tan\!\left(\frac{\pi}{2}\frac{B}{A}+B\frac{\pi}{2}\right).
+\end{equation}
+pro $B$ liché platí $B\frac{\pi}{2}\equiv\frac{\pi}{2}\pmod\pi$, využijeme posun $\cot(\varphi)=-\tan(\varphi-B\frac{\pi}{2})$ a~píšeme
+\begin{equation}
+    \frac{1}{2}\cot\frac{\pi}{2}\frac{B}{A}=-\frac{1}{2}\tan\!\left(\frac{\pi}{2}\frac{B}{A}+B\frac{\pi}{2}\right).
+\end{equation}
+Bez ohledu na~paritu $B$ tak můžeme absolutní člen vyjádřit jako 
+\begin{equation}
+    \lambda=\frac{\pi}{2}\frac{B}{A}\tan\left(\frac{\pi}{2}\frac{B}{A}+B\frac{\pi}{2}\right).
+\end{equation}
+
+Primitivní funkci k~parciálním zlomkům pro liché $A=2M+1$ získáváme v~podobě
+\begin{align}\label{eq:solution_odd}
+    \mathcal{S}&=\frac{\pi}{2}\frac{B}{A}\tan\!\left(\frac{\pi}{2}\frac{B}{A}+B\frac{\pi}{2}\right)-\frac{B}{A}\ln(1-u)\dots\nonumber\\
+    &-\frac{B}{A}\sum_{k=1}^{M}\cos{B\varphi_k}\ln\!\left(u^2+1-2u\cos\varphi_k\right)-2\sin{B\varphi_k}\atan\frac{u-\cos\varphi_k}{\sin\varphi_k}.
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Sudý počet kořenů %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Sudý počet kořenů}
+Uvažujme sudý řád jmenovatele, $A=2M, M\in\mathbb{N}$, a~dvojice členů vzájemně posunutých o~$M$. Primitivní funkci zapíšeme jako součet těchto protipólných členů,
+\begin{equation}
+    \mathcal{S}=-\frac{B}{A}\sum_{k=0}^{A-1}C_k+S_k=-\frac{B}{A}\sum_{k=0}^{M-1}\hat{C}_k+\hat{S}_k,\qquad \begin{aligned}\hat{C}_k&=C_k+C_{k+M},\\\hat{S}_k&=S_k+S_{k+M}.\end{aligned}
+\end{equation}
+
+Zaměříme se nejprve na~součet logaritmických členů. Pro konkrétní dvojici, $k\in\left\{{0,\dots,M-1}\right\}$, zavedeme posun o~půl periody, sečteme logaritmy a~vhodně rozšíříme,
+\begin{align}
+    \hat{C}_k&=\frac{1}{2}\cos{B\varphi_k}\ln(u^2+1-2u\cos\varphi_k)+\frac{1}{2}\cos{B\varphi_{k}'}\ln(u^2+1-2u\cos\varphi_{k}')\nonumber\\
+    &=\frac{1}{2}\cos{B\varphi_k}\ln(u^2+1-2u\cos\varphi_k)-\frac{1}{2}\cos{B\varphi_{k}}\ln(u^2+1+2u\cos\varphi_{k})\nonumber\\
+    &=\frac{1}{2}\cos{B\varphi_k}\ln\frac{u^2+1-2u\cos\varphi_k}{u^2+1+2u\cos\varphi_{k}}=\frac{1}{2}\cos{B\varphi_k}\ln\frac{1-\frac{2u\cos\varphi_k}{u^2+1}}{1+\frac{2u\cos\varphi_{k}}{u^2+1}}.
+\end{align}
+Argument logaritmu nyní odpovídá definici $\atanh$ dle \refeq{eq:tanh_atanh_deff}, nulový člen navíc odpovídá identitě pro dvojnásobný úhel dle \refeq{eq:tan_tanh_double}
+\begin{equation}
+    \hat{C}_k=-\cos{B\varphi_k}\atanh\frac{2u\cos\varphi_k}{u^2+1},\qquad\hat{C}_{0}=-\atanh{\frac{2u}{u^2+1}}=-2\atanh{u}.
+\end{equation}
+
+Dále se zaměříme na~druhou část vyjádření, členy vycházející z imaginární části komplexního logaritmu. Pro konkrétní dvojici, $k \in \left\{ 0,\dots,M-1\right\}$, zavedeme posun o~půl periody, odečteme $\atantwo$ dle \refeq{eq:atantwo_diff} a~argument vhodně upravíme,
+\begin{align}
+    \hat{S}_j&=-\sin{B\varphi_k'}\atantwo(-\sin \varphi_k',u-\cos \varphi_k')-\sin{B\varphi_k}\atantwo(-\sin \varphi_k,u-\cos \varphi_k)
+    \nonumber\\
+    &=+\sin{B\varphi_k}\atantwo(+\sin \varphi_k,u+\cos \varphi_k)-\sin{B\varphi_k}\atantwo(-\sin \varphi_k,u-\cos \varphi_k)\nonumber\\
+    &=\sin{B\varphi_k}\atantwo\!\left(\begin{aligned}
+        &\sin{\varphi_k}(u-\cos{\varphi_k})+\sin{\varphi_k}(u+\cos{\varphi_k}),\\
+        &(u+\cos{\varphi_k})(u-\cos{\varphi_k})-\sin^2{\varphi_k}
+    \end{aligned}\right)\nonumber\\
+    &=\sin{B\varphi_k}\atantwo(2u\sin{\varphi_k},u^2-1),\quad 2u\sin{\varphi_k}\ge0,\quad u^2-1<0.
+\end{align}
+Argumenty $\atantwo$ odpovídají druhému kvadrantu a~tedy druhé větvi dle \refeq{eq:atantwo_definition}, píšeme
+\begin{equation}
+    \hat{S}_k=\sin{B \varphi_k} \left(\atan\frac{2u\sin{\varphi_k}}{u^2-1}+\pi\right),
+\end{equation}
+kde nultý člen je nulový.
+
+Zvolená větev $\atantwo$ do výrazu přináší posun o~$\pi$, pro absolutní člen píšeme 
+\begin{equation}
+    \lambda = -\frac{B}{A}\sum_{k=0}^{M-1}\pi\sin B \varphi_k=-\pi\frac{B}{A}\Im\!\left(\sum_{k=0}^{M-1}\e{iB\varphi_k }\right),
+\end{equation}
+kde součet je vyjádřen jako imaginární složka součtu geometrické posloupnosti,
+\begin{equation}
+    \sum_{k=0}^{M-1}\left(\e{i\pi k~\frac{B}{M}}\right)^k=\frac{1-\left(\e{i\pi\frac{B}{M}}\right)^M}{1-\e{i\pi\frac{B}{M}}}=\frac{1-\e{iB\pi}}{1-\e{i\pi\frac{B}{M}}}.
+\end{equation}
+Pro $B$ liché v~čitateli získáváme $\e{iB\pi}=-1$. Ve jmenovateli zavedeme substituci za~poloviční úhel, $\delta = \frac{B\pi}{2M}$,
+\begin{equation}
+    1-\e{i\pi\frac{B}{M}}=1-e^{i2\delta}=\e{i\delta}\left(e^{-i\delta}-e^{i\delta}\right)=\e{i\delta}\left(-2i\sin{\delta}\right),
+\end{equation}
+součet geometrické řady pak odpovídá
+\begin{equation}
+    \frac{1-\e{iB\pi}}{1-\e{i\pi\frac{B}{M}}}=\frac{2}{-2i\e{i\delta}\sin{\delta}}=\frac{i\e{-i\delta}}{\sin{\delta}}=1+i\cot{\delta}.
+\end{equation}
+Absolutní člen dostáváme v~podobě
+\begin{equation}
+    \lambda=-\pi\frac{B}{A}\Im\left(1+i\cot{\delta}\right)=-\pi\frac{B}{A}\cot\frac{B\pi}{2M}=-\pi\frac{B}{A}\cot\frac{B\pi}{A}.
+\end{equation}
+
+Primitivní funkci pro $A=2M$ tak získáváme v~podobě
+\begin{align}
+    \mathcal{S}=&-\frac{B}{A}\left(\pi\cot\frac{B\pi}{A}+\sum_{k=0}^{M-1}-\cos{B\varphi_k}\atanh\frac{2u\cos{\varphi_k}}{u^2+1}+\sin{B\varphi_k}\atan{\frac{2u\sin{\varphi_k}}{u^2-1}}\right)\nonumber\\
+    =&\frac{B}{A}2\atanh{u}-\pi\frac{B}{A}\cot{\frac{B\pi}{A}}+\frac{B}{A}\sum_{k=1}^{M-1}\left(\begin{aligned}+&\cos{B\varphi_k}\atanh\frac{2u\cos{\varphi_k}}{u^2+1}\\-&\sin{B\varphi_k}\atan{\frac{2u\sin{\varphi_k}}{u^2-1}}\end{aligned}\right).
+\end{align}
+
+Součet pro $k\in\{1,\dots,M-1\}$ obsahuje další symetrii: uvažujme dvojice zrcadlových členů $\varphi_k$, $\varphi_{M-k}$, označme zrcadlový člen $\varphi_k'':=\varphi_{M-k}$. Mějme $K\in\mathbb{N}$; pro $M$ liché, $M=2K+1$, dostáváme $K$ dvojic; pro $M$ sudé, $M=2K$, dostáváme $K-1$ dvojic a~navíc jeden prostřední člen odpovídající $k=M/2$. Součet dvojic vyjádříme v~podobě
+\begin{align}
+    \mathcal{Q}=&\sum_{k=1}^{\floor{\frac{M-1}{2}}}\left(\begin{aligned}
+        +\cos{B\varphi_k}\atanh\frac{2u\cos{\varphi_k}}{u^2+1}&+\cos{B\varphi_k''}\atanh\frac{2u\cos{\varphi_k''}}{u^2+1}\\
+        -\sin{B\varphi_k}\atan{\frac{2u\sin{\varphi_k}}{u^2-1}}&-\sin{B\varphi_k''}\atan{\frac{2u\sin{\varphi_k''}}{u^2-1}}
+    \end{aligned}\right)
+    \nonumber\\
+    =&\sum_{k=1}^{\floor{\frac{M-1}{2}}}\left(\begin{aligned}
+        +\cos{B\varphi_k}\atanh\frac{2u\cos{\varphi_k}}{u^2+1}&-\cos{B\varphi_k}\atanh\frac{-2u\cos{\varphi_k}}{u^2+1}\\
+        -\sin{B\varphi_k}\atan{\frac{2u\sin{\varphi_k}}{u^2-1}}&-\sin{B\varphi_k}\atan{\frac{2u\sin{\varphi_k}}{u^2-1}}
+    \end{aligned}\right)\nonumber\\
+    =&\sum_{k=1}^{\floor{\frac{M-1}{2}}} \left(
+        2\cos{B\varphi_k}\atanh\frac{2u\cos{\varphi_k}}{u^2+1}
+        -2\sin{B\varphi_k}\atan{\frac{2u\sin{\varphi_k}}{u^2-1}}
+    \right).
+\end{align}
+Zbývající nepárový člen, pokud je přítomen, odpovídá $k=M/2$, potom $\varphi_{k}=\frac{\pi}{2}$, $\cos \varphi_{k}=0$, $\sin \varphi_{k}=1$ a~$\sin{B\varphi_k}=(-1)^{\frac{B-1}{2}}$. Součástí řešení pak je člen, který lze ještě zjednodušit s~využitím identity pro dvojnásobný úhel dle \refeq{eq:tan_tanh_double},
+\begin{equation}
+    -(-1)^{\frac{B-1}{2}}\atan\frac{2u}{u^2-1}=(-1)^{\frac{B-1}{2}}2\atan u.
+\end{equation}
+Přítomnost členu budeme indikovat faktorem $[2|M]$.
+
+Primitivní funkci k~parciálním zlomkům pro sudé $A=2M$ získáváme v~podobě
+\begin{align}\label{eq:solution_even}
+    \mathcal{S}=&-\pi\frac{B}{A}\cot{\frac{B\pi}{A}}+2\frac{B}{A}\atanh{u}+2\frac{B}{A}(-1)^\frac{B-1}{2}\atan{u}[2|M]\dots\nonumber\\
+    &+2\frac{B}{A}\sum_{k=1}^{\floor{\frac{M-1}{2}}}
+    \left(
+        \cos{B\varphi_k}\atanh\frac{2u\cos{\varphi_k}}{u^2+1}
+        -\sin{B\varphi_k}\atan{\frac{2u\sin{\varphi_k}}{u^2-1}}
+    \right).
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Obecné řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Obecné řešení}\label{sss:obecne_reseni}
+Kombinací dílčích výsledků dle \refeq{eq:negative_alpha_symmetry}, \refeq{eq:solution_polynomial}, \refeq{eq:solution_odd} a~\refeq{eq:solution_even}, po~dosazení za~substituci $u=y^{\frac{1}{B}}$ získáváme integrál levé strany separovatelné úlohy \refeq{eq:step_response_diff_eqn} včetně hodnoty integrační konstanty odpovídající nulovým počátečním podmínkám. 
+
+Pro $\alpha=A/B\in\mathbb{Q}$, $M\in\mathbb{N}$, za~podmínky nesoudělnosti $\gcd(A,B)=1$,
+\begin{subequations}\label{eq:solution_general_whole}
+\begin{align}
+    \int\frac{1}{1-y^{\alpha}}d{y}
+    &=y[\alpha<0]+\sgn{\alpha}\cdot F_{\alpha}(y),\\
+    F_{\alpha}(y)
+    &=-\!\!\sum_{k=1}^{\floor{\frac{B-1}{A}}}\frac{y^{1-k\alpha}}{1-k\alpha}+\alpha G_{\alpha}(y),
+\end{align}
+\begin{align}
+    G_\alpha(y)
+    =&\,\frac{\pi}{2}\tan\!\left(\frac{\pi}{2}\left(\frac{1}{\alpha}+B\right)\right)\dots\\
+    &-\ln\!\left(1-y^{\frac{1}{B}}\right)\dots\\
+    &-\sum_{k=1}^{M-1}\cos\frac{2\pi k}{\alpha}\ln\!\left(y^{\frac{2}{B}}-2y^{\frac{1}{B}}\cos\frac{2\pi k}{\alpha}+1\right)\dots\\
+    &+\sum_{k=1}^{M-1}\sin\frac{2\pi k}{\alpha}\atan\frac{y^{\frac{1}{B}}-\cos\frac{2\pi k}{\alpha}}{\sin\frac{2\pi k}{\alpha}},\quad A=2M-1,\\
+    =&-\pi\cot\frac{\pi}{\alpha}\dots\\
+    &+2\atanh{y^{\frac{1}{B}}}\dots\\
+    &+2(-1)^{\frac{B-1}{2}}\atan y^{\frac{1}{B}}\,[2|M]\dots\\
+    &-\!\!\sum_{k=1}^{\floor{\frac{M-1}{2}}}2\cos\frac{2\pi k}{\alpha}\atanh\frac{2y^{\frac{1}{B}}\cos\frac{2\pi k}{\alpha}}{y^{\frac{2}{B}}+1}\dots\\
+    &+\!\!\sum_{k=1}^{\floor{\frac{M-1}{2}}}2\sin\frac{2\pi k}{\alpha}\atan\frac{2y^{\frac{1}{B}}\sin\frac{2\pi k}{\alpha}}{y^{\frac{2}{B}}-1}, \quad A=2M.
+\end{align}
+\end{subequations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Explicitní řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Explicitní řešení}\label{ss:explicitni_reseni}
+Explicitní řešení pro konkrétní $\alpha$ existuje, pokud lze nalézt inverzní funkci k~\refeq{eq:solution_general_whole}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Speciální funkce %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Speciální funkce}\label{sss:specialni_funkce}
+Vedle standardních analytických funkcí rozšíříme použitelný aparát i~o vybrané speciální funkce. 
+
+\paragraph{Lambertova funkce W} je třída funkcí, která pro reálná čísla má dvě větve definované vztahem
+\begin{equation}
+    ye^y=x \quad \Longleftrightarrow\quad \begin{array}{ll}
+        \dst y=W_0(x)& \dst \quad x\in\left[-\e{-1},\infty\right)\to\left[-1,\infty\right),\\
+        \dst y=W_{-1}(x)&\dst \quad x\in\left[-\e{-1},0\right)\to\left(-\infty,-1\right].
+    \end{array}
+\end{equation}
+
+\paragraph{Logaritmický integrál} je speciální funkce definovaná vztahem
+\begin{equation}
+\li(x):=\begin{cases}
+    \dst\int_0^x \frac{\d{t}}{\ln{t}}&x\in(0,1),\\
+    \dst\lim_{\varepsilon\to 0_+}\left(\int_0^{1-\varepsilon} \frac{\d{t}}{\ln{t}}+\int_{1+\varepsilon}^x \frac{\d{t}}{\ln{t}}\right)& x>1.\\
+\end{cases}
+\end{equation}
+Jde o~funkci, která je studována zejména pro svou spojitost s prvočíselnou větou \english{prime number theorem} a~Riemannovou hypotézou, oblastí zájmu je tedy zejména chování funkce pro $x\to\infty$. Pro naše účely jsme však fyzikálně omezeni na argument $y\in(0,1)$. Na tomto intervalu je logaritmický integrál prostý, zavádíme částečnou inverzní funkci \english{partial inverse},
+\begin{subequations}
+\begin{align}
+    f(x)&:=-\li(x),\quad x\in(0,1)\to(0,\infty),\\
+    \lii(x)&:=f^{-1}(x),\quad x\in(0,\infty)\to(0,1),
+\end{align}
+\end{subequations}
+kde opačné znaménko je pouze kosmetickou úpravou zajišťující vhodnou orientaci funkce tak, aby argumentem byla kladná čísla.
+
+\paragraph{Exponenciální integrál} je speciální funkce definovaná vztahem
+\begin{equation}
+    \Ei(x):=-\int_{-x}^{\infty}\frac{\e{-t}}{t}\d{t}=\int_{-\infty}^x \frac{\e{t}}{t}\d{t},
+\end{equation}
+logaritmický a~exponenciální integrál jsou svázány vztahy
+\begin{equation}\label{eq:logarithmic_exponential_integral_relation}
+    \li \e x = \Ei x,\qquad \Ei \ln x = \li x, \quad x>0.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lineární systém %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Lineární systém}\label{sss:linearni_system}
+Pro $\alpha=1$, tedy $A=1$, $B=1$, získáváme lineární systém. Řešením je standardní přechodová charakteristika systému prvního řádu,
+\begin{subequations}
+\begin{align}
+    \Dd{y}{t}&=\frac{T_R k}{S \mu_0}\left(1-y\right),\\
+    \int\frac{1}{1-y}\d{y}&=\int\frac{T_R k}{S \mu_0}\d{t},\\
+    -\ln(1-y)&=\frac{T_R k}{S \mu_0}\cdot t+\left.c\right|_{=0},\\
+    y&=1-\exp\left(-\frac{T_R k}{S \mu_0}\cdot t\right).
+\end{align}
+\end{subequations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Kvadratický systém %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Kvadratický systém}\label{sss:kvadraticky_system}
+Pro $\alpha=2$, tedy $A=2$, $B=1$, získáváme kvadratický systém. Řešení získáváme v~podobě
+\begin{subequations}
+\begin{align}
+    \Dd{y}{t}&=\frac{T_R k}{S \mu_0}\frac{p_{in}}{2}\left(1-y^2\right),\\
+    \int\frac{1}{1-y^2}\d{y}&=\int\frac{p_{in}}{2}\frac{T_R k}{S \mu_0}\d{t},\\
+    \atanh(y)&=\frac{p_{in}}{2}\frac{T_R k}{S \mu_0}\cdot t+\left.c\right|_{=0},\\
+    y&=\tanh\left(\frac{p_{in}}{2}\frac{T_R k}{S \mu_0}\cdot t\right).
+\end{align}
+\end{subequations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Reciproký systém %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Reciproký systém}\label{sss:reciproky_system}
+Pro $\alpha=-1$, tedy $A=1$, $B=1$ a~$\sgn{\alpha}=-1$ získáváme reciproký systém. Implicitní řešení získáváme v~podobě
+\begin{subequations}
+\begin{align}
+    \Dd{y}{t}&=-\frac{T_R k}{S \mu_0}\frac{1}{p_{in}^2}\left(1-y^{-1}\right),\\
+    \int\frac{1}{1-y^{-1}}\d{y}&=\int-\frac{1}{p_{in}^2}\frac{T_R k}{S \mu_0}\d{t},\\
+    y+\ln(1-y)&=-\frac{1}{p_{in}^2}\frac{T_R k}{S \mu_0}\cdot t+\left.c\right|_{=0},
+\end{align}
+\end{subequations}
+kde rovnici upravíme do tvaru odpovídajícímu $u\e{u}$,
+\begin{subequations}
+    \begin{align}
+    \ln(1-y)&=-\frac{1}{p_{in}^2}\frac{T_R k}{S \mu_0}\cdot t-y,\\
+    1-y&=\exp\left(-\frac{1}{p_{in}^2}\frac{T_R k}{S \mu_0}\cdot t\right)\e{-y},\\
+    y-1&=-\exp\left(-1-\frac{1}{p_{in}^2}\frac{T_R k}{S \mu_0}\cdot t\right)\e{1-y},\\
+    \left(y-1\right)\e{(y-1)}&=-\frac{1}{e}\exp\left(-\frac{1}{p_{in}^2}\frac{T_R k}{S \mu_0}\cdot t\right).
+    \end{align}
+\end{subequations}
+Výraz $(y-1)$ nabývá hodnot z intervalu $(-1,0)$, volíme proto větev $W_0$ a~píšeme
+\begin{equation}
+    y=1+W_{0}\left(-\frac{1}{e}\exp\left(-\frac{1}{p_{in}^2}\frac{T_R k}{S \mu_0}\cdot t\right)\right).
+\end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Odmocninný systém %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Odmocninný systém}\label{sss:odmocninny_system}
+Pro $\alpha=\frac{1}{2}$, tedy $A=1$, $B=2$, získáváme odmocninný systém. Implicitní řešení získáváme v~podobě
+\begin{subequations}
+    \begin{align}
+    \Dd{y}{t}&=\frac{T_R k}{S \mu_0}\frac{2}{\sqrt{p_{in}}}\left(1-\sqrt{y}\right),\\
+    \int\frac{1}{1-\sqrt{y}}\d{y}&=\int\frac{2}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}\d{t},\\
+    -2\left(\sqrt{y}+\ln\left(1-\sqrt{y}\right)\right)&=\frac{2}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}+\left.c\right|_{=0},
+\end{align}
+\end{subequations}
+kde rovnici upravíme do tvaru odpovídajícímu $u\e{u}$ a~aplikujeme Lambertovu $W_0$,
+\begin{subequations}
+    \begin{align}
+        \ln(1-\sqrt{y})&=-\frac{1}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}\cdot t-\sqrt{y},\\
+    1-\sqrt{y}&=\exp\left(-\frac{1}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}\cdot t\right)\e{-\sqrt{y}},\\
+    \sqrt{y}-1&=-\exp\left(-1-\frac{1}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}\cdot t\right)\e{1-\sqrt{y}},\\
+    \left(\sqrt{y}-1\right)\e{\sqrt{y}-1}&=-\frac{1}{e}\exp\left(-\frac{1}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}\cdot t\right),\\
+    \sqrt{y}-1&=W_{0}\left(-\frac{1}{e}\exp\left(-\frac{1}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}\cdot t\right)\right),\\
+    y&=\left(1+W_{0}\left(-\frac{1}{e}\exp\left(-\frac{1}{\sqrt{p_{in}}}\frac{T_R k}{S \mu_0}\cdot t\right)\right)\right)^2.
+\end{align}
+\end{subequations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Neexistence dalších explicitních řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Neexistence dalších explicitních řešení}\label{ss:neexistence_dalsich_explicitnich_reseni}
+Dále ukážeme, že výčet explicitních řešení v~kapitole \ref{ss:explicitni_reseni} je úplný.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Důkaz úplnosti pro elementární funkce %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Důkaz úplnosti pro elementární funkce}\label{sss:dukaz_uplnosti_pro_elementarni_funkce}
+Argument o~neexistenci dalších explicitních řešení založíme na~výsledcích z oblasti diferenciální algebry.
+
+\paragraph{Rittova věta} o~inverzích elementárních funkcí stanovuje nutnou podmínku pro strukturu elementární funkce, jejíž inverzní funkce je rovněž elementární. 
+
+\begin{theorem}
+Nechť $f(z)$ je elementární funkce a~její inverzní funkce $f^{-1}(z)$ je rovněž elementární. Potom $f(z)$ musí být konečným složením funkcí
+$$ f=\phi_n \circ \phi_{n-1} \circ \dots \circ \phi_1, $$
+kde každá funkce $\phi_i$ je buď algebraická funkce $\phi_i\in\mathcal{A}$, nebo transcendentní funkce $\phi_i\in\mathcal{T}=\{\exp,\ln\}$. Pokud $\phi_{i+1}\in\mathcal{T}$, pak $\phi_{i}\in\mathcal{A}$.
+\end{theorem}
+
+\paragraph{Věta o~reziduu algebraické funkce} je klasickým výsledkem z teorie algebraických funkcí, kterou formuluje Rosenlicht 1972. 
+
+\begin{theorem}
+    Pro algebraickou funkci $f(u)$ platí, že její logaritmická derivace, ${f'}/{f}$, je také algebraickou funkcí, a~její reziduum v~každém singulárním bodě je racionální číslo,
+    $$ c_k = \lim_{u\to u_0} (u-u_0)\frac{f'(u)}{f(u)},\quad\Longrightarrow\quad c_k\in \mathbb{Q}.$$
+\end{theorem}
+
+Obecné řešení vyjádřené ve~tvaru s komplexním logaritmem můžeme zapsat v~podobě
+\begin{equation}
+    \int\frac{1}{1-y^{\frac{A}{B}}}\d{y}=\int\frac{Bu^{B-1}}{1-u^A}\d{u}=-\sum_{k=1}^{\floor{\frac{B-1}{A}}}\frac{Bu^{B-kA}}{B-kA}-\sum_{k=0}^{A-1}\frac{B}{A}\omega_k^B\Log(u-\omega_k),
+\end{equation}
+jedná se tedy o~součet polynomu a~logaritmů, kde poslední z řady skládaných funkcí $\phi_1$ je algebraická funkce $\phi_1(y)=y^{\frac{1}{B}}$.
+
+Rittova věta okamžitě zakazuje přítomnost polynomiálního členu: polynom sice lze zapsat jako logaritmus exponenciály, to je však v~rozporu s požadavkem na~neřetězení transcendentních funkcí. Výjimku by mohl tvořit polynom nultého řádu, tedy konstanta, ta je však pro nulovou počáteční podmínku nulová. Nemůže být ani součástí polynomiální části řešení, jednak protože polynom je sám o~sobě primitivní funkcí a~konstantní člen má tedy význam integrační konstanty, jednak pro nesoudělnost $A,B$, kvůli které $B-kA\neq0$. Získáváme podmínku,
+\begin{equation}\label{eq:condition_coprime_inequality}
+    \floor{\frac{B-1}{A}}<1\quad\Longrightarrow\quad B\le A,
+\end{equation}
+kde pro nesoudělnost je rovnost možná pouze v~případě $A=B=1$. 
+
+Zbývající součet logaritmu lze zapsat jako logaritmus součinů,
+\begin{equation}
+    \sum_{k=0}^{A-1}\frac{B}{A}\omega_k^B\Log(u-\omega_k)=\Log\prod_{k=0}^{A-1}(u-\omega_k)^{\frac{B}{A}\omega_k^B}
+\end{equation}
+odkud je zřejmě vnější funkce $\phi_3=\Log$. Zbývá zajistit, aby argument logaritmu byla algebraická funkce,
+\begin{equation}
+    \phi_2(u)=\prod_{k=0}^{A-1}(u-\omega_k)^{\frac{B}{A}\omega_k^B},\qquad \phi_2\in\mathcal{A}.
+\end{equation}
+
+Logaritmická derivace $\phi_2$ odpovídá 
+\begin{equation}
+    \frac{\phi_2'(u)}{\phi(u)}=\frac{B}{A}\sum_{k=0}^{A-1}\frac{\omega_k^B}{u-\omega_k},
+\end{equation}
+reziduum potom dostáváme v~podobě
+\begin{equation}
+    \qquad c_k=\frac{B}{A}\lim_{u\to \omega_k}\left(\omega_k^B+(u-\omega_k)\sum_{j\neq k}\frac{\omega_j^B}{u-\omega_j}\right)=\frac{B}{A}\omega_k^B,
+\end{equation}    
+na základě věty o~reziduu algebraické funkce je tedy nezbytné, aby $\omega_k^B$ byla racionální čísla. 
+
+Posloupnost $\omega_k^B$ je pro nesoudělná $A,B$ permutací posloupnosti $\omega_k$, rezidua tedy bez ohledu na~pořadí nabývají hodnot všech kořenů jednotky. Alespoň jeden z kořenů jednotky pro $k>2$ je vždy komplexní, existují tedy pouze dvě varianty pro řád jmenovatele, $A\in\{1,2\}$. Spolu s podmínkou \refeq{eq:condition_coprime_inequality} tak získáváme pouze dvě přípustné varianty: $A=1, B=1$, odpovídající lineárnímu systému dle kapitoly \ref{sss:linearni_system}, a~$A=2, B=1$, odpovídající kvadratickému systému dle kapitoly \ref{sss:kvadraticky_system}. Lineární a~kvadratický systém tak jsou jediné dva případy, kdy pro racionální $\alpha$ existuje explicitní řešení pouze s použitím elementárních funkcí.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Důkaz úplnosti s rozšířením o~Lambertovu funkci W %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Důkaz úplnosti s rozšířením o~Lambertovu funkci W}\label{dukaz_uplnosti_s_rozsirenim_o_lambertovu_funkci_w}
+Zavedením Lambertovy funkce W jsme náš aparát rozšířili o~možnost explicitního vyjádření inverzní funkce k~$\phi\e{\phi}$. Vyjdeme z obecného řešení vyjádřeného ve~tvaru s komplexním logaritmem pro obecné $\alpha \in \mathbb{Q}$, tedy i~$\alpha<0$. Nechť $r=\sgn \alpha$, pak $\abs{\alpha}=\frac{A}{B}$, $A,B\in\mathbb{N}$, obecné řešení získáváme v~podobě
+\begin{equation}
+    F(u)=u^B[r<0]-r\sum_{k=1}^{\floor{\frac{B-1}{A}}}\frac{Bu^{B-kA}}{B-kA}-r\sum_{k=0}^{A-1}\frac{B}{A}\omega_k^B\Log(u-\omega_k).
+\end{equation}
+
+Celou funkci nyní složíme s exponenciálou, získáváme
+\begin{equation}
+    \e{F(u)}=\prod_{k=0}^{A-1}(u-\omega_k)^{-r\frac{B}{A}\omega_k^B}\exp\!\left(u^B[r<0]-\sum_{k=1}^{\floor{\frac{B-1}{A}}}\frac{Bu^{B-kA}}{B-kA}\right)=f(u)\e{g(u)}.
+\end{equation}
+Dále hledáme takovou funkci $\Phi$, pro kterou $\Phi\circ \left(f\e g\right)=\phi\e \phi$. Analytickou funkci $\Phi$ lze reprezentovat Taylorovým, případně na~komplexní doméně Laurentovým polynomem,
+\begin{equation}
+    \Phi(z)=\sum_{n=0}^{\infty}c_n z^n.
+\end{equation}
+Složením s $f\e g$ získáváme opět řadu, 
+\begin{equation}
+    \Phi(f\e g)=\sum_{n=0}^{\infty}c_nf^n\e{ng} \longleftrightarrow \phi \e \phi,
+\end{equation}
+kde pro nekonstantní $g$ jsou členy řady $\e{ng}$ lineárně nezávislé a~proto je funkce $\Phi$ nezbytně monomiální, tj. obsahuje jediný člen řady.
+
+Hledáme funkci $\Phi(z)=az^b$, kde $a,b\in\mathbb{C}$. Získáváme podmínku na~tvar $f$ a~$g$,
+\begin{equation}
+    \Phi\circ f\e g = a(f\e g)^b = f^b \e {b g+\ln a}\quad \Longrightarrow\quad f^b=bg+\ln{a},
+\end{equation}
+po dosazení za~$f$ a~$g$,
+\begin{equation}\label{eq:condition_for_lambert_general}
+    \prod_{k=0}^{A-1}(u-\omega_k)^{-br\frac{B}{A}\omega_k^B}=bu^B[r<0]-br\sum_{k=1}^{\floor{\frac{B-1}{A}}}\frac{Bu^{B-kA}}{B-kA}+\ln a,
+\end{equation}
+kde výraz na~pravé straně je polynom. 
+
+Zaměříme se nyní na~levou stranu. Pro kořeny jednotky vzhledem k~jejich rovnoměrnému rozmístění na~jednotkové kružnici platí, že jejich součet je roven nule s výjimkou triviálního případu pro jednotku samotnou. Pro nesoudělná $A,B$ totéž platí pro součet jejich mocnin, analogicky pak pro jejich násobek,
+\begin{equation}
+    \sum_{k=0}^{A-1}\omega_k=\begin{cases}1,& A=1\\0,&A\ge2\end{cases}\quad \Longrightarrow \quad \sum_{k=0}^{A-1}-br\frac{B}{A}\omega_k^B=\begin{cases}-br\frac{B}{A},& A=1\\0,&A\ge2\end{cases}.
+\end{equation}
+Aby součet mocnin pro $A\ge2$ byl nulový, musí mít buď všechny členy nulovou reálnou část, což neplatí pro žádné $A$, nebo musí alespoň jeden člen mít zápornou reálnou část,
+\begin{equation}
+    \forall A\ge2 \exists k:\Re\left(-br\frac{B}{A}\omega_k^B\right)<0.
+\end{equation}
+Záporná reálná část mocniny však znamená, že příslušný člen odpovídá pólu levé strany, výraz na~levé straně proto pro $A\ge2$ nemůže být polynomem. 
+
+Pro $A=1$ máme jediný kořen $\omega_0=1$, podmínka \refeq{eq:condition_for_lambert_general} nyní odpovídá
+\begin{equation}
+    (u-1)^{-brB}=bu^B[r<0]-br\sum_{k=1}^{B-1}\frac{Bu^{B-k}}{B-k}+\ln a.
+\end{equation}
+kde na~levé straně získáváme polynom pouze pro $-brB\in\mathbb{N}$. Označme $n=-brB$, pak $b=-r\frac{n}{B}$, píšeme
+\begin{equation}
+    (u-1)^n=-r\frac{n}{B}u^B[r<0]+\sum_{k=1}^{B-1}\frac{nu^{B-k}}{B-k}+\ln a.
+\end{equation}
+
+Rovnost musí platit i~pro $u=0$, dosazením získáváme
+\begin{equation}
+    (-1)^n=\ln a,
+\end{equation}
+podmínku tedy můžeme upravit do podoby 
+\begin{equation}
+    (u-1)^n=-r\frac{n}{B}u^B[r<0]+\sum_{k=1}^{B-1}\frac{nu^{B-k}}{B-k}+(-1)^n.
+\end{equation}
+
+Pro kladné $\alpha>0$ máme $r=\sgn{\alpha}=1$ a~podmínka odpovídá 
+\begin{equation}
+    (u-1)^n=\sum_{k=1}^{B-1}\frac{nu^{B-k}}{B-k}+(-1)^n,
+\end{equation}
+kde abychom na~obou stranách dostali polynomy stejného řádu, musí nutně platit $B=n+1$. Pro $n=1$ je podmínka splněna,
+\begin{equation}
+    u-1=\sum_{k=1}^{B-1}\frac{u^{B-k}}{B-k}-1=\sum_{k=1}^{2-1}\frac{u^{2-k}}{2-k}-1=u-1,
+\end{equation}
+pro hodnoty $A=1$, $B=2$ pak dostáváme $b=-r\frac{n}{B}=-\frac{1}{2}$ a~$\ln a=(-1)^n=-1$, $a=\e{-1}$, samotné řešení vede na~odmocninný systém popsaný v~kapitole \ref{sss:odmocninny_system}.
+
+Pro $n\ge2$ podmínku splnit nelze, neboť polynomy získáváme v~podobě
+\begin{equation}\label{eq:lambert_alpha_positive_expanded}
+    u^n-nu^{n-1}+\sum_{j=2}^{n}{\binom{n}{j}}(-1)^j u^{n-j}=u^n+\frac{n}{n-1}u^{n-1}+\sum_{k=3}^{n}\frac{nu^{B-k}}{B-k}+(-1)^n,
+\end{equation}
+kde srovnáním koeficientů u~$u^{n-1}$ dostáváme rovnici
+\begin{equation}
+    -n=\frac{n}{n-1} \quad \Longleftrightarrow \quad n=0,
+\end{equation}
+což je v~rozporu s restrikcí $n\ge2$. Pro $\alpha>0$ je tedy případ $n=1$ jediným, který vede na~explicitní řešení.
+
+Pro $\alpha<0$ máme $r=\sgn{\alpha}=-1$ a~podmínka odpovídá
+\begin{equation}
+    (u-1)^n=\frac{n}{B}u^B+\sum_{k=1}^{B-1}\frac{nu^{B-k}}{B-k}+(-1)^n,
+\end{equation}
+kde abychom na~obou stranách dostali polynomy stejného řádu, musí nutně platit $B=n$. Pro $n=1$ je podmínka splněna,
+\begin{equation}
+    u-1=\frac{n}{n}u^n+\sum_{k=1}^{n-1}\frac{nu^{n-k}}{n-k}+(-1)^n=u-1,
+\end{equation}
+pro hodnoty $A=1$, $B=1$ pak dostáváme $b=-r\frac{n}{B}=1$ a~$\ln a=(-1)^1=-1$, $a=\e{-1}$, samotné řešení vede na~reciproký systém popsaný v~kapitole \ref{sss:reciproky_system}.
+
+Pro $n\ge2$ podmínku splnit nelze, neboť polynomy získáváme v~podobě
+\begin{equation}
+    u^n-nu^{n-1}+\sum_{j=2}^{n}{\binom{n}{j}}(-1)^j u^{n-j}=u^n+\frac{n}{n-1}u^{n-1}+\sum_{k=2}^{n}\frac{nu^{B-k}}{B-k}+(-1)^n,
+\end{equation}
+řešíme tedy při srovnání koeficientů u~$u^{n-1}$ identický problém jako v~\refeq{eq:lambert_alpha_positive_expanded}. Řešení $n=0$ ani zde nevyhovuje restrikci $n\ge2$, pro $\alpha<0$ je tedy případ $n=1$ opět jediným, který vede na~explicitní řešení.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Limitní řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Limitní řešení}\label{ss:limitni_reseni}
+Zvláštní pozornost si zaslouží ještě případy pro $\alpha\to0$ a~$\alpha\to \pm \infty$.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Logaritmický systém %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Logaritmický systém}\label{sss:logaritmicky_system}
+Mocnině $\alpha=0$ odpovídá $n=-1$, a~tedy speciální případ integrace difusní rovnice dle \refeq{eq:pme_pressure_1D}. Řešíme analogicky: substitucí za~první derivaci, dvěma iteracemi separace proměnných, určení integračních konstant a~explicitní vyjádření,
+\begin{subequations}
+\begin{align}
+    \left(\Dd{p}{x}\right)^2 - p\DD{p}{x} = 0\quad&\Longleftrightarrow\quad u^2 -pu\Dd{p}{u}=0,\\
+    \int \frac{\d{p}}{p}=\int\frac{\d{u}}{u}\quad&\Longrightarrow\quad u=K_1p,\\
+    \int \frac{\d{p}}{p}=\int K_1 \d{x} \quad&\Longrightarrow\quad \ln{p}=K_1x+K_2,\\
+    p(0)=p_{\mathrm{in}}\quad&\Longrightarrow\quad K_2=\ln{p_{\mathrm{in}}},\\
+    p(L)=p_{\mathrm{out}}\quad&\Longrightarrow\quad K_1L=\ln{p_{\mathrm{out}}}-\ln{p_{\mathrm{in}}},\\
+    \ln{p}&=\frac{x}{L}\ln{\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}}+\ln{p_{\mathrm{in}}},\\
+    p(x)&=p_{\mathrm{in}}\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{{x}/{L}}.
+\end{align}
+\end{subequations}
+Hustotu toku vyjádříme z profilu hustoty podle \refeq{eq:polytropic_state_equation} a~derivace tlakového profilu,
+\begin{subequations}
+\begin{align}
+\rho(x)&=\frac{K_p}{p_{\mathrm{in}}}\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{-{x}/{L}},\qquad K_p=\frac{p_0^2}{RT_0},\\
+\Dd{p}{x}&=\frac{p_{\mathrm{in}}}{L}\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)\cdot \left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{{x}/{L}},\\
+j&=-\frac{k}{\mu}\frac{p_0^2}{RT_0}\frac{1}{L}\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right),
+\end{align}
+\end{subequations}
+nárůst tlaku v~permeametru získáváme v~podobě
+\begin{subequations}
+\begin{align}
+    \Dd{p_{\mathcal{R}}}{t}&=-\frac{A}{V_{\mathcal{R}}L}\frac{k}{\mu}\frac{T_{\mathcal{R}}}{T_0}p_0^2\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right),\\
+    \Dd{}{t}\left[\frac{p_{\mathrm{out}}}{p_0}\right]&=\frac{Ak}{V_{\mathcal{R}}L}\left[\frac{p_0}{\mu}\right]\left[\frac{T_{\mathcal{R}}}{T_0}\right]\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right),\\
+    \Dd{p_{out}}{t}&=-\frac{T_R k}{S\mu_0}\ln\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right),\\
+    \Dd{y}{t}&=-\frac{T_R k}{S\mu_0}\frac{1}{p_{in}}\ln{y},\\
+    \int\frac{\d{y}}{\ln{y}}&=\int-\frac{T_R k}{S\mu_0}\frac{1}{p_{in}}\d{t}.
+\end{align}
+\end{subequations}
+
+Časový průběh přechodové charakteristiky pak získáváme v~podobě
+\begin{subequations}
+\begin{align}
+    \li(y)&=-\frac{T_R k}{S\mu_0}\frac{1}{p_{in}}\cdot t\label{eq:logarithmic_step_implicit_original}\\
+    y&=\lii\left(\frac{T_R k}{S\mu_0}\frac{1}{p_{in}}\cdot t\right).
+\end{align}
+\end{subequations}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Návaznost řešení na~okolí logaritmického systému %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Návaznost řešení na~okolí logaritmického systému}\label{sss:navaznost_reseni_na_okoli_logaritmickeho_systemu}
+Zbývá ukázat, že logaritmický systém je uzávěrem prostoru řešení ve~smyslu spojitosti v~parametru $\alpha$. Uvažujme separovatelnou úlohu ekvivalentní k~\refeq{eq:step_response_diff_eqn},
+\begin{equation}
+    \int\frac{\alpha}{1-y^{\alpha}} \d{y} =\int\frac{T_R k}{S \mu_0}p_{in}^{\alpha-1}\d{t}
+\end{equation}
+Integrál pravé strany je stále triviální, integrál levé strany odpovídá škálované hypergeometrické řadě dle \refeq{eq:general_cauchy_series_solution_positive}, kde nad primitivní funkcí včetně nulové integrační konstanty budeme uvažovat jako nad funkcí dvou proměnných,
+\begin{equation}
+    S(\alpha, y):=\int_0^{y}\frac{\alpha}{1-s^{\alpha}} \d{s}=\sum_{n=0}^{\infty}\alpha\frac{y^{\alpha n+1}}{\alpha n+1}, \quad \alpha > 0, y\in(0,1).
+\end{equation}
+Zavedeme substituci $x=\alpha n+1$, píšeme
+\begin{equation}
+    S(\alpha, y)=\sum_{n=0}^{\infty}\alpha \frac{y^{x}}{x}.
+\end{equation}
+Součet pro limitu $\alpha \to 0_+$ naplňuje formu Riemannova určitého integrálu pro šířku kroku $\Delta x = \alpha$ v~mezích $n=0\Rightarrow x=1$ a~$n\to\infty\Longrightarrow x\to\infty$,
+\begin{equation}
+    \lim_{\alpha\to 0_+}S(\alpha,y)=\int_1^\infty\frac{y^x}{x}\d{x},
+\end{equation}
+kde po~vhodné substituci,
+\begin{subequations}
+\begin{align}
+    w&=-x \ln y,& x&=-\frac{w}{\ln y},\\
+    \d{w}&=-\ln y \d{x},& \d{x}&=-\frac{\d{w}}{\ln{y}},\\
+    x=1&\Rightarrow w=-\ln y,& x\to\infty &\Rightarrow w\to \infty,
+\end{align}
+\end{subequations}
+získáváme definiční vztah exponenciálního integrálu,
+\begin{equation}
+    \int_1^\infty\frac{y^x}{x}\d{x}=\int_{-\ln{y}}^{\infty}\frac{\e{-w}}{-\frac{w}{\ln{y}}}\frac{\d{w}}{-\ln{y}}=\int_{-\ln{y}}^{\infty}\frac{\e{-w}}{w}\d{w}=-\Ei\ln{y}=-\li y.
+\end{equation}
+Řešení Cauchyho úlohy získáváme v~podobě
+\begin{equation}
+    -\li y = \frac{T_R k}{S \mu_0} p_{in}^{-1}t,
+\end{equation}
+což je výsledek ekvivalentní s řešením dle \refeq{eq:logarithmic_step_implicit_original}.
+
+Limitu pro $\alpha \to 0_-$ snadno převedeme na~předchozí úlohu, neboť podle \refeq{eq:negative_alpha_absolute_value} můžeme psát
+\begin{equation}
+    \hat{S}(\alpha,y)
+    :=\int_0^{y}\frac{\alpha}{1-s^{\alpha}}\d{s}
+    =\int_0^{y}\frac{\abs{\alpha}}{1-s^{\abs{\alpha}}}-\abs{\alpha}\d{s}
+    =S(\abs{\alpha},y)+\alpha y,
+\end{equation}
+limita pak odpovídá
+\begin{equation}
+    \lim_{\alpha \to 0_-}\hat{S}(\alpha, y)=\lim_{\alpha \to 0_+}S(\alpha, y)+0=-\li{y},
+\end{equation}
+i pro $\alpha<0$ tedy limita konverguje k~řešení dle \refeq{eq:logarithmic_step_implicit_original}.
+
+%TODO: zkontrolovat, že to pasuje na~obecný tvar.
+% \begin{equation}
+%     \int\frac{1}{1-y^3}\d{y}=\frac{\sqrt{3}}{3}\atan\left(\frac{2y+1}{\sqrt{3}}\right)+\frac{1}{6}\ln\left(y^2+y+1\right)-\frac{1}{3}\ln\left(1-y\right)+c,
+% \end{equation}
+% kde počáteční podmínce odpovídá hodnota $c=-{\pi}/{6\sqrt{3}}$.

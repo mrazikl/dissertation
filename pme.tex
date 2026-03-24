@@ -1,0 +1,848 @@
+\section{Vnitřní dynamika systému}\label{s:vnitrni_dynamika_systemu}
+Abychom porozuměli zdrojům nelineárního chování, vystavíme matematický model transportu ideálního plynu porézním médiem z~hlubších principů. Vedle zákonů zachování hmoty a~energie zavedeme i~předpoklady vedoucí k~formulaci Darcyho zákona a~k~podobě Cauchyho tenzoru napětí. Vyjdeme z~obecné integrální formulace zákonů, poté omezíme geometrii na~tenkou membránu a~převedeme problém na~jednorozměrnou diferenciální rovnici. Jejím asymptotickým řešením získáme profily stavových veličin uvnitř membrány, z~nichž odvodíme nelineární závislost toku plynu membránou na~vstupním a~výstupním tlaku.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Základní nástroje a~postuláty %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Základní nástroje a~postuláty}\label{ss:zakladni_nastroje_a_postulaty}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Matematické nástroje %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Matematické nástroje}\label{sss:matematicke_nastroje}
+\paragraph{Věta o~divergenci} (též Gaussova nebo Gaussova-Ostrogradského) vyjadřuje vztah mezi objemovým integrálem divergence vektorového pole a~plošným integrálem toku tohoto pole přes hranici oblasti. Pro oblast $V\subset\mathbb{R}^3$ s~po částech hladkou hranicí $\partial V$ a~pole $\bm{F}\in C^1 (\overline{V}, \mathbb{R}^3)$ platí:
+\begin{equation}\label{eq:divergence_theorem}
+    \int_{V}\nabla\cdot\bm{F}\d{V}=\int_{\partial V} \bm{F}\cdot \bm{n} \d{S},
+\end{equation}
+psáno též pomocí vektorového diferenciálu $\dvec{S}=\bm{n}\d{S}$ \cite{marsden2003}.
+
+\paragraph{Greenova věta} (též Gaussova-Greenova nebo věta o~divergenci v~rovině) popisuje vztah mezi plošným integrálem divergence a~obvodovým integrálem toku. Pro oblast $A\subset\mathbb{R}^2$ s~po částech hladkou hranicí $\partial A$ a~pole $\bm{F}\in C^1(\overline{A},\mathbb{R}^2)$, platí:
+\begin{equation}\label{eq:green_standard}
+    \int_{A}\nabla\cdot\bm{F}\d{S}=\oint_{\partial A} \bm{F}\cdot \bm{n} \d{l},
+\end{equation}
+psáno též pomocí vektorového diferenciálu $\dvec{l}=\bm{n}\d{l}$ \cite{marsden2003}, kde $\bm{n}$ je jednotkový normálový vektor orientovaný směrem ven z výpočetní domény $V$. 
+
+\paragraph{Věta o~divergenci na~řezu} je zvláštní případ Greenovy věty pro průřez tělesem kolmý na~osu $x$. Píšeme
+\begin{equation}\label{eq:green_slice}
+    \int_{V_{x_0}} \widetilde{\nabla} \cdot \bm{F}(x_0, y, z) \d{S} =
+    \oint_{\partial V_{x_0}} \bm{F}(x_0,y,z) \cdot \bm{\tilde{n}}\d{l},
+\end{equation}
+kde $V_{x_0}=\left\{\left(x_0, y, z\right)\in V\right\}$ je řez, $\widetilde{\nabla}:=\left(0, \dd{}{y}, \dd{}{z}\right)$ je operátor tečné divergence a~$\bm{\tilde{n}}=\left(0, \tilde{n}_y, \tilde{n}_z\right)$ je normálový vektor v~rovině řezu \cite{whitaker2013}.
+
+\paragraph{Lokalizační věta} říká, že~pokud má integrál přes každou podmnožinu oblasti nulovou hodnotu, musí být nulový samotný integrand. Námi uvažovanou oblastí bude tloušťka membrány $x\in(0,L)$, pro kterou píšeme
+\begin{equation}
+    \int_I F(t, x) \d{x} = 0 \quad\forall I\subset \left(0,L\right) \Longrightarrow F(t, x) = 0.
+\end{equation}
+Je nutné poznamenat, že~lokalizační věta neříká nic o~krajních bodech $\{0,L\}$. Členy, které jsou vyhodnoceny právě v~$x=0$ a~$x=L$ se projeví jako okrajové podmínky diferenciální rovnice $F(t,x)=0$, což je přímým důsledkem spojitosti řešení \cite{evans2022}.
+
+\paragraph{Leibnizova věta} (v trojrozměrné variantě známá také jako Reynoldsův transportní teorém) umožňuje zaměnit pořadí integrace a~derivování, pokud je integrační oblast neměnná \cite{aris2012}:
+\begin{equation}
+    \dd{}{t}\int_{V}F \d{V}=\int_{V}\dd{F}{t}\d{V}.
+\end{equation}
+
+\paragraph{Fubiniho věta} umožňuje přepsat násobný integrál jako iterovaný integrál za předpokladu, že~integrand je měřitelný a~oblast má ve směru vnější integrace Lipschitzovskou hranici \cite{rudin2021}. Uvažujme těleso tvaru $V=\left[0, L\right]\times V_x$. Trojrozměrná varianta umožňuje převést objemový integrál skalárního pole na~integrál přes tloušťku membrány a~příčné řezy:
+\begin{equation}\label{eq:fubini_3D_scalar}
+    \int_{V}F(x,y,z)\d{V}=\int_0^L\int_{V_{x}}F(x,y,z)\d{S}\d{x}.
+\end{equation}
+Podobně lze plošný integrál přes část hranice tělesa reprezentující vnitřní rozhraní mezi plynem a~membránou
+$\partial V^{\star}=\left\{\left(x,y,z\right)\in \partial V, x \in \left(0,L\right)\right\}$ přepsat jako iterovaný integrál přes tloušťku membrány a~obvodové integrály hranic jednotlivých příčných řezů:
+\begin{equation}\label{eq:fubini_2D}
+    \int_{\partial V^{\star}}\bm{F}(x,y,z)\cdot\bm{n}\d{S} =
+    \int_0^L\oint_{\partial V_x}\bm{F}(x,y,z)\cdot \bm{\tilde{n}}\d{l}\d{x}.
+\end{equation}
+Při aplikaci Fubiniho věty je z~kontextu zpravidla zřejmé, zda jde o~variantu pro objemový či plošný integrál.
+
+\paragraph{Průměr na~řezu} je nástroj nezbytný pro redukci prostorových dimenzí pouze na~jednu ve směru toku plynu, zavádíme operaci
+\begin{equation}\label{eq:mean_surface}
+    \left\langle F\right\rangle(x):=\frac{1}{\abs{V_x}}\int_{V_x}F(x,y,z) \d{S}.
+\end{equation}
+
+\paragraph{Průměr na~hranici řezu} zavádíme zcela analogicky, 
+\begin{equation}\label{eq:mean_line}
+    \dblangle{F}(x):=\frac{1}{\abs{\partial V_x}}\oint_{\partial V_x}F(x,y,z) \d{l}.
+\end{equation}
+
+\paragraph{Průměr gradientu na~řezu} si zaslouží zvláštní pozornost, neboť obecně platí:
+\begin{equation}
+    \left\langle\dd{F}{x}\right\rangle (x)=\Dd{}{x}\left\langle F \right\rangle (x)-\frac{1}{\abs{V_x}}\int_{\partial V_x} F(x,y,z) n_x \d{x},
+\end{equation}
+kde druhý člen je nenulový v~případě, že~oblast průměrování závisí na~ose $x$, např. pro nakloněný řez. v~případě rovného řezu kolmého na~osu $x$ však tento člen mizí a~můžeme psát
+\begin{equation}
+    \left\langle\dd{F}{x}\right\rangle (x)=\Dd{}{x}\left\langle F \right\rangle (x).
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fyzika toku %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Fyzika toku}\label{sss:fyzika_toku}
+\paragraph{Rovnice kontinuity} vyjadřuje zákon zachování hmoty pro otevřený systém. Popisuje změnu hmotnosti kontrolního objemu v~důsledku toku hmoty přes jeho hranici,
+\begin{equation} \label{eq:continuity_integral}
+\dd{}{t}\int_V \rho \d{V} = - \int_{\partial V} \rho \bm{v} \cdot \dvec{S},
+\end{equation}
+zavádíme hustotu $\rho\unit{kg\,m^{-3}}$ a~vektor rychlosti $\bm{v}\unit{m\,s^{-1}}$. 
+
+\paragraph{Zákon zachování energie} popisuje změnu vnitřní energie kontrolního objemu, pro otevřený systém v~důsledku toku hmoty i~energie,
+\begin{equation}\label{eq:first_law_thermodynamics}
+    \dd{}{t}\int_{V}\rho u~\d{V}
+    = - \int_{V}\nabla \cdot \left(\bm{\sigma}\cdot\bm{v}\right) \d{V}
+    - \int_{\partial V} \rho h \bm{v} \cdot \dvec{S}
+    - \int_{\partial V}\left(\bm{q}+\bm{\phi}\right)\cdot \dvec{S}
+\end{equation}
+zavádíme měrnou vnitřní energii $u\unit{J\,{kg}^{-1}}$, Cauchyho tenzor napětí $\bm{\sigma}\unit{Pa}$, měrnou entalpii $h\unit{J\,{kg}^{-1}}$, vektor hustoty tepelného toku $\bm{q}\unit{W\,m^{-2}}$ a~vektor hustoty toku chemické energie $\bm{\phi}\unit{W\,m^{-2}}$. 
+
+\paragraph{Cauchyho tenzor napětí} představuje úplný popis mechanických napětí v~kontinuu. Vedle viskózního napětí obsahuje také izotropickou složku,
+\begin{equation}\label{eq:cauchy_stress_tensor}
+    \bm{\sigma}=\bm{\tau}-p\bm{I},
+\end{equation}
+zavádíme tenzor viskózního (též smykového) napětí $\bm{\tau}\unit{Pa}$ a~tlak $p\unit{Pa}$.
+
+\paragraph{Dynamická viskozita} je materiálový parametr vyjadřující odpor plynu vůči smykové deformaci, zavádíme $\mu\unit{{Pa}\,{s}}$. Má svůj původ v~kinetické teorii plynů, je důsledkem přenosu hybnosti mezi molekulami. Pro účely našeho modelu budeme dynamickou viskozitu považovat za~konstantní. 
+
+\paragraph{Newtonovská tekutina} je tekutina, jejíž viskózní napětí je přímo úměrné tenzoru rychlosti deformace. Pro Newtonovskou tekutinu platí:
+\begin{equation}\label{eq:deviatoric_stress_tensor}
+\bm{\tau}=\mu\left(\nabla \bm{v}+\left(\nabla\bm{v}\right)^\top\right)+\left(\zeta-\frac{2}{3}\mu\right)\left(\nabla\cdot\bm{v}\right)\bm{I},
+\end{equation}
+kde $I$ je jednotkový tenzor a~$\zeta\unit{Pa\,s}$ je objemová viskozita, kterou budeme uvažovat konstantní.
+
+\paragraph{Fourierův zákon} je základní vztah pro popis vedení tepla v~kontinuu. Udává, že~hustota tepelného toku je úměrná gradientu teploty,
+\begin{equation}
+    \bm{q}=-\lambda \nabla T,
+\end{equation}
+zavádíme tepelnou vodivost $\lambda\unit{W\,m^{-1}\,K^{-1}}$ a~teplotu $T\unit{K}$. 
+
+\paragraph{Sorpce} je chápána výhradně jako děj energetické výměny na~fázovém rozhraní mezi plynem a~membránou, bez přímého přenosu hmoty. Tato idealizace umožňuje zachytit chemické účinky sorpce ve formě toku chemické energie, aniž by bylo nezbytné zavádět samostatný tok hmoty.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Termodynamika %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Termodynamika}\label{sss:termodynamika}
+
+\paragraph{Stavová rovnice ideálního plynu} propojuje termodynamický a~mechanický popis systému. Vedle standardního tvaru rovnice budeme nejčastěji pracovat s~vyjádřením pomocí hustoty,
+\begin{equation}\label{eq:ideal_gas_law}
+    p V = m R T, \qquad p=\rho R T,
+\end{equation}
+zavádíme hmotnost $m\unit{kg}$ a~měrnou plynovou konstantu $R\unit{J\,K^{-1}\,kg^{-1}}$.
+
+\paragraph{Gibbsova identita} pro stlačitelnou tekutinu popisuje změnu vnitřní energie,
+\begin{equation}\label{eq:gibbs_equation}
+    \d{u}=T\d{s}-p\d{\nu},
+\end{equation}
+kde zavádíme entropii $s\unit{J\,kg^{-1}\,K^{-1}}$ a~měrný objem $\nu\unit{m^3\,kg^{-1}}$.
+
+\paragraph{Mayerův vztah} svazuje měrné tepelné kapacity ideálního plynu,
+\begin{equation}\label{eq:mayer}
+    c_p - c_V = R, \qquad c_p=\left(\dd{h}{T}\right)_p, \qquad c_V=\left(\dd{u}{T}\right)_V,
+\end{equation}
+zavádíme měrnou tepelnou kapacitu při konstantním tlaku $c_p\unit{J\,kg^{-1}\,K^{-1}}$ a~při konstantním objemu $c_V\unit{J\,kg^{-1}\,K^{-1}}$. Budeme předpokládat, že~plyn je kaloricky dokonalý, tj. jeho tepelné kapacity jsou konstantní.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Fyzika membrány %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Fyzika membrány}\label{sss:fyzika_membrany}
+Membránu uvažujeme jako oblast prostoru, která je složená z~plynné a~pevné fáze. Zaměřujeme se na~chování uvnitř plynné fáze, kterou značíme $\mathcal{G}$. Hranici uvažovaného systému tvoří trojice rozhraní, přičemž platí $\partial\mathcal{G}=\partial\mathcal{S}\cup\partial\mathcal{I}\cup\partial\mathcal{O}$, kde jednotlivé části označují:
+\begin{itemize}
+\item $\partial\mathcal{S}$ -- rozhraní plynné a~pevné fáze uvnitř membrány,
+\item $\partial\mathcal{I}$ -- rozhraní se vstupem systému (zásobní cela),
+\item $\partial\mathcal{O}$ -- rozhraní s~výstupem systému (permeační cela).
+\end{itemize}
+Geometricky membránu, resp. tvar rozhraní, považujeme za~neměnný, vylučujeme tedy např. stlačitelnost membrány. Hranice $\partial\mathcal{S}$ je reálné fázové rozhraní, hranice $\partial\mathcal{I}$ a~$\partial\mathcal{O}$ jsou pouze myšlené uzávěry $\mathcal{G}$ vhodně zvolené tak, aby celé těleso membrány mělo hladkou hranici.
+
+\paragraph{Reprezentativní elementární objem} \english{representative elementary volume} je takový objemový element, který je dostatečně malý, aby zachycoval detailní strukturu pórů, ale zároveň dostatečně velký, aby reprezentoval makroskopické vlastnosti proudícího plynu. Na mikroskopické úrovni uvažujeme, že~vnitřní geometrie membrány je buď přímo periodická, nebo alespoň statisticky homogenní, což je klíčové pro zavedení průměrovaných veličin jako jsou střední rychlost a~tlak. 
+
+\paragraph{Navier-Stokesovy rovnice} představují fundamentální popis proudění tekutin. Vyjadřují zákon zachování hybnosti a~pro nestlačitelnou tekutinu mají podobu
+\begin{subequations}
+    \begin{align}
+    \rho\left(\dd{\bm{v}}{t}+\bm{v}\cdot\nabla\bm{v}\right)&=-\nabla p + \mu \Delta \bm{v},\\
+    \nabla\cdot\bm{v}&=0.
+    \end{align}
+\end{subequations}
+Rovnici uvažujeme pro plynnou fázi reprezentativního elementárního objemu, nestlačitelnost uvažujeme pouze na~této mikroskopické úrovni.
+
+\paragraph{Stokesův tok} \english{creeping flow} je režim toku odpovídající malým hodnotám Reynoldsova čísla,
+\begin{equation}
+    \mathrm{Re}=\frac{\rho \overline{v}L}{\mu}\ll1,
+\end{equation}
+kde $\overline{v}$ je charakteristická rychlost, $L$ je charakteristický rozměr pórů a~$\mu$ je dynamická viskozita. V~tomto režimu výrazně převládá působení viskózních sil nad silami setrvačnými, jedná se o~stacionární režim pomalého proudění. Tok plynu membránou spadá do~režimu Stokesova toku zejména v~důsledku mikroskopických rozměrů pórů.
+
+\paragraph{Stokesův problém} je zjednodušení Navier-Stokesových rovnic pro Stokesův tok, kdy uvažujeme jednak stacionární tok, tj. neuvažujeme časovou derivaci, a~zanedbáváme setrvačný člen. Získáváme dvojici rovnic
+\begin{subequations}
+    \begin{align}
+    -\nabla p+\mu \Delta \bm{v}&=\bm{0}\\
+    \nabla\cdot\bm{v}&=0,
+    \end{align}
+\end{subequations}
+platných pro reprezentativní elementární objem.
+
+\paragraph{Bezsmykový styk} \english{no-slip condition} je okrajová podmínka definovaná na~rozhraní mezi plynem a~pevnou fází (stěnách pórů), která říká, že~plyn zde má nulovou rychlost,
+\begin{equation}
+    \bm{v}=\bm{0}\quad\forall \bm{x} \in \partial{\mathcal{S}}.
+\end{equation}
+Podmínka je opodstatněná, pokud střední volná dráha molekul je dostatečně malá.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Darcyho zákon %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Darcyho zákon}\label{sss:darcyho_zakon}
+Darcyho zákon představuje základní vztah pro popis toku v~porézních médiích na~makroskopické úrovni. Lineární závislost objemového toku na~tlakovém gradientu se osvědčila nejen empiricky, a~to v~mnoha oblastech, ale byla také rigorózně odvozena z~hlubších principů. Pochopení matematického původu Darcyho zákona je nezbytné pro následnou interpretaci nelineárních rozšíření popisu toku. Hledáme tedy makroskopický popis toku plynu vycházející z~jeho mikroskopických vlastností.
+
+Geometrii pevné fáze uvažujeme jako periodickou strukturu vnitřních buněk odpovídajících reprezentativnímu objemu definovanému výše. Na úrovni buňky budeme klást silnější předpoklady na~vlastnosti proudící tekutiny (nestlačitelnost tekutiny, periodicitu řešení). Na makroskopické úrovni budeme naopak zanedbávat potenciální fluktuace veličin uvnitř buněk, mikroskopické vlastnosti proto budeme průměrovat.
+
+Uvažujme parametr $\varepsilon=l/L$ pro charakteristický rozměr pórů $l$ a~charakteristický rozměr výpočetní domény $L$. V~doméně $\Omega \subset \mathbb{R}^3$ dále uvažujme plynnou fázi $\Omega^\varepsilon\subset\Omega$ reprezentující póry. V~plynné fázi řešíme Stokesův problém za~podmínky bezsmykového styku,
+\begin{subequations}\label{eq:permeability_stokes_formulation}
+    \begin{align}
+        \label{eq:permeability_stokes_formulation:innertia}
+    &&-\nabla p^{\varepsilon}+\mu \Delta \bm{v}^{\varepsilon}&=\bm{0}
+    \quad && \textrm{na}\,\Omega^\varepsilon,\\
+        \label{eq:permeability_stokes_formulation:incrompressibility}
+    &&\nabla\cdot\bm{v}^\varepsilon&=0
+    \quad && \textrm{na}\,\Omega^\varepsilon,\\
+    \label{eq:permeability_stokes_formulation:boundary}
+    &&\bm{v}^\varepsilon&=\bm{0}
+    \quad && \textrm{na pevné části}\,\partial\Omega^\varepsilon.
+    \end{align}
+\end{subequations}
+
+Pro doménu $\Omega$ uvažujme reprezentativní elementární objem $Y\subset\Omega$ a~jeho plynnou fázi $Y_F\subset Y$. Předpokládáme, že~struktura pórů je periodická vzhledem k~buňce $Y$. Definujme lokální rychlou proměnnou $\bm{y}=\bm{x}/\varepsilon$, odkud přímo plyne $\bm{y}\in\left[0,1\right]^3$ na~$Y$. v~této dvouúrovňové struktuře pro diferenciální operátory platí:
+\begin{equation}
+    \left(\bm{x},\bm{y}\right)=\left(\bm{x},\frac{1}{\varepsilon}\bm{x}\right)
+    \Longrightarrow\quad
+    \begin{aligned}
+    &\nabla=\nablax+\frac{1}{\varepsilon}\nablay,\\
+    &\Delta=\laplacexx+2\frac{1}{\varepsilon}\laplacexy+\frac{1}{\varepsilon^{2}}\laplaceyy,
+    \end{aligned}
+\end{equation}
+kde pod operátorem je značen jeho směr, nadto $\laplacexy=\nablax\cdot\nablay$.
+
+Dále hledáme takové asymptotické rozvoje veličin $p^{\varepsilon}$ a~$\bm{v}^\varepsilon$ ve smyslu mocninné řady v~$\varepsilon$, které vedou k~netriviálnímu řešení, tj. hledáme řád $\varepsilon$ příslušný nultému členu obou řad. Mějme rozvoje
+\begin{align}\label{eq:stokes_asymptotic}
+    \bm{v}^{\varepsilon}(\bm{x})=\sum_{i=0}^\infty \varepsilon^{i+\alpha_v}\bm{v}_i(\bm{x},\bm{y}),
+    &&&
+    p^{\varepsilon}(\bm{x})=\sum_{i=0}^\infty \varepsilon^{i+\alpha_p}p_i(\bm{x},\bm{y}),
+\end{align}
+kde $\alpha_v, \alpha_p\in\mathbb{Z}$ jsou posuny mocniny $\varepsilon$ příslušné nultému členu. Je nezbytné, aby $\alpha_v=0$, neboť
+\begin{align}
+        \alpha_v>0\Longrightarrow \lim_{\varepsilon\to0_+}\varepsilon^{\alpha_v}\bm{v}_i = \bm{0},
+    &&&
+        \alpha_v < 0 \Longrightarrow \abs{\lim_{\varepsilon\to0_+}\varepsilon^{\alpha_v}\bm{v}_i}=+\infty.
+\end{align}
+Dále je nutnou podmínkou, aby po~dosazení rozvojů do~původního problému souhlasil řád $\varepsilon$ u~nultých členů $p_0$ a~$\bm{v}_0$, odkud jednoznačně $\alpha_v=\alpha_p+1$, viz \refeq{eq:permeability_stokes_hierarchy:1.1}. Získáváme asymptotické rozvoje pro obě veličiny, 
+\begin{align}
+        \bm{v}^{\varepsilon}(\bm{x})=\sum_{i=0}^\infty \varepsilon^{i}\bm{v}_i(\bm{x},\bm{y}),
+        &&&
+        p^{\varepsilon}(\bm{x})=\sum_{i=0}^\infty \varepsilon^{i-1}p_i(\bm{x},\bm{y}).
+\end{align}
+
+Dosazením asymptotického rozvoje a~operátorů do~jednotlivých členů problému \refeq{eq:permeability_stokes_formulation} dostáváme
+\begin{subequations}
+\begin{align}
+\nabla
+& p^{\varepsilon} 
+    = \left(\nablax+\frac{1}{\varepsilon}\nablay\right)\sum_{i=0}^\infty \varepsilon^{i-1} p_i
+    =\nablax\sum_{i=0}^\infty \varepsilon^{i-1} p_i
+    +\nablay\sum_{i=0}^\infty \varepsilon^{i-2} p_i
+\nonumber\\&
+    =\frac{1}{\varepsilon^{2}}\nablay p_0
+    +\frac{1}{\varepsilon}\left(\nablax p_0+\nablay p_1\right)
+    +\sum_{i=0}^{\infty}\varepsilon^i \left(\nablax p_{i+1}+\nablay p_{i+2}\right),
+\\
+\Delta
+& \bm{v}^\varepsilon=
+    \laplacexx\sum_{i=0}^\infty \varepsilon^i\bm{v}_i
+    +2\laplacexy\sum_{i=0}^\infty \varepsilon^{i-1}\bm{v}_i
+    +\laplaceyy\sum_{i=0}^\infty \varepsilon^{i-2}\bm{v}_i
+\nonumber\\&=
+    \frac{1}{\varepsilon^{2}}\laplaceyy\bm{v}_0+
+    \frac{1}{\varepsilon}\left(2\laplacexy\bm{v}_0+\laplaceyy\bm{v}_1\right)
+    +\sum_{i=0}^{\infty}\varepsilon^{i}\left(\laplacexx\bm{v}_i+2\laplacexy\bm{v}_{i+1}+\laplaceyy\bm{v}_{i+2}\right),
+\\\nabla
+&\cdot\bm{v}^{\varepsilon}=
+    \left(\nablax+\frac{1}{\varepsilon}\nablay\right) \cdot 
+    \sum_{i=0}^\infty \varepsilon^i\bm{v}_i
+    =
+    \sum_{i=0}^{\infty}\varepsilon^{i} \left(\nablax\cdot\, \bm{v}_{i}\right)
+    +\sum_{i=0}^{\infty} \varepsilon^{i-1} \left(\nablax \cdot\, \bm{v}_{i}\right)
+\nonumber\\&=
+    \frac{1}{\varepsilon}\nablay\cdot\, \bm{v}_0
+    +\left(\nablax\cdot\,\bm{v}_0+\nablay\cdot\, \bm{v}_1\right)
+    +\sum_{i=0}^{\infty}\varepsilon^{i}\left(\nablax\cdot\,\bm{v}_{i}+\nablay\cdot\,\bm{v}_{i+1}\right).
+\end{align}
+\end{subequations}
+Získáváme hierarchii problémů v~mocninách $\varepsilon$:
+\begin{subequations}
+    \label{eq:permeability_stokes_hierarchy}
+    \begin{align}
+        \label{eq:permeability_stokes_hierarchy:1.1}
+    \varepsilon^{-2}:   &&-\nablay p_0 +\mu \laplaceyy \bm{v}_0&=\bm{0},&&&&\\
+        \label{eq:permeability_stokes_hierarchy:2.1}
+    \varepsilon^{-1}:   &&-\nablay p_1 -\nablax p_0 + \mu\left(2\laplacexy\bm{v}_0+\laplaceyy\bm{v}_1\right)&=\bm{0},\\
+        \label{eq:permeability_stokes_hierarchy:2.2}
+                        &&\nablay \cdot\, \bm{v}_0&=0,\\
+        \label{eq:permeability_stokes_hierarchy:3.1}
+    \varepsilon^{0}:    &&-\nablay p_2 -\nablax p_1 + \mu\left(\laplacexx\bm{v}_0+\laplacexy\bm{v}_1+\laplaceyy\bm{v}_2\right)&=\bm{0},\\
+        \label{eq:permeability_stokes_hierarchy:3.2}
+                        &&\nablax\cdot\, \bm{v}_0+\nablay \cdot\, \bm{v}_1 &= 0.
+    \end{align}
+\end{subequations}
+Hledáme řady funkcí $p_i$ a~$\bm{v}_i$, jejíž členy řeší každou úroveň hierarchie samostatně a~zároveň jsou vzájemně kompatibilní, tj. výsledná řada jako celek aproximuje řešení původního problému. 
+
+Abychom mohli řešit rovnici \refeq{eq:permeability_stokes_hierarchy:1.1}, využijeme na~základě podmínky kompatibility rovnici \refeq{eq:permeability_stokes_hierarchy:2.2}. Spolu s~okrajovou podmínkou \refeq{eq:permeability_stokes_formulation:boundary} získáváme řešitelnou úlohu,
+\begin{subequations}
+\begin{align}
+    -\nablay p_0 +\mu \laplaceyy \bm{v}_0=\bm{0}\quad\textrm{na}\,Y_F,&&\bm{v}_0=\bm{0}\quad&\textrm{na pevné hranici}\,Y_F,\\
+    \nablay \cdot\, \bm{v}_0=0\quad\textrm{na}\,Y_F,&&p_0,\bm{v}_0\quad&\textrm{jsou}\,Y\textrm{-periodické}.
+\end{align}
+\end{subequations}
+Všimněme si, že~úloha je nezávislá na~$\bm{x}$ a~periodická v~$\bm{y}$. Nutně platí $\nablay p_0 = \bm{0}$, neboť přítomnost gradientu by vedla k~nerovnoměrnému toku, což je v~rozporu s~periodicitou a~nestlačitelností stacionárního řešení rychlosti $\bm{v}_0$; pro buňku platí $p_0=p_0(\bm{x})$. Zůstává soustava $\laplaceyy \bm{v}_0=0$ a~$\nabla \cdot \bm{v}_0=0$, kde první rovnici řeší harmonické a~druhou lineární funkce, což v~kombinaci s~nulovou okrajovou podmínkou umožňuje pouze řešení $\bm{v}_0=\bm{0}$. Nultými členy rozvoje tedy jsou:
+\begin{equation}
+p_0(\bm{x},\bm{y})=p_0(\bm{x}),\quad \bm{v}_0(\bm{x},\bm{y})=\bm{0},\quad\textrm{na}\,Y_F.
+\end{equation}
+
+Na úrovni $\varepsilon^{-1}$ řešíme rovnici \refeq{eq:permeability_stokes_hierarchy:2.1}, která je na~základě kompatibility doplněna o~rovnici \refeq{eq:permeability_stokes_hierarchy:3.2} a~o~okrajovou podmínku \refeq{eq:permeability_stokes_formulation:boundary}. z~předchozí úrovně plyne, že~$\laplacexy \bm{v}_0=0$ a~$\nablax \cdot \bm{v}_0$; dostáváme úlohu
+\begin{subequations}
+\begin{align}
+    -\nablay p_1-\nablax p_0 +\mu \laplaceyy \bm{v}_1=\bm{0}\quad\textrm{na}\,Y_F,&&\bm{v}_1=\bm{0}\quad&\textrm{na pevné hranici}\,Y_F,\\
+    \nablay \cdot \bm{v}_1=0\quad\textrm{na}\,Y_F,&&p_1,\bm{v}_1\quad&\textrm{jsou}\,Y\textrm{-periodické}.
+\end{align}
+\end{subequations}
+Všimněme si, že~člen $\nablax p_0$ je makroskopický tlakový gradient a~v~soustavě působí jako parametr, odpovídáme tedy na~otázku, jaký vliv má přítomnost makroskopického tlakového gradientu na~lokální tok porézní strukturou. Soustava je lineární v~$p_1$ a~$\bm{v}_1$ a~afinní v~$\nablax p_0$, hledáme tedy řešení v~podobě superpozice elementárních řešení odpovídajících jednotkovým směrům tlakového gradientu.
+
+Uvažujme elementární řešení $\bm{w}^i(y)$ pro rychlostní pole generované gradientem $\nablax p_0=\bm{\mathrm{e}}^i$ ve~směru jednotkového vektoru $\bm{\mathrm{e}}^i$, dále uvažujme odpovídající korekci tlaku $\pi^i(\bm{y})$. Pro každou z~$d=3$ prostorových dimenzí řešíme problém
+\begin{subequations}
+\begin{align}
+    -\nablay \pi^{i} +\mu \laplaceyy \bm{w}^{i}=\bm{\mathrm{e}}^i\quad\textrm{na}\,Y_F,&&\bm{w}^i=\bm{0}\quad&\textrm{na pevné hranici}\,Y_F,\\
+    \nablay \cdot\, \bm{w}^i=0\quad\textrm{na}\,Y_F,&&\pi^i,\bm{w}^i\quad&\textrm{periodické}.
+\end{align}
+\end{subequations}
+Pro libovolný tlakový gradient je pak řešením superpozice elementárích řešení,
+\begin{equation}
+    p_1(\bm{x},\bm{y})=-\sum_{i=1}^{d}\dd{p_0}{x_i}(\bm{x})\,\pi^{i}(\bm{y}),\quad \bm{v}_1(\bm{x},\bm{y})=-\sum_{i=1}^{d}\dd{p_0}{x_i}(\bm{x})\,\bm{w}^{i}(\bm{y}),
+\end{equation}
+kde řešení rychlosti jsou nepřímo úměrné viskozitě, $w\propto1/\mu$.
+
+Definujme nyní tenzor permeability $\bm{k}\unit{m^2}$ po~složkách jako
+\begin{equation}
+    \bm{k}\in\mathbb{R}^{d\times d}:\quad k_{ij}=\frac{\mu}{\abs{Y}}\int_{Y_F} w_j^i\d{y},
+\end{equation}
+kde $w_j^i$ je $j$-tá složka řešení $\bm{w}^i$ odpovídající makroskopickému tlakovému gradientu ve směru $\bm{\mathrm{e}}^i$. Přítomnost viskozity kompenzuje její vliv na~řešení rychlostí, takto definovaná permeabilita tedy reprezentuje pouze vlastnosti geometrické struktury, nikoliv proudící tekutiny.
+
+\paragraph{Darcyho zákon} popisuje makroskopickou rychlost proudění $\bm{v}(\bm{x})$ jako průměrnou rychlost přes póry,
+\begin{equation}\label{eq:darcy_velocity}
+    \bm{v}(\bm{x})=\frac{1}{\abs{Y}}\int_{Y_F}\bm{v}_1(\bm{x},\bm{y})\d{y}=-\sum_{i=1}^{d}\dd{p_0}{x_i}(\bm{x})\cdot \frac{1}{\abs{Y}}\int_{Y_F}\bm{w}^i\d{y}=-\frac{\bm{k}}{\mu}\cdot\nabla p_0(\bm{x}).
+\end{equation}
+
+Řešení Stokesova problému \refeq{eq:permeability_stokes_formulation} aproximujeme částečnými rozvoji \refeq{eq:stokes_asymptotic}. Pro tlak získáváme
+\begin{equation}
+    p^{\varepsilon}=\varepsilon^{-1} p_0(\bm{x})+ \varepsilon^{0}p_1 + \mathcal{O}(\varepsilon)=\varepsilon^{-1} p_0(\bm{x}) - \varepsilon^{0}\sum_{i=1}^{d}\dd{p_0}{x_i}(\bm{x})\,\pi^{i}(\bm{y}) + \mathcal{O}(\varepsilon),
+\end{equation}
+kde člen $p_1$ reprezentuje lokální fluktuace tlaku v~důsledku mikroskopické struktury. Pro rychlost získáváme
+\begin{equation}
+    \bm{v}^{\varepsilon}=\varepsilon \bm{v}_1+\mathcal{O}(\varepsilon^2)\approx-\frac{\bm{k}}{\mu}\cdot\nabla p_0(\bm{x}),
+\end{equation}
+kde případné další členy reprezentují korekce vyššího řádu.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Formulace jednorozměrné úlohy %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Formulace jednorozměrné úlohy}\label{ss:formulace_jednorozmerne_ulohy}
+Formulujme zákon zachování energie \refeq{eq:first_law_thermodynamics} pro otevřený systém $\mathcal{G}$, jehož geometrie je definována v~kapitole \ref{sss:fyzika_membrany}. Popisujeme změnu vnitřní energie systému,
+\begin{equation}\label{eq:1st_law_general}
+    \dd{}{t}\int_{\mathcal{G}}\rho u~\d{V}
+    = - \int_{\partial\mathcal{I}+\partial\mathcal{O}} \mkern-36mu \rho h \bm{v} \cdot \dvec{S}
+    - \int_{\partial\mathcal{S}}\left(\bm{q}+\bm{\phi}\right)\cdot \dvec{S}
+    - \int_{\mathcal{G}}\nabla \cdot \left(\bm{\sigma}\cdot\bm{v}\right) \d{V}.
+\end{equation}
+Levá strana rovnice vyjadřuje časovou změnu celkové energie v~systému, integrál budeme označovat jako akumulační člen. První člen pravé strany představuje energii přenesenou přes hranici systému v~důsledku proudění hmoty, budeme jej označovat jako konvektivní člen. Druhý člen pravé strany představuje energii přenesenou přes hranici systému bez přenosu hmoty, budeme jej proto v~širším slova smyslu označovat jako konduktivní člen. Poslední člen vyjadřuje mechanickou práci vykonanou systémem, označujeme jej jako objemový člen. 
+
+Konvektivní člen je relevantní pouze na~hranicích $\partial\mathcal{I}$ a~$\partial\mathcal{O}$, neboť hranici $\partial\mathcal{S}$ považujeme za~nepropustnou. Konduktivní člen naopak uvažujeme pouze na~hranici $\partial\mathcal{S}$, neboť veškeré energetické toky myšlenou hranicí $\partial\mathcal{I}$, resp. $\partial\mathcal{O}$, jsou již zahrnuty v~konvektivním členu. K energetickému toku hranicí $\partial\mathcal{S}$ dochází dvěma mechanismy: výměnou tepelné energie $\bm{q}$ a~chemické energie $\bm{\phi}$; mechanická práce je vyloučena v~důsledku nestlačitelnosti membrány a~bezsmykového styku. Po dosazení Fourierova zákona a~Cauchyho tenzoru napětí získáváme
+\begin{align}\label{eq:1st_law_detailed}
+    \dd{}{t}&\int_{\mathcal{G}}\rho u~\d{V}
+    =-\int_{\partial\mathcal{I}+\partial\mathcal{O}} \mkern-36mu \rho h \bm{v} \cdot \dvec{S}
+    -\int_{\partial\mathcal{S}}\left(-\lambda \nabla T +\bm{\phi}\right)\cdot\dvec{S}
+    +\int_{\mathcal{G}}\nabla\cdot\left(p\bm{v}\right)\d{V}\nonumber\\
+    -&\int_{\mathcal{G}}\mu\nabla\cdot\left(\left(\nabla \bm{v}+\left(\nabla\bm{v}\right)^\top\right)\bm{v}\right)+
+    \left(\zeta-\frac{2}{3}\mu\right)\nabla\cdot\left(\left(\nabla\cdot\bm{v}\right)\bm{v}\right)\d{V},
+\end{align}
+kde objemový člen jsme rozdělili na~izotropickou a~deviatorickou část.
+
+Zaměříme se nyní na~důsledky uvažované geometrie systému. Naším cílem je převést prostorově trojrozměrnou úlohu na~úlohu jednorozměrnou, neboť škála dostupných nástrojů pro řešení jednorozměrných úloh je, zejména v~oblasti hledání analytických řešení, podstatně širší. Vedle ryze geometrických úvah však bude třeba zavést i~konkrétní předpoklady na~vlastnosti veličin, tyto se budeme snažit omezit na~nezbytné minimum. 
+
+\paragraph{Geometrie membrány} je od této chvíle omezena na~oblast odpovídající realitě: membránu považujeme za~tenkou vrstvu o~konstantní tloušťce $L\unit{m}$ a~ploše $A\unit{m^2}$, kde $L\ll A$, umístěnou v~souřadném systému tak, že~$x\in\left(0,L\right)$. Hranici $\partial\mathcal{I}$ umístíme do~souřadnice $x=0$, hranici $\partial\mathcal{O}$ do~souřadnice $x=L$, proudění plynu tedy probíhá ve směru kladné osy $x$. Zavádíme bázové vektory $\bm{\hat{x}}$, $\bm{\hat{y}}$, $\bm{\hat{z}}$.
+
+O vnitřní struktuře membrány předpokládáme, že~je axiálně (tj. ve směru $\bm{\hat{x}}$) homogenní a~laterálně (příčně, případně radiálně, ve směrech $\bm{\hat{y}}$ a~$\bm{\hat{z}}$) izotropní. Pro ujasnění významu těchto pojmů uvažujme libovolný příčný řez membránou. Zavádíme porozitu $\varepsilon\unit{-}$ jako poměr mezi plochou řezu náležející plynné fázi a~celkovou plochou řezu, a~měrnou mezifázovou plochu $a\unit{m^{-1}}$ \english{surface-to-volume-ratio} jako poměr mezi smáčeným obvodem \english{wetted perimeter} a~celkovou plochou řezu. Axiální homogenitou rozumíme, že~tyto dva geometrické parametry jsou podél osy $x$ invariantní -- tedy konstantní. Membránu označujeme jako laterálně izotropní v~případě, kdy z~makroskopického pohledu neexistuje preferovaný směr veličin v~příčném směru. Jinými slovy předpokládáme, že~se lokální deviace v~geometrii membrány statisticky vyruší, a~tedy že~očekávané hodnoty laterálních složek všech vektorových veličin jsou totožné. Přímým důsledkem požadavků na~geometrii je, že~tenzor permeability $\bm{k}$ degeneruje ve skalární veličinu $k$.
+
+Naším cílem je převést trojrozměrnou integrální úlohu o~mnoha veličinách na~jednorozměrnou diferenciální rovnici popisující chování tlaku. Klíčovými nástroji jsou lokalizační věta, průměrování na~řezu a~důsledky nepropustnosti hranice a~bezsmykového styku. 
+
+\paragraph{Konvektivní člen} se svou geometrií vymyká ostatním, integrujeme přes hraniční plochy $\partial\mathcal{I}=\mathcal{G}_0$ a~$\partial\mathcal{O}=\mathcal{G}_{L}$. Na výstupní hranici je normálový vektor totožný s~$\bm{\hat{x}}$, na~vstupní hranici je jeho směr opačný. Dosazením za~skalární součin $\bm{v}\cdot\bm{\hat{x}}=v_x$ získáváme
+\begin{subequations}
+\begin{align}
+-\int_{\partial\mathcal{I}}\rho h\bm{v}\,\dvec{S} &= -\int_{\partial\mathcal{I}}\rho h \bm{v}\cdot\left(-\bm{\hat{x}}\right)\d{S}=\int_{\partial\mathcal{G}_{0}}\rho h v_x\d{S}=\varepsilon A {\left\langle\rho h v_x \right\rangle}_{x=0},\\
+-\int_{\partial\mathcal{O}}\rho h\bm{v}\,\dvec{S} &= -\int_{\partial\mathcal{O}}\rho h \bm{v}\cdot\bm{\hat{x}}\d{S}=-\int_{\partial\mathcal{G}_{L}}\rho h v_x\d{S}=-\varepsilon A {\left\langle\rho h v_x \right\rangle}_{x=L}.
+\end{align}
+\end{subequations}
+Argument konvektivního členu lze na~základě stavové rovnice ideálního plynu, definice entalpie a~Darcyho zákona vyjádřit jako
+\begin{equation}
+    \rho h v_x=\rho c_p T v_x = \rho c_p \frac{p}{R \rho}v_x=\frac{c_p}{R}p v_x=-\frac{c_p}{R}p\frac{k}{\mu}\dd{p}{x},
+\end{equation}
+kde $c_p\unit{J\,kg^{-1}\,K^{-1}}$ je izobarická měrná tepelná kapacita. Získáváme vyjádření konvektivního členu,
+\begin{equation}\label{eq:convection_io_mean}
+    -\int_{\partial\mathcal{I}+\partial\mathcal{O}} \mkern-36mu \rho h \bm{v} \cdot \dvec{S}={\left[\varepsilon A\frac{k}{\mu}\frac{c_p}{R}\left\langle p\dd{p}{x}\right\rangle\right]}_0^L.
+\end{equation}
+
+\paragraph{Akumulační člen} nejprve přepíšeme pomocí Fubiniho věty,
+\begin{equation}
+    \dd{}{t}\int_{\mathcal{G}}\rho u~\d{V}
+    =\dd{}{t}\int_0^L\int_{\mathcal{G}_x}\rho u\d{S}\d{x},
+\end{equation}
+vnitřní integrál vyjádříme jako střední hodnotu na~řezu,
+\begin{equation}
+    \dd{}{t}\int_0^L\int_{\mathcal{G}_x}\rho u\d{S}\d{x}
+    =\dd{}{t}\int_0^L\varepsilon A\left\langle\rho u\right\rangle\d{x},
+\end{equation}
+a s~použitím Leibnizovy věty zaměníme pořadí derivace a~integrálu,
+\begin{equation}
+    \dd{}{t}\int_0^L\varepsilon A\left\langle\rho u\right\rangle\d{x}=\int_0^L\varepsilon A\dd{}{t}\left\langle\rho u\right\rangle\d{x}.
+\end{equation}  
+Argument akumulačního členu lze na~základě stavové rovnice ideálního plynu a~definice specifické energie vyjádřit jako
+\begin{equation}
+    \rho u~= \rho c_V T = \rho c_V \frac{p}{R \rho}=\frac{c_V}{R}p,
+\end{equation}
+kde $c_V\unit{J\,kg^{-1}\,K^{-1}}$ je izochorická měrná tepelná kapacita. Dosazením získáváme vyjádření akumulačního členu,
+\begin{equation}\label{eq:accumulation_mean}
+    \dd{}{t}\int_{\mathcal{G}}\rho u~\d{V}=\int_0^L\varepsilon A\frac{c_V}{R}\dd{\left\langle p\right\rangle}{t}\d{x}.
+\end{equation}
+
+\paragraph{Konduktivní člen} nejprve přepíšeme pomocí Fubiniho věty,
+\begin{equation}
+    \int_{\partial\mathcal{S}}\left(-\lambda \nabla T + \bm{\phi}\right)\cdot\dvec{S}=
+    \int_0^L \int_{\partial\mathcal{S}_x}\left(-\lambda \nabla T + \bm{\phi}\right)\cdot\bm{\tilde{n}}\d{l}\d{x},
+\end{equation}
+a vnitřní integrál vyjádříme jako střední hodnotu na~hranici řezu,
+\begin{equation}\label{eq:conduction_mean}
+    \int_0^L \int_{\partial\mathcal{S}_x}\left(-\lambda \nabla T + \bm{\phi}\right)\cdot\bm{\tilde{n}}\d{l}\d{x}=
+    \int_0^L a~A \dblangle{\left(-\lambda \nabla T + \bm{\phi}\right)\cdot\bm{\tilde{n}}}\d{x}.
+\end{equation}
+
+\paragraph{Izotropická část objemového členu} po~použití Fubiniho věty a~rozepsání divergence obsahuje
+\begin{equation}
+    \int_G \nabla\cdot\left(p \bm{v}\right) \d{V}=
+    \int_0^L\int_{\mathcal{G}_x}\dd{}{x}\left(pv_x\right)+\dd{}{y}\left(p v_y\right)+\dd{}{z} \left(p v_z\right)\d{S}\d{x}.
+\end{equation}
+Členy s~derivací ve směru $y$ a~$z$ naplňují formu potřebnou pro aplikaci věty o~divergenci na~řezu,
+\begin{equation}
+    \int_{\mathcal{G}_x}\dd{}{y}\left(p v_y\right)+\dd{}{z} \left(p v_z\right)\d{S}=
+    \int_{\mathcal{G}_x}\widetilde{\nabla}\cdot(p\bm{v})\d{S}=
+    \int_{\partial\mathcal{G}_x}p\bm{v}\cdot\bm{\tilde{n}}\d{l},
+\end{equation}
+kde po~celou dobu uvažujeme fixní $x$. Součin $\bm{v}\cdot\bm{\tilde{n}}$ je dle podmínky bezsmyko\-vého styku nulový, proto z~izotropické části objemového členu zůstává pouze 
+\begin{equation}
+    \int_{\mathcal{G}} \nabla\cdot\left(p \bm{v}\right) \d{V}
+    =\int_0^L\int_{\mathcal{G}_x}\dd{}{x}\left(p v_x\right)\d{S}\d{x}
+    =\int_0^L\varepsilon A \left\langle\dd{}{x}\left(p v_x\right)\right\rangle \d{x}.
+\end{equation}
+
+Dosazením Darcyho zákona získáváme vyjádření izotropické části objemového členu,
+\begin{equation}\label{eq:isotropic_mean}
+    \int_G \nabla\cdot\left(p \bm{v}\right) \d{V}=-\int_0^L\varepsilon A \frac{k}{\mu}\left\langle \dd{}{x}\left(p\dd{p}{x}\right)\right\rangle \d{x}.
+\end{equation}
+
+\paragraph{Deviatorická část objemového členu} má formu potřebnou pro aplikaci věty o~divergenci,
+\begin{equation}
+    -\int_{\mathcal{G}}\nabla\cdot\left(\bm{\tau}\cdot \bm{v}\right) \d{V}
+    =-\int_{\partial\mathcal{G}}\left(\bm{\tau}\cdot\bm{v}\right)\cdot\dvec{S},
+\end{equation}
+kde na~pevné části hranici platí bezsmykový styk, tedy
+\begin{equation}
+    -\int_{\partial\mathcal{G}}\left(\bm{\tau}\cdot\bm{v}\right)\cdot\dvec{S}
+    =-\int_{\partial\mathcal{I}+\partial\mathcal{O}}\mkern-36mu\left(\bm{\tau}\cdot\bm{v}\right)\cdot\bm{n}\d{S}.
+\end{equation}
+Pro normálový vektor platí $\bm{n}=\pm\hat{\bm{x}}$, získáváme
+\begin{subequations}
+    \begin{align}
+        -\int_{\partial\mathcal{I}}\left(\bm{\tau}\cdot\bm{v}\right)_x\bm{n}\d{S}&
+        =\int_{\mathcal{G}_0}\left(\bm{\tau}\cdot\bm{v}\right)_x\left(-\hat{\bm{x}}\right)\d{S}
+        =\varepsilon A{\left\langle \left(\bm{\tau}\cdot\bm{v}\right)_x \right\rangle}_{x=0},
+        \\
+        -\int_{\partial\mathcal{O}}\left(\bm{\tau}\cdot\bm{v}\right)_x\bm{n}\d{S}&
+        =-\int_{\mathcal{G}_L}\left(\bm{\tau}\cdot\bm{v}\right)_x\hat{\bm{x}}\d{S}
+        =-\varepsilon A{\left\langle \left(\bm{\tau}\cdot\bm{v}\right)_x \right\rangle}_{x=L}.
+    \end{align}
+\end{subequations}
+kde $\left(\cdot\right)_x$ je složka odpovídající směru $\hat{\bm{x}}$. Dosazením Darcyho zákona získáváme
+\begin{equation}
+    {\left[\vphantom{\frac{k}{\mu}}-\varepsilon A \left(\bm{\tau}\cdot \bm{v}\right)_x \right]}_0^L={\left[ \varepsilon A \frac{k}{\mu}\left(\bm{\tau}\cdot \nabla p\right)_x \right]}_0^L.
+\end{equation}
+Pro Newtonovskou tekutinu platí
+\begin{align}
+    \left(\bm{\tau}\cdot\bm{v}\right)_x
+    =&\mu\left(\dd{v_x}{y}+\dd{v_y}{x}\right)v_y+\mu\left(\dd{v_x}{z}+\dd{v_z}{x}\right)v_z\nonumber\\
+    &+\left(\zeta+\frac{4}{3}\mu\right)\dd{v_x}{x}v_x+\left(\zeta-\frac{2}{3}\mu\right)\left(\dd{v_y}{y}+\dd{v_z}{z}\right)v_x,
+\end{align}
+po dosazení Darcyho zákona dostáváme
+\begin{align}
+    \left(\bm{\tau}\cdot \nabla p\right)_x=
+    &-2k\left(\frac{\partial^2 p}{\partial x \partial y}\dd{p}{y}+\frac{\partial^2 p}{\partial x \partial z}\dd{p}{z}\right)-\frac{k}{\mu}\left(\zeta-\frac{2}{3}\mu\right)\left(\dD{p}{y}+\dD{p}{z}\right)\dd{p}{x}\nonumber\\
+    &-\frac{k}{\mu}\left(\zeta+\frac{4}{3}\mu\right)\dD{p}{x}\dd{p}{x}
+    .
+\end{align}
+Tlak na~vstupní a~výstupní hranici je konstantní, laterální složky a~jejich derivace, stejně jako derivace axiální složky v~laterálních směrech jsou proto nulové. Deviatorickou část objemového členu získáváme v~podobě
+\begin{equation}\label{eq:deviatoric_mean}
+    -\int_{\mathcal{G}}\nabla\cdot\left(\bm{\tau}\cdot \bm{v}\right) \d{V}=
+    {\left[- \varepsilon A \frac{k^2}{\mu}\left(\frac{\zeta}{\mu}+\frac{4}{3}\right)\left\langle\dD{p}{x}\dd{p}{x}\right\rangle \right]}_0^L.
+\end{equation}
+
+Pro rekapitulaci uveďme aktuální stav formulace zákona zachování energie. Vycházejíce z~\refeq{eq:1st_law_detailed}, dosadíme výsledky podle \refeq{eq:accumulation_mean}, \refeq{eq:convection_io_mean}, \refeq{eq:conduction_mean} a~z~objemového členu \refeq{eq:isotropic_mean}, \refeq{eq:deviatoric_mean}, pokrátíme plochu řezu $\varepsilon A$. Získáváme formulaci zákona zachování energie za~předpokladu nepropustnosti stěny $\partial\mathcal{S}$, bezsmykového styku, celkového tvaru membrány a~homogenity vnitřní struktury,
+\begin{align}\label{eq:model_1D_integral}
+    &\underbrace{\int_0^L\frac{c_V}{R}\dd{\left\langle p\right\rangle}{t}\d{x}}_{\text{akumulace}}\,=
+    -\underbrace{\int_0^L \frac{a}{\varepsilon} \dblangle{\left(-\lambda \nabla T + \bm{\phi}\right)\cdot\bm{\tilde{n}}}\d{x}}_{\text{tok energie stěnou}}
+    \,-\, \underbrace{\int_0^L \frac{k}{\mu}\left\langle \dd{}{x}\left(p\dd{p}{x}\right)\right\rangle \d{x}}_{\text{izotropické napětí -- tlak}}
+    \nonumber\\ & \qquad\qquad
+    -\,\underbrace{\vphantom{\int_0^L}{\left[\frac{k^2}{\mu}\left(\frac{\zeta}{\mu}+\frac{4}{3}\right)\left\langle\dD{p}{x}\dd{p}{x}\right\rangle \right]}_0^L}_{\text{deviatorické napětí}}
+    \,+\, \underbrace{\vphantom{\int_0^L}{\left[\frac{k}{\mu}\frac{c_p}{R}\left\langle p\dd{p}{x}\right\rangle\right]}_0^L}_{\text{tok hmoty}}.
+\end{align}
+
+Zavedeme substituci $J\unit{Pa\,s^{-1}}$ či ekvivalentně $\unit{W\,m^{-3}}$,
+\begin{equation}
+    J=-\frac{a}{\varepsilon}\left(-\lambda \nabla T + \bm{\phi}\right)\cdot\bm{\tilde{n}},
+\end{equation}
+kterou nazveme indukovanou hustotou výkonu, tj. výkonem na~jednotku objemu plynné fáze, vyvolaným energetickým tokem stěnou membrány vztaženým na~její tloušťku. 
+
+Na základě lokalizační věty můžeme integrální formulaci interpretovat jako diferenciální rovnici,
+\begin{subequations}
+\begin{align}
+    &\frac{c_V}{R}\dd{\left\langle p\right\rangle}{t}=\dblangle{J}-\frac{k}{\mu}\left\langle \dd{}{x}\left(p\dd{p}{x}\right)\right\rangle,\\
+    &{\left[\frac{k}{\mu}\left\langle \left(\frac{c_p}{R} p - k\left(\frac{\zeta}{\mu}+\frac{4}{3}\right)\dD{p}{x}\right)\dd{p}{x}\right\rangle \right]}_0^L.
+\end{align}
+\end{subequations}
+
+Zaměřme se nyní na~izotropický člen s~cílem vyjádřit průměr derivace součinu pouze s~pomocí $\left\langle p \right\rangle$. Píšeme
+\begin{equation}
+    \left\langle \dd{}{x}\left(p\dd{p}{x}\right)\right\rangle=\dd{}{x}\left\langle p\dd{p}{x}\right\rangle=\dd{}{x}\left(\left\langle p\right\rangle\left\langle\dd{p}{x}\right\rangle\right)=\dd{}{x}\left(\left\langle p\right\rangle\dd{\left\langle p\right\rangle}{x}\right),
+\end{equation}
+kde vedle aplikace průměru na~řezu předpokládáme v~druhém kroku nekorelovanost veličin $p$ a~$\dd{p}{x}$, kterou obhajujeme homogenní strukturou membrány. Získáváme parciální diferenciální rovnici
+\begin{equation}
+    \frac{c_V}{R}\dd{\left\langle p\right\rangle}{t}=\dblangle{J}-\frac{k}{\mu}\dd{}{x}\left(\left\langle p\right\rangle\dd{\left\langle p\right\rangle}{x}\right).
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Řešení jednorozměrné úlohy %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Řešení jednorozměrné úlohy}\label{ss:reseni_jednorozmerne_ulohy}
+Pro zjednodušení zápisu od této chvíle píšeme $p(x):=\left\langle p \right\rangle\!(x)$ a~podobně pro všechny další veličiny. Řešíme parciální diferenciální rovnici
+\begin{equation}\label{eq:general_1D_problem_pde}
+    \frac{c_V}{R}\dd{p}{t}=\dblangle{J}-\frac{k}{\mu}\dd{}{x}\left(p\dd{p}{x}\right),\quad p(0)=p_{\mathrm{in}},\quad p(L)=p_{\mathrm{out}},
+\end{equation}
+kde okrajové podmínky uvažujeme Dirichletovy: pro vstupní tlak konstantní dle nastavení experimentu, případně dle dat regulátoru, a~pro výstupní tlak dle měření tlakoměru; úloha je dvěma Dirichletovými podmínkami plně určena. Komplikovaný člen vyjadřující energetický tok je stále relevantní, ale pouze pro vyhodnocení celkového množství energie uvnitř systému. 
+
+Předpokládáme, že~dynamika procesu ustálení tlakového profilu uvnitř membrány je řádově rychlejší než dynamika napouštění integrální cely permeametru, hledáme tedy stacionární, resp. asymptotické řešení problému. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Izotermní úloha %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Izotermní úloha}\label{sss:izotermni_uloha}
+Jako první najdeme stacionární řešení úlohy pro izotermní děj bez energetického toku stěnou membrány, 
+\begin{equation}\label{eq:izotermal_problem}
+    \Dd{}{x}\left(p\Dd{p}{x}\right)=0,\quad p(0)=p_{\mathrm{in}},\quad p(L)=p_{\mathrm{out}}.
+\end{equation}
+Rozepsáním vnější derivace získáváme
+\begin{equation}
+    \Dd{}{x}\left(p\Dd{p}{x}\right)=\left(\Dd{p}{x}\right)^2+p\DD{p}{x}.
+\end{equation}
+Zavedeme substituci za~první derivaci,
+\begin{equation}\label{eq:dpdx_substitution}
+    u(p)=\Dd{p}{x},\quad \DD{p}{x}=\Dd{u}{x}=\Dd{u}{p}\Dd{p}{x}=\Dd{u}{p}u,
+\end{equation}
+a přepíšeme podle ní původní úlohu,
+\begin{equation}
+    \left(\Dd{p}{x}\right)^2+p\DD{p}{x}=0\quad\Longleftrightarrow\quad u^2+pu\Dd{u}{p}=0.
+\end{equation}
+V substituci jde o~separovatelnou úlohu, jejímž řešením je
+\begin{equation}
+    \int \frac{\d{p}}{p}=\int-\frac{\d{u}}{u}\quad\Longrightarrow\quad u=\frac{K_1}{p}.
+\end{equation}
+Dosazením za~substituci dostáváme opět separovatelnou úlohu, jejímž řešením je
+\begin{equation}
+    \Dd{p}{x}=\frac{K_1}{p}\quad\Longrightarrow\quad 
+    %\int p \d{p}=\int K_1 x \d{x}\quad\Longrightarrow \\\frac{1}{2}p^2=K_1 x + K_2\quad&\Longrightarrow\quad
+    p(x)=2\sqrt{K_1x +K_2},
+\end{equation}
+partikulární řešení vyhovující okrajovým podmínkám získáváme v~podobě
+\begin{equation}
+    p(x)=p_{\mathrm{in}}\left(1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^2\right)\right)^{\frac{1}{2}}, 
+\end{equation}
+
+Pro zjednodušení zápisu zavádíme funkci tvaru jako lineární část vyjádření profilu a~její směrnici,
+\begin{equation}
+        S_2(x):=1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^2\right), \qquad
+        S'_2=-\frac{1}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^2\right),
+\end{equation}
+tlakový profil a~jeho derivaci pak zjednodušeně píšeme jako
+\begin{equation}
+    p(x)=p_{\mathrm{in}}S_2^{\frac{1}{2}}(x), \qquad \Dd{p}{x}=\frac{1}{2}p_{\mathrm{in}}S'_2S_2^{-\frac{1}{2}}(x).
+\end{equation}
+Ze stavové rovnice vyplývá podoba profilu hustoty,
+\begin{equation}
+    \rho(x)=\frac{p(x)}{RT}=\frac{p_{\mathrm{in}}}{RT}S_2^{\frac{1}{2}}(x).
+\end{equation}
+Z rovnice kontinuity dále odečteme hustotu toku plynu membránou $j\unit{kg\,m^{-2}\,s^{-1}}$, neboť po~dosazení Darcyho zákona platí
+\begin{equation}
+    j=\rho v~= -\frac{k}{\mu}\rho \Dd{p}{x}=-\frac{1}{2}\frac{k}{\mu}\frac{p_{\mathrm{in}}^2}{RT}S'_2S_2^{\frac{1}{2}-\frac{1}{2}}(x)=\frac{k\left(p_{\mathrm{in}}^2-p_{\mathrm{out}}^2\right)}{2\mu RTL}.
+\end{equation}
+Pozorujeme, že~vyjádření je prostorovou invariantou, tvar profilů je tedy v~souladu se zákonem zachování hmoty.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Parametrizace izotermního řešení %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Parametrizace izotermního řešení}\label{sss:parametrizace_izotermniho_reseni}
+Předpokládejme, že~stacionární variantu úlohy \refeq{eq:general_1D_problem_pde} řeší parametrické rozšíření izotermního řešení, kde namísto druhých mocnin a~odmocnin budeme uvažovat obecný exponent $\alpha$. Zavádíme zobecnění funkce tvaru,
+\begin{equation}
+    S_\alpha(x):=1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^\alpha\right),\qquad
+    S'_\alpha=-\frac{1}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^\alpha\right),
+\end{equation}
+a zobecnění tlakového profilu,
+\begin{equation}\label{eq:pressure_profile_general}
+    p(x):=p_{\mathrm{in}}\left(1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^\alpha\right)\right)^{\frac{1}{\alpha}},
+\end{equation}
+který, spolu s~jeho derivací, můžeme pomocí funkce tvaru zapsat jako
+\begin{equation}
+    p(x)=p_{\mathrm{in}}S_\alpha^{\frac{1}{\alpha}}(x),\qquad \Dd{p}{x}=\frac{1}{\alpha}p_{\mathrm{in}}S'_\alpha S_\alpha^{\frac{1}{\alpha}-1}(x).
+\end{equation}
+
+Z rovnice kontinuity plyne požadavek na~konstantní hustotu toku, kterého lze docílit pouze se zavedením teplotního profilu,
+\begin{equation}
+    j=\rho v~= \frac{p}{RT}\cdot-\frac{k}{\mu}\Dd{p}{x}=-\frac{k}{\mu R}\frac{p\Dd{p}{x}}{T}\quad\Longrightarrow \quad
+    T(x)\propto p\Dd{p}{x} \propto S_\alpha^{\frac{2}{\alpha}-1}(x).
+\end{equation}
+
+Teplotní profil je proporcionalitou určen až na~multiplikativní konstantu, jejíž hodnota plyne z okrajové podmínky $T(0)=T_{\mathrm{in}}$,
+\begin{equation}
+    T(x)=T_{\mathrm{in}}S_\alpha^{\frac{2}{\alpha}-1}(x).
+\end{equation}
+Při znalosti tlakového i~teplotního profilu již ze~stavové rovnice jednoznačně plyne také vyjádření profilu hustoty,
+\begin{equation}
+    \rho(x)=\frac{p(x)}{RT(x)}=\frac{p_{\mathrm{in}}S_\alpha^{\frac{1}{\alpha}}(x)}{RT_{\mathrm{in}}S_\alpha^{\frac{2}{\alpha}-1}(x)}=\frac{p_{\mathrm{in}}}{RT_{\mathrm{in}}}S_\alpha^{1-\frac{1}{\alpha}}(x).
+\end{equation}
+
+Z rovnice \refeq{eq:general_1D_problem_pde} pro stacionární řešení plyne, že~indukovaná hustota výkonu $J$ odpovídá izotropickému členu rovnice,
+\begin{equation}
+    \begin{split}
+    J(x)
+    &=\frac{k}{\mu}\Dd{}{x}\left(p\Dd{p}{x}\right)
+    =\frac{k}{\mu}\Dd{}{x}\left(\frac{p_{\mathrm{in}}^2}{\alpha}S'_\alpha S_\alpha^{\frac{2}{\alpha}-1}\right)
+    =\frac{k}{\mu}\frac{p_{\mathrm{in}}^2}{\alpha}S'_\alpha\frac{2-\alpha}{\alpha}S'_\alpha S_\alpha^{\frac{2}{\alpha}-2}\\
+    &=\frac{k}{\mu} \left(2-\alpha\right)\left(\frac{1}{\alpha}p_{\mathrm{in}} S'_\alpha S_\alpha^{\frac{1}{\alpha}-1}\right)^2
+    =\left(2-\alpha\right)\frac{k}{\mu}\left(\Dd{p}{x}\right)^2.
+    \end{split}
+\end{equation}
+Pozorujeme, že~indukovaná hustota výkonu je lineární funkcí hustoty mechanického výkonu plynu (viskózní disipace) $\Phi\unit{W\,m^{-3}}$,
+\begin{equation}
+    \Phi(x)=\frac{k}{\mu}\left(\Dd{p}{x}\right)^2,\qquad J(x)=\left(2-\alpha\right)\Phi(x).
+\end{equation}
+
+Hustotu toku vyjádříme z rovnice kontinuity,
+\begin{equation}\label{eq:pme_mass_flux}
+    j=\frac{k p_{\mathrm{in}}^{2-\alpha}}{\alpha \mu R L T_{\mathrm{in}}}\left(p_{\mathrm{in}}^{\alpha}-p_{\mathrm{out}}^{\alpha}\right)=\frac{k p_{\mathrm{in}}^{2}}{\alpha \mu R L T_{\mathrm{in}}}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right).
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Termodynamický děj %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Termodynamické děje}\label{ss:termodynamicky_dej}
+V kapitole \ref{sss:parametrizace_izotermniho_reseni} jsme exponent $\alpha$ zavedli ad hoc, jeho význam objasníme odvozením termodynamického děje probíhajícího uvnitř membrány. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Polytropický děj %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Polytropický děj}\label{sss:polytropicky_dej}
+% TODO: zavést pojem polytropický jako analogii k~uzavřenému p-V systému.
+Nejprve ze~stavové rovnice ideálního plynu vyjádříme měrný objem a~jeho změnu,
+\begin{equation}
+    \nu=\frac{1}{\rho}=\frac{RT}{p},\quad \d{\nu}=\frac{R}{p}\d{T}-\frac{RT}{p^2}\d{p}=\frac{R}{p}\d{T}-\frac{\nu}{p}\d{p},
+\end{equation}
+kde po~pronásobení tlakem dostáváme diferenciální formu
+\begin{equation}
+    p\d{\nu}=R\d{T}-v\d{p}.
+\end{equation}
+Vnitřní energie je pouze funkcí teploty, $\d{u}=c_V\d{T}$; dosazením do~Gibbsovy identity získáváme
+\begin{equation}
+    T\d{s}=\d{u}+p\d{\nu}=c_V\d{T}+R\d{T}-\nu\d{p}=c_p\d{T}-\frac{RT}{p}\d{p}.
+\end{equation}
+
+Entropie je funkcí teploty i~tlaku, $s=s(T,p)$. Uvažujme trajektorii v~tomto stavovém prostoru,
+\begin{equation}
+    \mathcal{C}:\xi\to\left(T(\xi),p(\xi)\right),
+\end{equation}
+změnu entropie podél této trajektorie pak lze vyjádřit jako
+\begin{equation}
+    \Dd{s}{\xi}=\dd{s}{T}\Dd{T}{\xi}+\dd{s}{p}\Dd{p}{\xi}=\frac{c_p}{T}\Dd{T}{\xi}-\frac{R}{p}\Dd{p}{\xi}.
+\end{equation}
+Chceme-li vyjádřit změnu entropie pouze pomocí změny teploty, musíme uvažovat směrovou derivaci entropie podle teploty podél trajektorie,
+\begin{equation}
+    \left.\Dd{s}{T}\right|_{\mathcal{C}}=\frac{\d{s}/\!\d{\xi}}{\d{T}/\!\d{\xi}}=\frac{c_p}{T} - \frac{R}{p}\left.\Dd{p}{T}\right|_{\mathcal{C}}.
+\end{equation}
+Pronásobením teplotou získáváme kompaktnější vyjádření,
+\begin{equation}
+    T\left.\Dd{s}{T}\right|_{\mathcal{C}}=c_p - \frac{RT}{p}\left.\Dd{p}{T}\right|_{\mathcal{C}}=c_p - \nu\left.\Dd{p}{T}\right|_{\mathcal{C}},
+\end{equation}
+zavádíme odchylku měrné tepelné kapacity od izobarického děje $c_d\unit{J\,kg^{-1}\,K^{-1}}$,
+\begin{equation}
+    c_d:=\nu\frac{\d{p}/\!\d{\xi}}{\d{T}/\!\d{\xi}},
+\end{equation}
+kterou budeme uvažovat v~průběhu děje za~konstantní. Odpovídající diferenciální formu píšeme jako
+\begin{equation}
+    T\d{s}=\left(c_p-c_d\right)\d{T},
+\end{equation}
+kde od této chvíle již uvažujeme restrikci na~trajektorii $\mathcal{C}$. Dosazením za~změnu entropie v~Gibbsově identitě získáváme
+\begin{equation}
+    \left(c_p-c_d\right)\d{T}=c_p\d{T}-\frac{RT}{p}\d{p},\qquad \frac{\d{T}}{T}=\frac{R}{c_d}\frac{\d{p}}{p},
+\end{equation}
+kde poměr $R/c_d$ budeme dále používat jako bezrozměrný parametr vhodný k~popisu odchylky od izobarického děje,
+\begin{equation}
+    \chi=\frac{R}{c_d}=R\rho \frac{\d{T}/\!\d{\xi}}{\d{p}/\!\d{\xi}}.
+\end{equation}
+
+Abychom získali diferenciální formu svazující tlak a~hustotu, vyjádříme úplný diferenciál stavové rovnice ideálního plynu,
+\begin{equation}
+    \d{p} = R\left(T\d{\rho} + \rho\d{T}\right) \quad \Longrightarrow \quad \frac{\d{p}}{p}=\frac{\d{\rho}}{\rho}+\frac{\d{T}}{T}.
+\end{equation}
+Dosazením za~teplotní člen dostáváme
+\begin{equation}
+    \frac{\d{p}}{p}-\frac{\d{\rho}}{\rho}=\chi\frac{\d{p}}{p}, \qquad
+    \left(1-\chi\right)\frac{\d{p}}{p}=\frac{\d{\rho}}{\rho}, \qquad \frac{\d{p}}{p}=\frac{1}{1-\chi}\frac{\d{\rho}}{\rho}.
+\end{equation}
+Multiplikativní konstantu značíme $n$ a~zveme polytropický index či polytropický koeficient,
+\begin{equation}
+    n=\frac{1}{1-\chi}=\frac{c_d}{c_d-R}.
+\end{equation}
+
+Integrací získáváme polytropickou rovnici,
+\begin{equation}\label{eq:polytropic_state_equation}
+    \int \frac{\d{p}}{p}=\int n \frac{\d{\rho}}{\rho}\quad\Longrightarrow\quad p= K_\rho \rho^n\quad\Longleftrightarrow\quad \rho=K_p p^{\frac{1}{n}},
+\end{equation}
+kde $K_\rho$ a~$K_p$ jsou různé reprezentace integrační konstanty. Uvažujme dále obecný referenční bod $\left(p_0, \rho_0, T_0\right)$. Hodnotu obou variant integrační konstanty určíme tak, aby v~tomto bodě platila stavová rovnice ideálního plynu,
+\begin{subequations}
+    \begin{align}
+        &&&&p_0&=\rho_0 R T_0 = K_\rho \rho_0^n &\Longrightarrow\qquad  K_\rho  &= \rho_0^{1-n} R T_0,&&\\
+        &&&&\rho_0&=\frac{p_0}{R T_0}=K_p p_0^{\frac{1}{n}}&\Longrightarrow\qquad  K_p &= \frac{1}{R T_0}p_0^{\frac{n-1}{n}}.&&
+    \end{align}
+\end{subequations}
+Pro úplnost uveďme ještě vztahy pro gradient tlaku a~hustoty,
+\begin{equation}
+    \nabla p = K_\rho n \rho^{n-1}\nabla \rho,\qquad \nabla \rho = K_p \frac{1}{n} p^{\frac{1-n}{n}}\nabla p.
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Nelineární difusní rovnice %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Nelineární difusní rovnice}
+Naším dalším cílem je s~pomocí polytropické rovnice nalézt profily stavových veličin uvnitř membrány. 
+
+Vycházíme z diferenciální formy rovnice kontinuity, kde dosazením Darcyho zákona získáváme
+\begin{equation}
+    \varepsilon \dd{\rho}{t}=-\nabla\cdot \left(\rho \bm{v}\right)=\frac{k}{\mu}\nabla\cdot\left(\rho\nabla p\right).
+\end{equation}
+Rovnice obsahuje parametr porozity, na~rozdíl od odvození v~kapitole \ref{ss:formulace_jednorozmerne_ulohy} totiž neuvažujeme průměrování přes průřez membrány a~oddělenou plynnou a~pevnou fázi, ale naopak zcela homogenizované kontinuum.
+
+Zaměříme se nejprve na~popis chování hustoty. Dosazením do~rovnice kontinuity za~gradient tlaku získáváme
+\begin{equation}
+    \frac{\varepsilon}{K_\rho} \frac{\mu}{k}\dd{\rho}{t}
+    =\nabla\cdot\left(\rho n \rho^{n-1}\nabla \rho\right),
+\end{equation}
+kde po~úpravách dostáváme tři různá vyjádření,
+\begin{equation}\label{eq:pme_density_3D}
+    \frac{\varepsilon}{K_\rho} \frac{\mu}{k}\dd{\rho}{t}
+    = n \nabla\cdot\left(\rho^n \nabla \rho\right)
+    =\frac{n}{n+1}\Delta\left(\rho^{n+1}\right)
+    =\rho^{n-1}\left(n^2\norm{\nabla\rho}^2+n\rho\Delta\rho\right).
+\end{equation}
+První vyjádření je výhodné pro numerické řešení, neboť neobsahuje členy s~vyššími derivacemi. Druhé svou formou rovnici zařazuje do~třídy rovnic Porous Medium Equation \cite{vazquez2006}, které jsou podtřídou rovnic nelineární difuse. Třetí vyjádření je výhodné pro hledání analytických řešení, diferenciální operátory totiž působí na~stavové veličiny přímo.
+
+Dosazením polytropické rovnice za~hustotu analogicky získáváme popis chování tlaku,
+\begin{equation}\label{eq:pme_pressure_time_3D}
+    \varepsilon \dd{}{t}\left(K_p p^{\frac{1}{n}}\right)
+    =K_p \frac{\varepsilon}{n}p^{\frac{1-n}{n}}\dd{p}{t}
+    =\frac{k}{\mu}\nabla\cdot\left(K_p p^{\frac{1}{n}}\nabla p\right),
+\end{equation}
+kde po~úpravách dostáváme opět tři různá vyjádření,
+\begin{equation}\label{eq:pme_pressure_3D}
+    \varepsilon \frac{\mu}{k}\dd{p}{t}
+    = n p^{\frac{n-1}{n}} \nabla\cdot\left( p^{\frac{1}{n}}\nabla p\right)
+    = \frac{n^2}{n+1}\Delta\left(p^{\frac{n+1}{n}}\right)
+    = \norm{\nabla p}^2 + n p\Delta p.
+\end{equation}
+
+Stacionární jednorozměrná úloha postavená na~posledním z vyjádření rovnice \refeq{eq:pme_pressure_3D} doplněná o~okrajovou podmínku odpovídající popisu membrány má tvar
+\begin{equation}\label{eq:pme_pressure_1D}
+    \left(\Dd{p}{x}\right)^2 + n p\DD{p}{x} = 0,\quad p(0)=p_{\mathrm{in}},\quad p(L)=p_{\mathrm{out}}.
+\end{equation}
+Tento tvar pro $n=1$ přesně odpovídá izotermní úloze dle \refeq{eq:izotermal_problem}.
+
+Budeme nyní hledat řešení neizotermní úlohy dle \refeq{eq:pme_pressure_1D} pro obecný polytropický index $n$, řešíme obdobně jako v~kapitole \ref{ss:reseni_jednorozmerne_ulohy}. Substitucí za~první derivaci dle \refeq{eq:dpdx_substitution} získáváme
+\begin{equation}
+    \left(\Dd{p}{x}\right)^2 + n p\DD{p}{x}=0\quad\Longleftrightarrow\quad u^2 + n p u~\Dd{u}{p}=0.
+\end{equation}
+Opět jde o~separovatelnou úlohu, jejímž řešením je
+\begin{equation}
+    \int \frac{\d{p}}{p}=-n \int \frac{\d{u}}{u}\quad\Longrightarrow\quad u=K_1 p^{-\frac{1}{n}}.
+\end{equation}
+I po~dosazení za~substituci dostáváme separovatelnou úlohu,
+\begin{equation}
+    \int p^{\frac{1}{n}}\d{p}=\int K_1 \d{x}\quad\Longrightarrow \quad
+    \frac{n}{n+1}p^{\frac{n+1}{n}}=K_2 + K_1 x,
+\end{equation}
+kde speciálnímu případu pro $n=-1$ se budeme věnovat souhrnně v~kapitole \ref{ss:limitni_reseni}.
+Partikulární řešení vyhovující okrajovým podmínkám získáváme v~podobě
+\begin{subequations}
+    \begin{align}
+        p(0)=p_{\mathrm{in\hphantom{out}}}\quad&\Longrightarrow\quad {K_2 \hphantom{L}}
+        =\frac{n}{n+1}\,p_{\mathrm{in}}^{\frac{n+1}{n}},\\
+        p(L)=p_{\mathrm{out\hphantom{in}}}\quad&\Longrightarrow\quad K_1 L
+        =\frac{n}{n+1}\left( p_{\mathrm{out}}^{\frac{n+1}{n}}-p_{\mathrm{in}}^{\frac{n+1}{n}}\right),
+        \\
+        p^{\frac{n+1}{n}}&=
+        p_{\mathrm{in}}^{\frac{n+1}{n}} + \frac{x}{L} \left( p_{\mathrm{out}}^{\frac{n+1}{n}}-p_{\mathrm{in}}^{\frac{n+1}{n}}\right),
+        \\
+        p(x)&=
+        p_{\mathrm{in}}\left(1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\frac{n+1}{n}}\right)\right)^{\frac{n}{n+1}}.
+    \end{align}
+\end{subequations}
+
+Srovnáním tlakového profilu s~řešením dle \refeq{eq:pressure_profile_general} jsme schopni vyjádřit parametr $\alpha$ pomocí polytropického indexu $n$, odchylky měrné tepelné kapacity od~izobarického děje $c_d$, či celkové tepelné kapacity odpovídající ději. Převodní vztahy mezi jednotlivými parametry mají následující podobu:
+
+\begingroup
+\sloppy
+\begin{subequations}
+    \makebox[0.98\textwidth][l]{
+        \begin{tabular}{cccccccccr}
+    ~\hspace{38px}~&&&&&&&&~\hspace{38px}~&\\ &
+          $\dst \alpha 
+    $&$=$&$\dst \frac{n+1}{n}
+    $&$=$&$\dst 2-\frac{R}{c_d} 
+    $&$=$&$\dst 2-\chi 
+    ,$&&\refstepcounter{equation}(\theequation)\\~\\ &
+          $\dst \frac{1}{\alpha-1}
+    $&$=$&$\dst n
+    $&$=$&$\dst \frac{c_d}{c_d-R}
+    $&$=$&$\dst \frac{1}{1-\chi}
+    ,$&&\refstepcounter{equation}(\theequation)\\~\\ &
+          $\dst \frac{R}{2-\alpha}
+    $&$=$&$\dst \frac{nR}{n-1}
+    $&$=$&$\dst c_d
+    $&$=$&$\dst \frac{R}{\chi}
+    ,$&&\refstepcounter{equation}(\theequation)\\~\\ &
+          $\dst 2-\alpha
+    $&$=$&$\dst \frac{n-1}{n}
+    $&$=$&$\dst \frac{R}{c_d}
+    $&$=$&$\dst \chi
+    .$&&\refstepcounter{equation}(\theequation)\\~\\ &
+    ~
+\end{tabular}
+}
+\end{subequations}
+\endgroup
+
+Vyjádřeno pomocí $\alpha$, tlakový profil získáváme identický s~parametrizovaným řešením izotermního problému dle \refeq{eq:pressure_profile_general},
+\begin{equation}
+    p(x)=p_{\mathrm{in}}\left(1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^\alpha\right)\right)^{\frac{1}{\alpha}}
+\end{equation}
+derivace odpovídá
+\begin{equation}
+    \Dd{p}{x}=-\frac{p_{\mathrm{in}}}{\alpha L}\left(1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right)\right)^{\frac{1-\alpha}{\alpha}}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right).
+\end{equation}
+Polytropickou rovnici pomocí $\alpha$ přepíšeme jako
+\begin{subequations}
+    \begin{align}
+        p&=K_{\rho} \rho^{\frac{1}{\alpha-1}},\qquad K_\rho = RT_0\rho_0^{\frac{\alpha-2}{\alpha-1}},\\
+        \rho&=K_p p^{\alpha-1},\qquad K_p=\frac{1}{RT_0} p_0^{2-\alpha},
+    \end{align}
+\end{subequations}
+profil hustoty pak získáváme v~podobě
+\begin{equation}
+    \rho(x)=\frac{p_0^{2-\alpha}}{RT_0}p_{\mathrm{in}}^{\alpha-1}\left(1-\frac{x}{L}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right)\right)^{\frac{\alpha-1}{\alpha}}.
+\end{equation}
+Získáváme alternativní vyjádření hustoty toku s~využitím referenčního bodu,
+\begin{equation}\label{eq:pme_mass_flux_reference}
+    j=-\frac{1}{L}\frac{k}{\mu}\rho \dd{p}{x}
+    =\frac{1}{L}\frac{k}{\mu}\frac{p_0^{2-\alpha}}{RT_0}\frac{p_{\mathrm{in}}^{\alpha}}{\alpha}\left(1-\left(\frac{p_{\mathrm{out}}}{p_{\mathrm{in}}}\right)^{\alpha}\right).
+\end{equation}
+Pro referenční bod $(p_0,T_0)=(p_{\mathrm{in}},T_{\mathrm{in}})$ jsou obě vyjádření identická, v~opačném případě poskytuje polytropická rovnice přepočetní vztah. Protože budeme chtít srovnávat výsledky experimentů pro různé počáteční podmínky, tj. variabilní vstupní tlak, budeme při formulaci vnější dynamiky používat vyjádření s~pomocí referenčního bodu.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Limitní termodynamické děje %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \subsubsection{Limitní termodynamické děje}\label{sss:limitni_termodynamicke_deje}

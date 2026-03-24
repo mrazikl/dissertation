@@ -1,0 +1,100 @@
+%% Language and font encodings
+\usepackage[english,czech]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage{amsthm}
+\usepackage{bm} % bold
+\usepackage{esint}
+\usepackage{multicol}
+\usepackage[bottom=2.5cm,includefoot]{geometry}
+\usepackage[hidelinks]{hyperref} % for interactive table of content
+\usepackage{graphicx}
+\graphicspath{{img-low/}}
+% \graphicspath{{img-high/}}
+\usepackage{subcaption}
+\usepackage{csquotes}
+\usepackage[backend=biber,style=chem-acs]{biblatex}
+\usepackage{booktabs}
+\usepackage{mhchem}
+\usepackage{siunitx}
+\sisetup{list-final-separator = { a },
+         list-pair-separator = { a },
+         range-phrase = {--},
+         range-units  = single,
+         product-units = single,
+         }
+\DeclareSIUnit{\rpm}{rpm}
+\DeclareSIUnit{\bar}{bar}
+\DeclareSIUnit{\xg}{\times \mathit{g}}
+\DeclareSIUnit{\inchp}{{}^{\prime\prime}}
+
+\addbibresource{sources.bib}
+\pagestyle{plain}
+
+\numberwithin{equation}{section}
+\numberwithin{table}{section}
+\numberwithin{figure}{section}
+
+\newcommand{\eqcaption}[2][\noindent]{\par\noindent\hspace{5em}{\textbf{#2}}\par #1 \ignorespaces}
+
+\newlength{\grouplen}
+\newcommand{\groupbox}[1]{\mathmakebox[\grouplen][l]{#1}}
+
+\newcommand{\lft}{\mathopen{}\mathclose\bgroup\left}
+\newcommand{\rgt}{\aftergroup\egroup\right}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\renewcommand{\d}[1]{\,\mathrm{d}{#1}}
+\newcommand{\dvec}[1]{\mathrm{d}\bm{#1}}
+\newcommand{\dd}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\dD}[2]{\frac{\partial^2 \! #1}{\partial #2^2}}
+\newcommand{\dDxy}[3]{\frac{\partial^2 \! #1}{\partial #2 \partial #3}}
+\newcommand{\Dd}[2]{\frac{\mathrm{d} #1}{\mathrm{d} #2}}
+\newcommand{\DD}[2]{\frac{\mathrm{d}^2 \! #1}{\mathrm{d} #2^2}}
+\newcommand{\DDxy}[3]{\frac{\mathrm{d}^2 \! #1}{\mathrm{d} #2\mathrm{d} #3}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\e}[1]{\mathrm{e}^{#1}}
+\def\dst{\displaystyle}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\li}{li}
+\DeclareMathOperator{\Li}{Li}
+\DeclareMathOperator{\lii}{lii}
+\DeclareMathOperator{\Ei}{Ei}
+\DeclareMathOperator{\cis}{cis}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator\atanh{atanh}
+\DeclareMathOperator\atan{atan}
+\DeclareMathOperator\atantwo{atan2}
+
+\newcommand{\refeq}[1]{$\left(\mathrm{\ref{#1}}\right)$}
+\newcommand{\Unit}[1]{\,\left(\mathrm{#1}\right)}
+\newcommand{\english}[1]{(\textit{#1})}
+\newcommand{\dblangle}[1]{\left\langle\!\left\langle #1 \right\rangle\!\right\rangle}
+\newcommand{\nablax}{\mathop{\nabla}\limits_{x}}
+\newcommand{\nablay}{\mathop{\nabla}\limits_{y}}
+\newcommand{\laplacexx}{\mathop{\Delta}\limits_{xx}}
+\newcommand{\laplacexy}{\mathop{\Delta}\limits_{xy}}
+\newcommand{\laplaceyy}{\mathop{\Delta}\limits_{yy}}
+\newcommand{\lhopital}{\stackrel{\mathrm{L'H}}{=}}
+
+% Custom environment for indented theorems
+% Usage: \begin{indentedtheorem}[Source/Author]{Title} ... \end{indentedtheorem}
+\newenvironment{theorem}
+{
+  \par\medskip
+  \addtolength{\leftskip}{1cm}
+  \addtolength{\rightskip}{1cm}
+  \itshape
+  \noindent\ignorespaces
+}
+{
+  \par\medskip
+  \addtolength{\leftskip}{-1cm}
+  \addtolength{\rightskip}{-1cm}
+}
+
+%\newtheorem{post}{Postulát}[section]
